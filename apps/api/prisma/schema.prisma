@@ -8,13 +8,16 @@ datasource db {
 }
 
 model User {
-  id           String  @default(cuid())
+  id           String  @unique @default(cuid())
   email        String  @unique
   password     String
   firstName    String
-  LastName     String
+  lastName     String
   refreshToken String?
   role         Role    @default(STUDENT)
+
+  @@index([id])
+  @@index([role])
 }
 
 enum Role {
