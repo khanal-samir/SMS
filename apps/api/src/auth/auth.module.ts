@@ -11,8 +11,8 @@ import { JwtStrategy } from './strategies/jwt.strategy'
 @Module({
   imports: [
     UserModule,
-    JwtModule.registerAsync(jwtConfig.asProvider()),
-    ConfigModule.forFeature(jwtConfig),
+    JwtModule.registerAsync(jwtConfig.asProvider()), // access token is default here so no injection but for refresh token injection is needed
+    ConfigModule.forFeature(jwtConfig), //makes it injectable in services
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

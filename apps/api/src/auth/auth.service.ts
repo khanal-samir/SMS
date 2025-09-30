@@ -1,22 +1,18 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common'
+import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { CreateUserDto } from 'src/user/dto/create-user.dto'
 import { UserService } from 'src/user/user.service'
 import { AuthUser, JwtPayload } from './types/auth-user.type'
+import refreshConfig from './config/refresh.config'
+import type { ConfigType } from '@nestjs/config/dist/types/config.type'
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService,
+    private readonly jwtService: JwtService, // default access token
+    @Inject(refreshConfig.KEY) // DI injection for refresh token
+    private refreshTokenConfig: ConfigType<typeof refreshConfig>,
   ) {}
-  //auth middleware
-  async validateLocalUser(email: string, password: string): Promise<AuthUser> {
-    const user = await this.userService.findByEmail(email)
-    if (!user) throw new UnauthorizedException('User not found!')
-    const isPasswordMatched = await this.userService.comparePassword(user.password, password)
-    if (!isPasswordMatched) throw new UnauthorizedException('Invalid Credentials!')
-    return { id: user.id, role: user.role }
-  }
 
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.userService.findByEmail(createUserDto.email)
@@ -25,32 +21,42 @@ export class AuthService {
   }
 
   async login(userId: string) {
-    const { accessToken } = await this.generateTokens(userId)
-    // const hashedRT = await hash(refreshToken)
-    // await this.userService.updateHashedRefreshToken(userId, hashedRT)
+    const { accessToken, refreshToken } = await this.generateTokens(userId)
+    const hashedRT = await this.userService.hashPasswordOrToken(refreshToken)
+    await this.userService.updateHashedRefreshToken(userId, hashedRT)
     return {
       id: userId,
       accessToken,
-      // refreshToken,
+      refreshToken,
     }
   }
 
-  //protected routes
+  //auth middleware or local strategy
+  async validateLocalUser(email: string, password: string): Promise<AuthUser> {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new UnauthorizedException('User not found!')
+    const isPasswordMatched = await this.userService.comparePassword(user.password, password)
+    if (!isPasswordMatched) throw new UnauthorizedException('Invalid Credentials!')
+    return { id: user.id, role: user.role }
+  }
+
+  //protected routes or jwt strategy
   async validateJwtUser(userId: string): Promise<AuthUser> {
     const user = await this.userService.findOne(userId)
     if (!user) throw new UnauthorizedException('User not found!')
     return { id: user.id, role: user.role }
   }
 
+  // generate access and refresh tokens
   async generateTokens(userId: string) {
     const payload: JwtPayload = { sub: userId }
-    const [accessToken] = await Promise.all([
+    const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload),
-      // this.jwtService.signAsync(payload, this.refreshTokenConfig),
+      this.jwtService.signAsync(payload, this.refreshTokenConfig),
     ])
     return {
       accessToken,
-      // refreshToken,
+      refreshToken,
     }
   }
 }
