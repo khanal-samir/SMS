@@ -35,7 +35,7 @@ export class AuthService {
   async validateLocalUser(email: string, password: string): Promise<AuthUser> {
     const user = await this.userService.findByEmail(email)
     if (!user) throw new UnauthorizedException('User not found!')
-    const isPasswordMatched = await this.userService.comparePassword(user.password, password)
+    const isPasswordMatched = await this.userService.comparePasswordOrToken(user.password, password)
     if (!isPasswordMatched) throw new UnauthorizedException('Invalid Credentials!')
     return { id: user.id, role: user.role }
   }
@@ -47,6 +47,29 @@ export class AuthService {
     return { id: user.id, role: user.role }
   }
 
+  //refresh token strategy
+  async validateRefreshToken(userId: string, refreshToken: string): Promise<AuthUser> {
+    const user = await this.userService.findOne(userId)
+    if (!user || !user.refreshToken) throw new UnauthorizedException('User not found!')
+    const isRTMatched = await this.userService.comparePasswordOrToken(
+      user.refreshToken,
+      refreshToken,
+    )
+    if (!isRTMatched) throw new UnauthorizedException('Invalid Refresh Token!')
+    return { id: user.id, role: user.role }
+  }
+
+  // after expiry of access token
+  async refreshToken(userId: string) {
+    const { accessToken, refreshToken } = await this.generateTokens(userId)
+    const hashedRT = await this.userService.hashPasswordOrToken(refreshToken)
+    await this.userService.updateHashedRefreshToken(userId, hashedRT)
+    return {
+      id: userId,
+      accessToken,
+      refreshToken,
+    }
+  }
   // generate access and refresh tokens
   async generateTokens(userId: string) {
     const payload: JwtPayload = { sub: userId }

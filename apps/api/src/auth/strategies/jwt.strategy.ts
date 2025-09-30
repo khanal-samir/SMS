@@ -8,6 +8,7 @@ import { JwtPayload } from '../types/auth-user.type'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  //default name is 'jwt'
   constructor(
     @Inject(jwtConfig.KEY) // DI injection token
     private jwtConfiguration: ConfigType<typeof jwtConfig>,

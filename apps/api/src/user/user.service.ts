@@ -46,8 +46,8 @@ export class UserService {
     return await hash(password)
   }
 
-  async comparePassword(plainPassword: string, hashedPassword: string) {
-    this.logger.log(`Comparing password`)
+  async comparePasswordOrToken(plainPassword: string, hashedPassword: string) {
+    this.logger.log(`Comparing password/tokens`)
     return await verify(hashedPassword, plainPassword)
   }
 }
