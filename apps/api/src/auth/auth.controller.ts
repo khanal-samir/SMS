@@ -7,6 +7,9 @@ import { Public } from './decorators/public.decorator'
 import type { AuthenticatedRequest } from './types/auth-user.type'
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth/refresh-auth.guard'
 import { GoogleAuthGuard } from './guards/google/oauth/oauth.guard'
+import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
+import { RolesGuard } from './guards/roles/roles.guard'
+import { Roles } from './decorators/roles.decorator'
 
 @Controller('auth')
 export class AuthController {
@@ -49,6 +52,10 @@ export class AuthController {
     // )
   }
 
+  //bottom up approach first route then jwt guard then roles guard
+  @Roles('ADMIN', 'STUDENT', 'TEACHER')
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('logout')
   signOut(@Request() req: AuthenticatedRequest) {
     return this.authService.signOut(req.user.id)
