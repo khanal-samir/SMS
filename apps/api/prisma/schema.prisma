@@ -11,8 +11,7 @@ model User {
   id           String  @unique @default(cuid())
   email        String  @unique
   password     String
-  firstName    String
-  lastName     String
+  name         String
   refreshToken String?
   role         Role    @default(STUDENT)
 
