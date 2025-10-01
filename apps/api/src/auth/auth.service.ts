@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+  Logger,
+} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { CreateUserDto } from 'src/user/dto/create-user.dto'
 import { UserService } from 'src/user/user.service'
@@ -7,6 +13,8 @@ import refreshConfig from './config/refresh.config'
 import type { ConfigType } from '@nestjs/config/dist/types/config.type'
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name)
+
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService, // default access token
@@ -42,6 +50,7 @@ export class AuthService {
 
   //protected routes or jwt strategy
   async validateJwtUser(userId: string): Promise<AuthUser> {
+    this.logger.log(`Validating JWT user with ID: ${userId}`)
     const user = await this.userService.findOne(userId)
     if (!user) throw new UnauthorizedException('User not found!')
     return { id: user.id, role: user.role }
