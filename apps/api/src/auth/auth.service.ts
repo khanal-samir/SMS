@@ -97,4 +97,7 @@ export class AuthService {
     if (user) return user
     return await this.userService.create(googleUser)
   }
+  async signOut(userId: string) {
+    return await this.userService.updateHashedRefreshToken(userId, null)
+  }
 }

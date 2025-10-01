@@ -17,7 +17,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromBodyField('refreshToken'), //can have body also
       secretOrKey: refreshConfiguration.secret!, //jwt key from config
-      ignoreExpiration: false,
+      ignoreExpiration: false, // time expired token not allowed to even get validated
       passReqToCallback: true, // allow validate to receive request as first arg
     })
   }
@@ -25,7 +25,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh-jwt') {
   async validate(req: Request, payload: JwtPayload) {
     const userId = payload.sub
     // Extract refresh token from request body
-    const refreshToken = req.body.refreshToken
+    const refreshToken: string = req.body.refreshToken
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token not found in request')
     }
