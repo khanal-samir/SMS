@@ -1,21 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, IsOptional, IsEnum } from 'class-validator'
-import { Role } from '@prisma/client'
+import { CreateUserSchema } from '@repo/schemas'
+import { createZodDto } from 'nestjs-zod'
 
-export class CreateUserDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string
-
-  @IsString()
-  @IsEmail()
-  @IsNotEmpty()
-  email: string
-
-  @IsString()
-  @IsNotEmpty()
-  password: string
-
-  @IsOptional()
-  @IsEnum(Role)
-  role?: Role
-}
+export class CreateUserDto extends createZodDto(CreateUserSchema) {}

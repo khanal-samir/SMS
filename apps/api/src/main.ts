@@ -1,20 +1,16 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app/app.module'
-import { ValidationPipe } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Logger } from '@nestjs/common'
+import { ZodValidationPipe } from 'nestjs-zod'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   const configService = app.get<ConfigService>(ConfigService)
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-    }),
-  )
+  // Use Zod validation pipe globally for automatic validation
+  app.useGlobalPipes(new ZodValidationPipe())
 
   app.setGlobalPrefix('v1')
 
