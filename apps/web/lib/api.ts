@@ -1,14 +1,17 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/auth.store'
+import type { AuthResponse } from '@repo/schemas'
+import { AuthResponseSchema } from '@repo/schemas'
 
-interface RefreshResponse {
-  accessToken: string
-  refreshToken: string
-}
 export interface ApiError {
   message: string
   statusCode: number
   error?: string
+  errors?: Array<{
+    field: string
+    message: string
+    code: string
+  }>
 }
 
 const apiClient = axios.create({
@@ -54,10 +57,10 @@ apiClient.interceptors.response.use(
 
     originalRequest._retry = true // tell axios to retry the request
     isRefreshing = true // tell other requests to queue
-    const { refreshToken, updateTokens, logout } = useAuthStore.getState()
+    const { user, updateTokens, logout } = useAuthStore.getState()
 
     //if no refresh token then logout and reject the request
-    if (!refreshToken) {
+    if (!user?.refreshToken) {
       logout()
       failedQueue.forEach((p) => p.reject(new Error('No refresh token')))
       failedQueue = []
@@ -65,16 +68,19 @@ apiClient.interceptors.response.use(
     }
 
     try {
-      const { data } = await axios.post<RefreshResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
-        { refreshToken },
-        { headers: { Authorization: `Bearer ${refreshToken}` } },
+      const { data } = await axios.post<AuthResponse>(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/refresh`,
+        {},
+        { headers: { Authorization: `Bearer ${user?.refreshToken}` } },
       )
 
-      updateTokens(data.accessToken, data.refreshToken)
-      originalRequest.headers!.Authorization = `Bearer ${data.accessToken}`
+      // Validate response with Zod
+      const validatedData = AuthResponseSchema.parse(data)
 
-      failedQueue.forEach((p) => p.resolve(data.accessToken))
+      updateTokens(validatedData.accessToken, validatedData.refreshToken)
+      originalRequest.headers!.Authorization = `Bearer ${validatedData.accessToken}`
+
+      failedQueue.forEach((p) => p.resolve(validatedData.accessToken))
       failedQueue = []
 
       return apiClient(originalRequest)
@@ -88,4 +94,5 @@ apiClient.interceptors.response.use(
     }
   },
 )
+
 export default apiClient

@@ -16,6 +16,9 @@ export class UserService {
         password: hashedPassword,
         ...user,
       },
+      select: {
+        password: false,
+      },
     })
   }
 
