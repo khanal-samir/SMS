@@ -18,17 +18,6 @@ export const PublicUserSchema = UserSchema.omit({
 })
 export type PublicUser = z.infer<typeof PublicUserSchema>
 
-// /**
-//  * User schema for frontend (only public fields)
-//  */
-// export const PublicUserSchema = z.object({
-//   id: z.string().cuid(),
-//   email: z.string().email(),
-//   name: z.string().min(1),
-//   role: RoleEnum,
-// })
-// export type PublicUser = z.infer<typeof PublicUserSchema>
-
 export const CreateUserSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.email('Invalid email address'),

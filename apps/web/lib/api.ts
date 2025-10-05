@@ -8,9 +8,7 @@ export interface ApiError {
   statusCode: number
   error?: string
   errors?: Array<{
-    field: string
     message: string
-    code: string
   }>
 }
 

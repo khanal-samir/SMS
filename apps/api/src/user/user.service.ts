@@ -17,7 +17,11 @@ export class UserService {
         ...user,
       },
       select: {
-        password: false,
+        id: true,
+        email: true,
+        name: true,
+        refreshToken: true,
+        role: true,
       },
     })
   }
@@ -41,6 +45,11 @@ export class UserService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: hashedRT },
+      select: {
+        email: true,
+        name: true,
+        role: true,
+      },
     })
   }
 
