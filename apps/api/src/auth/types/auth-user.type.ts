@@ -1,5 +1,5 @@
-import type { JwtPayload, AuthUser, AuthResponse, TokenPair } from '@repo/schemas'
-export type { JwtPayload, AuthUser, AuthResponse, TokenPair }
+import type { JwtPayload, AuthUser } from '@repo/schemas'
+export type { JwtPayload, AuthUser }
 export interface AuthenticatedRequest extends Request {
   user: AuthUser
 }

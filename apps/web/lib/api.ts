@@ -1,7 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/auth.store'
-import type { AuthResponse } from '@repo/schemas'
-import { AuthResponseSchema } from '@repo/schemas'
+import { type RefreshResponse, RefreshResponseSchema } from '@repo/schemas'
 
 export interface ApiError {
   message: string
@@ -66,14 +65,14 @@ apiClient.interceptors.response.use(
     }
 
     try {
-      const { data } = await axios.post<AuthResponse>(
+      const { data } = await axios.post<RefreshResponse>(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
         {},
         { headers: { Authorization: `Bearer ${user?.refreshToken}` } },
       )
 
       // Validate response with Zod
-      const validatedData = AuthResponseSchema.parse(data)
+      const validatedData = RefreshResponseSchema.parse(data)
 
       updateTokens(validatedData.accessToken, validatedData.refreshToken)
       originalRequest.headers!.Authorization = `Bearer ${validatedData.accessToken}`
