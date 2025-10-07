@@ -3,10 +3,11 @@ import { useAuthStore } from '@/store/auth.store'
 import { type RefreshResponse, RefreshResponseSchema } from '@repo/schemas'
 
 export interface ApiError {
-  message: string
   statusCode: number
+  message: string
   error?: string
   errors?: Array<{
+    // for zod validation errors problably wont be used
     message: string
   }>
 }
@@ -71,7 +72,7 @@ apiClient.interceptors.response.use(
         { headers: { Authorization: `Bearer ${user?.refreshToken}` } },
       )
 
-      // Validate response with Zod
+      //validate response with Zod
       const validatedData = RefreshResponseSchema.parse(data)
 
       updateTokens(validatedData.accessToken, validatedData.refreshToken)
