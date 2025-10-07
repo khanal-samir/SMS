@@ -1,13 +1,13 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/auth.store'
-import { type RefreshResponse, RefreshResponseSchema } from '@repo/schemas'
+import { RefreshResponseSchema } from '@repo/schemas'
+import { authApi } from '@/api/auth.api'
 
 export interface ApiError {
   statusCode: number
   message: string
   error?: string
   errors?: Array<{
-    // for zod validation errors problably wont be used
     message: string
   }>
 }
@@ -24,7 +24,6 @@ let failedQueue: Array<{
   reject: (error: Error) => void
 }> = []
 
-//add access token to request headers
 apiClient.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState()
   if (accessToken) {
@@ -53,11 +52,11 @@ apiClient.interceptors.response.use(
       })
     }
 
-    originalRequest._retry = true // tell axios to retry the request
-    isRefreshing = true // tell other requests to queue
-    const { user, updateTokens, logout } = useAuthStore.getState()
+    originalRequest._retry = true
+    isRefreshing = true
 
-    //if no refresh token then logout and reject the request
+    //store
+    const { user, updateTokens, logout } = useAuthStore.getState()
     if (!user?.refreshToken) {
       logout()
       failedQueue.forEach((p) => p.reject(new Error('No refresh token')))
@@ -66,13 +65,7 @@ apiClient.interceptors.response.use(
     }
 
     try {
-      const { data } = await axios.post<RefreshResponse>(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
-        {},
-        { headers: { Authorization: `Bearer ${user?.refreshToken}` } },
-      )
-
-      //validate response with Zod
+      const data = await authApi.refresh(user.refreshToken)
       const validatedData = RefreshResponseSchema.parse(data)
 
       updateTokens(validatedData.accessToken, validatedData.refreshToken)
