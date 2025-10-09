@@ -6,12 +6,14 @@ import { ZodValidationPipe } from 'nestjs-zod'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
-
   const configService = app.get<ConfigService>(ConfigService)
+  app.enableCors({
+    origin: configService.get('PUBLIC_WEB_URL'),
+    credentials: true,
+  })
 
   // Use Zod validation pipe globally for automatic validation
   app.useGlobalPipes(new ZodValidationPipe())
-
   app.setGlobalPrefix('v1')
 
   const port = configService.get<number>('BE_PORT') ?? 7000
