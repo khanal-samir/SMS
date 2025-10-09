@@ -39,6 +39,7 @@ export class AuthService {
       email: user.email,
       name: user.name,
       role: user.role,
+      provider: user.provider,
     }
   }
 
@@ -46,6 +47,14 @@ export class AuthService {
   async validateLocalUser(email: string, password: string): Promise<AuthUser> {
     const user = await this.userService.findByEmail(email)
     if (!user) throw new UnauthorizedException('User not found!')
+
+    // Check if user signed up with OAuth (Google)
+    if (!user.password) {
+      throw new UnauthorizedException(
+        'This account was created using Google Sign-In. Please login with Google.',
+      )
+    }
+
     const isPasswordMatched = await this.userService.comparePasswordOrToken(password, user.password)
     if (!isPasswordMatched) throw new UnauthorizedException('Invalid Credentials!')
     return { id: user.id, role: user.role }
@@ -97,8 +106,12 @@ export class AuthService {
   // Google OAuth validation
   async validateGoogleUser(googleUser: CreateUserDto) {
     const user = await this.userService.findByEmail(googleUser.email)
-    if (user) return user
-    return await this.userService.create(googleUser)
+    if (user) {
+      this.logger.log(`Existing user found for Google login: ${user.email}`)
+      return user
+    }
+    this.logger.log(`Creating new user for Google OAuth: ${googleUser.email}`)
+    return await this.userService.createOAuthUser(googleUser)
   }
   async signOut(userId: string) {
     return await this.userService.updateHashedRefreshToken(userId, null)

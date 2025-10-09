@@ -10,10 +10,14 @@ import { GoogleAuthGuard } from './guards/google/oauth/oauth.guard'
 import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
 import { RolesGuard } from './guards/roles/roles.guard'
 import { Roles } from './decorators/roles.decorator'
+import { ConfigService } from '@nestjs/config'
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
   @Public()
   @Post('register')
   registerUser(@Body() createUserDto: CreateUserDto) {
@@ -43,13 +47,14 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Request() req: AuthenticatedRequest, @Res() res: Response) {
-    console.log('Google User', req.user)
-    const response = await this.authService.login(req.user.id)
-    console.log('Response', response, res)
-
-    // res.redirect(
-    //   `http://localhost:3000/api/auth/google/callback?userId=${response.id}&accessToken=${response.accessToken}&refreshToken=${response.refreshToken}`,
-    // )
+    const frontendUrl = this.configService.get('PUBLIC_WEB_URL')
+    try {
+      const response = await this.authService.login(req.user.id)
+      const callbackUrl = `${frontendUrl}/auth/google/callback?accessToken=${response.accessToken}&refreshToken=${response.refreshToken}&userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}`
+      res.redirect(callbackUrl)
+    } catch {
+      res.redirect(`${frontendUrl}/auth/google/callback?error=Authentication failed`)
+    }
   }
 
   //bottom up approach first route then jwt guard then roles guard

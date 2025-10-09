@@ -23,7 +23,7 @@ export const useRegister = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Registration successful!')
-      router.push('/dashboard')
+      router.push('/login')
     },
     onError: (error: AxiosError<ApiError>) => {
       setError(error)
@@ -89,4 +89,16 @@ export const useLogout = () => {
       setLoading(false)
     },
   })
+}
+
+export const useGoogleAuth = () => {
+  const { setLoading } = useAuthStore()
+
+  const initiateGoogleLogin = () => {
+    setLoading(true)
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL
+    window.location.href = `${apiUrl}auth/google/login`
+  }
+
+  return { initiateGoogleLogin }
 }

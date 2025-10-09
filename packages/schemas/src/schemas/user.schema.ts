@@ -3,14 +3,18 @@ import { z } from 'zod'
 export const RoleEnum = z.enum(['ADMIN', 'TEACHER', 'STUDENT'])
 export type Role = z.infer<typeof RoleEnum>
 
+export const ProviderEnum = z.enum(['LOCAL', 'GOOGLE'])
+export type Provider = z.infer<typeof ProviderEnum>
+
 //for db
 export const UserSchema = z.object({
   id: z.cuid(),
   email: z.email(),
   name: z.string().min(1),
-  password: z.string(),
+  password: z.string().nullable(),
   refreshToken: z.string().nullable(),
   role: RoleEnum,
+  provider: ProviderEnum,
 })
 export type User = z.infer<typeof UserSchema>
 

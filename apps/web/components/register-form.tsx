@@ -17,11 +17,12 @@ import { FieldSeparator } from '@/components/ui/field'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CreateUserSchema, type CreateUserDto } from '@repo/schemas'
-import { useRegister } from '@/hooks/useAuth'
+import { useRegister, useGoogleAuth } from '@/hooks/useAuth'
 import Link from 'next/link'
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
   const { mutate: register, isPending } = useRegister()
+  const { initiateGoogleLogin } = useGoogleAuth()
 
   const form = useForm<CreateUserDto>({
     resolver: zodResolver(CreateUserSchema),
@@ -35,11 +36,6 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
 
   const onSubmit = (data: CreateUserDto) => {
     register(data)
-  }
-
-  const handleGoogleSignup = () => {
-    // Redirect to Google OAuth
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/login`
   }
 
   return (
@@ -56,7 +52,7 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
                 variant="outline"
                 type="button"
                 className="w-full"
-                onClick={handleGoogleSignup}
+                onClick={initiateGoogleLogin}
                 disabled={isPending}
               >
                 <svg
