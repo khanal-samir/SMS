@@ -13,6 +13,16 @@ export const authApi = {
     return data
   },
 
+  teacherRegister: async (userData: CreateUserDto): Promise<AuthResponse> => {
+    const { data } = await apiClient.post('/auth/teacher/register', userData)
+    return data
+  },
+
+  teacherLogin: async (credentials: LoginDto): Promise<AuthResponse> => {
+    const { data } = await apiClient.post('/auth/teacher/login', credentials)
+    return data
+  },
+
   refresh: async (refreshToken: string): Promise<RefreshResponse> => {
     const { data } = await apiClient.post('/auth/refresh', { refreshToken })
     return data

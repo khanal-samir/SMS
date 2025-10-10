@@ -1,4 +1,13 @@
-import { Body, Controller, Post, UseGuards, Request, Get, Res } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Post,
+  UseGuards,
+  Request,
+  Get,
+  Res,
+  ForbiddenException,
+} from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
 import { CreateUserDto } from 'src/user/dto/create-user.dto'
@@ -25,9 +34,26 @@ export class AuthController {
   }
 
   @Public()
+  @Post('teacher/register')
+  registerTeacher(@Body() createUserDto: CreateUserDto) {
+    return this.authService.registerUser({
+      ...createUserDto,
+      role: 'TEACHER',
+    } as CreateUserDto)
+  }
+
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req: AuthenticatedRequest) {
+    return this.authService.login(req.user.id)
+  }
+
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('teacher/login')
+  loginTeacher(@Request() req: AuthenticatedRequest) {
+    if (req.user.role !== 'TEACHER') throw new ForbiddenException('Only teachers can login here')
     return this.authService.login(req.user.id)
   }
 

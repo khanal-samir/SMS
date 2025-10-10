@@ -102,3 +102,55 @@ export const useGoogleAuth = () => {
 
   return { initiateGoogleLogin }
 }
+
+export const useTeacherRegister = () => {
+  const { setLoading } = useAuthStore()
+  const { setError } = useErrorStore()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (userData: CreateUserDto) =>
+      authApi.teacherRegister({ ...userData, role: 'TEACHER' }),
+    onMutate: () => {
+      setLoading(true)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
+      toast.success('Teacher registration successful!')
+      router.push('/teacher/login')
+    },
+    onError: (error: AxiosError<ApiError>) => {
+      setError(error)
+    },
+    onSettled: () => {
+      setLoading(false)
+    },
+  })
+}
+
+export const useTeacherLogin = () => {
+  const { login: loginStore, setLoading } = useAuthStore()
+  const { setError } = useErrorStore()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (credentials: LoginDto) => authApi.teacherLogin(credentials),
+    onMutate: () => {
+      setLoading(true)
+    },
+    onSuccess: (data) => {
+      loginStore(data, data.accessToken!)
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
+      toast.success('Teacher login successful!')
+      router.push('/teacher/dashboard')
+    },
+    onError: (error: AxiosError<ApiError>) => {
+      setError(error)
+    },
+    onSettled: () => {
+      setLoading(false)
+    },
+  })
+}
