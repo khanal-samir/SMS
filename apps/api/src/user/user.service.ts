@@ -53,7 +53,6 @@ export class UserService {
     this.logger.log(`Finding user by email`)
     return await this.prisma.user.findUnique({
       where: { email },
-      omit: { password: true },
     })
   }
 
