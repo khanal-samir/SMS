@@ -28,6 +28,11 @@ export const authApi = {
     return data
   },
 
+  getCurrentUser: async (): Promise<AuthResponse> => {
+    const { data } = await apiClient.get('/auth/me')
+    return data
+  },
+
   logout: async (): Promise<void> => {
     await apiClient.post('/auth/logout')
   },

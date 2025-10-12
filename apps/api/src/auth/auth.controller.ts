@@ -83,6 +83,11 @@ export class AuthController {
     }
   }
 
+  @Get('me')
+  getCurrentUser(@Request() req: AuthenticatedRequest) {
+    return this.authService.getCurrentUser(req.user.id)
+  }
+
   //bottom up approach first route then jwt guard then roles guard
   @Roles('ADMIN', 'STUDENT', 'TEACHER')
   @UseGuards(RolesGuard)

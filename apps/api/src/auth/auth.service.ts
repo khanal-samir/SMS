@@ -113,6 +113,21 @@ export class AuthService {
     this.logger.log(`Creating new user for Google OAuth: ${googleUser.email}`)
     return await this.userService.createOAuthUser(googleUser)
   }
+
+  async getCurrentUser(userId: string) {
+    const user = await this.userService.findOne(userId)
+    if (!user) throw new UnauthorizedException('User not found!')
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      provider: user.provider,
+      refreshToken: user.refreshToken,
+    }
+  }
+
   async signOut(userId: string) {
     return await this.userService.updateHashedRefreshToken(userId, null)
   }
