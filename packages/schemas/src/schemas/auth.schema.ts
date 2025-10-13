@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { RoleEnum, PublicUserSchema } from './user.schema'
+import { RoleEnum, User, UserSchema } from './user.schema'
 
 //strategy
 export const JwtPayloadSchema = z.object({
@@ -22,7 +22,7 @@ export const RefreshResponseSchema = z.object({
 })
 export type RefreshResponse = z.infer<typeof RefreshResponseSchema>
 
-export const AuthResponseSchema = PublicUserSchema.extend({
+export const AuthResponseSchema = UserSchema.extend({
   accessToken: z.string().optional(),
-})
+}).omit({ password: true })
 export type AuthResponse = z.infer<typeof AuthResponseSchema>

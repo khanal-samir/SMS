@@ -1,5 +1,5 @@
 import { zustandStore } from './zustand.store'
-import type { PublicUser as User } from '@repo/schemas'
+import type { AuthResponse as User } from '@repo/schemas'
 
 export interface AuthState {
   user: User | null
@@ -64,8 +64,8 @@ export const useAuthStore = zustandStore<AuthState>(
     persistOptions: {
       name: 'auth-storage',
       partialize: (state) => ({
-        //dont store access token in local storage
-        user: state.user,
+        userId: state.user?.id,
+        role: state.user?.role,
         isAuthenticated: state.isAuthenticated,
       }),
     },

@@ -18,12 +18,6 @@ export const UserSchema = z.object({
 })
 export type User = z.infer<typeof UserSchema>
 
-//for auth response
-export const PublicUserSchema = UserSchema.omit({
-  password: true,
-})
-export type PublicUser = z.infer<typeof PublicUserSchema>
-
 //dto
 export const CreateUserSchema = z.object({
   name: z.string().min(1, 'Name is required'),
