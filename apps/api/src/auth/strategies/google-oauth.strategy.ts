@@ -4,6 +4,7 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth20'
 import googleOauthConfig from '../config/google-oauth.config'
 import type { ConfigType } from '@nestjs/config'
 import { AuthService } from '../auth.service'
+import { Role } from '@prisma/client'
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -24,11 +25,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     const user = await this.authService.validateGoogleUser({
       email: profile.emails[0].value,
       name: profile.displayName,
-      password: '',
+      password: '', // Will be ignored for OAuth users
+      role: Role.STUDENT,
     })
 
     done(null, user)
-    // return user
-    // request.user
   }
 }

@@ -1,15 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
-export class CreateUserDto {
-  @IsString()
-  @IsNotEmpty()
-  name: string
+import { CreateUserSchema } from '@repo/schemas'
+import { createZodDto } from 'nestjs-zod'
 
-  @IsString()
-  @IsEmail()
-  @IsNotEmpty()
-  email: string
-
-  @IsString()
-  @IsNotEmpty()
-  password: string
-}
+export class CreateUserDto extends createZodDto(CreateUserSchema) {}

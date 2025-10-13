@@ -1,14 +1,5 @@
-import { Role } from '@prisma/client'
-
-export interface JwtPayload {
-  sub: string
-}
-
-export interface AuthUser {
-  id: string
-  role: Role
-}
-
+import type { JwtPayload, AuthUser } from '@repo/schemas'
+export type { JwtPayload, AuthUser }
 export interface AuthenticatedRequest extends Request {
   user: AuthUser
 }

@@ -14,7 +14,37 @@ export class UserService {
     return await this.prisma.user.create({
       data: {
         password: hashedPassword,
+        provider: 'LOCAL',
         ...user,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        refreshToken: true,
+        role: true,
+        provider: true,
+      },
+    })
+  }
+
+  async createOAuthUser(createUserDto: CreateUserDto) {
+    this.logger.log(`Creating OAuth user`)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = createUserDto
+    return await this.prisma.user.create({
+      data: {
+        password: null,
+        provider: 'GOOGLE',
+        ...user,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        refreshToken: true,
+        role: true,
+        provider: true,
       },
     })
   }
@@ -38,6 +68,12 @@ export class UserService {
     return await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: hashedRT },
+      select: {
+        email: true,
+        name: true,
+        role: true,
+        provider: true,
+      },
     })
   }
 
