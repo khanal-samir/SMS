@@ -46,6 +46,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Request() req: AuthenticatedRequest) {
+    if (req.user.role !== 'STUDENT') throw new ForbiddenException('Only Students can login here')
     return this.authService.login(req.user.id)
   }
 
