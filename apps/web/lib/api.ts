@@ -37,6 +37,11 @@ apiClient.interceptors.response.use(
   async (error: AxiosError<ApiError>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
+    const isAuthRoute = originalRequest?.url?.includes('/auth')
+    if (isAuthRoute) {
+      return Promise.reject(error) // prevents refresh token loop
+    }
+
     //if request is not original request or status is not 401 or retry is true then exit
     if (!originalRequest || error.response?.status !== 401 || originalRequest._retry) {
       return Promise.reject(error)

@@ -1,17 +1,13 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/api/auth.api'
 import { useAuthStore } from '@/store/auth.store'
-import { useErrorStore } from '@/store/error.store'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import type { CreateUserDto, LoginDto } from '@repo/schemas'
-import type { AxiosError } from 'axios'
-import type { ApiError } from '@/lib/api'
 import { toast } from 'sonner'
 
 export const useRegister = () => {
   const { setLoading } = useAuthStore()
-  const { setError } = useErrorStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -25,9 +21,6 @@ export const useRegister = () => {
       toast.success('Registration successful!')
       router.push('/login')
     },
-    onError: (error: AxiosError<ApiError>) => {
-      setError(error)
-    },
     onSettled: () => {
       setLoading(false)
     },
@@ -36,7 +29,6 @@ export const useRegister = () => {
 
 export const useLogin = () => {
   const { login: loginStore, setLoading } = useAuthStore()
-  const { setError } = useErrorStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -52,9 +44,6 @@ export const useLogin = () => {
       toast.success('Login successful!')
       router.push('/dashboard')
     },
-    onError: (error: AxiosError<ApiError>) => {
-      setError(error)
-    },
     onSettled: () => {
       setLoading(false)
     },
@@ -63,7 +52,6 @@ export const useLogin = () => {
 
 export const useLogout = () => {
   const { logout, setLoading } = useAuthStore()
-  const { setError } = useErrorStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -77,13 +65,6 @@ export const useLogout = () => {
       queryClient.clear()
       toast.success('Logged out successfully')
       router.push('/login')
-    },
-    onError: (error: AxiosError<ApiError>) => {
-      // Even if API fails, logout locally
-      logout()
-      queryClient.clear()
-      router.push('/login')
-      setError(error)
     },
     onSettled: () => {
       setLoading(false)
@@ -105,7 +86,6 @@ export const useGoogleAuth = () => {
 
 export const useTeacherRegister = () => {
   const { setLoading } = useAuthStore()
-  const { setError } = useErrorStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -120,9 +100,6 @@ export const useTeacherRegister = () => {
       toast.success('Teacher registration successful!')
       router.push('/teacher/login')
     },
-    onError: (error: AxiosError<ApiError>) => {
-      setError(error)
-    },
     onSettled: () => {
       setLoading(false)
     },
@@ -131,7 +108,6 @@ export const useTeacherRegister = () => {
 
 export const useTeacherLogin = () => {
   const { login: loginStore, setLoading } = useAuthStore()
-  const { setError } = useErrorStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -146,11 +122,21 @@ export const useTeacherLogin = () => {
       toast.success('Teacher login successful!')
       router.push('/teacher/dashboard')
     },
-    onError: (error: AxiosError<ApiError>) => {
-      setError(error)
-    },
     onSettled: () => {
       setLoading(false)
     },
+  })
+}
+
+export const useGetCurrentUser = () => {
+  const { setUser, isAuthenticated, accessToken } = useAuthStore()
+  return useQuery({
+    queryKey: [QUERY_KEYS.USER],
+    queryFn: async () => {
+      const data = await authApi.getCurrentUser()
+      setUser(data)
+      return data
+    },
+    enabled: isAuthenticated && !!accessToken,
   })
 }
