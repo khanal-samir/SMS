@@ -1,4 +1,5 @@
 import { zustandStore } from './zustand.store'
+import { setSessionCookie, removeSessionCookie, updateSessionCookie } from '@/lib/session'
 import type { AuthResponse as User } from '@repo/schemas'
 
 export interface AuthState {
@@ -29,6 +30,7 @@ export const useAuthStore = zustandStore<AuthState>(
         isAuthenticated: true,
         isLoading: false,
       })
+      setSessionCookie({ userId: user.id, role: user.role, isAuthenticated: true })
     },
 
     logout: () => {
@@ -38,18 +40,25 @@ export const useAuthStore = zustandStore<AuthState>(
         isAuthenticated: false,
         isLoading: false,
       })
+      removeSessionCookie()
     },
 
     updateTokens: (accessToken, refreshToken) => {
-      set((state) => ({
-        accessToken,
-        user: state.user
+      set((state) => {
+        const newUser = state.user
           ? {
               ...state.user,
               refreshToken,
             }
-          : null,
-      }))
+          : null
+        if (newUser) {
+          updateSessionCookie({ userId: newUser.id, role: newUser.role, isAuthenticated: true })
+        }
+        return {
+          accessToken,
+          user: newUser,
+        }
+      })
     },
 
     setLoading: (loading) => {
