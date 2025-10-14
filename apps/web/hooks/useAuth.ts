@@ -42,7 +42,7 @@ export const useLogin = () => {
 
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Login successful!')
-      router.push('/dashboard')
+      router.push('/student/dashboard')
     },
     onSettled: () => {
       setLoading(false)
