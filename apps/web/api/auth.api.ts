@@ -1,6 +1,6 @@
 import apiClient from '@/lib/api'
 import { CreateUserDto, LoginDto } from '@repo/schemas'
-import type { AuthResponse, RefreshResponse } from '@repo/schemas'
+import type { AuthResponse } from '@repo/schemas'
 
 export const authApi = {
   register: async (userData: CreateUserDto): Promise<AuthResponse> => {
@@ -23,9 +23,8 @@ export const authApi = {
     return data
   },
 
-  refresh: async (refreshToken: string): Promise<RefreshResponse> => {
-    const { data } = await apiClient.post('/auth/refresh', { refreshToken })
-    return data
+  refresh: async (): Promise<void> => {
+    await apiClient.post('/auth/refresh')
   },
 
   getCurrentUser: async (): Promise<AuthResponse> => {
