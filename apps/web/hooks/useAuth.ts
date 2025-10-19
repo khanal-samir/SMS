@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/api/auth.api'
 import { useAuthStore } from '@/store/auth.store'
@@ -9,7 +9,6 @@ import { toast } from 'sonner'
 export const useRegister = () => {
   const { setLoading } = useAuthStore()
   const router = useRouter()
-  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (userData: CreateUserDto) => authApi.register(userData),
@@ -17,7 +16,6 @@ export const useRegister = () => {
       setLoading(true)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Registration successful!')
       router.push('/login')
     },
@@ -28,7 +26,7 @@ export const useRegister = () => {
 }
 
 export const useLogin = () => {
-  const { login: loginStore, setLoading } = useAuthStore()
+  const { setUser, setLoading } = useAuthStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -38,8 +36,7 @@ export const useLogin = () => {
       setLoading(true)
     },
     onSuccess: (data) => {
-      loginStore(data, data.accessToken!)
-
+      setUser(data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Login successful!')
       router.push('/student/dashboard')
@@ -51,7 +48,7 @@ export const useLogin = () => {
 }
 
 export const useLogout = () => {
-  const { logout, setLoading } = useAuthStore()
+  const { clearUser, setLoading } = useAuthStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -61,7 +58,7 @@ export const useLogout = () => {
       setLoading(true)
     },
     onSuccess: () => {
-      logout()
+      clearUser()
       queryClient.clear()
       toast.success('Logged out successfully')
       router.push('/login')
@@ -87,7 +84,6 @@ export const useGoogleAuth = () => {
 export const useTeacherRegister = () => {
   const { setLoading } = useAuthStore()
   const router = useRouter()
-  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: (userData: CreateUserDto) =>
@@ -96,7 +92,6 @@ export const useTeacherRegister = () => {
       setLoading(true)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Teacher registration successful!')
       router.push('/teacher/login')
     },
@@ -107,7 +102,7 @@ export const useTeacherRegister = () => {
 }
 
 export const useTeacherLogin = () => {
-  const { login: loginStore, setLoading } = useAuthStore()
+  const { setUser, setLoading } = useAuthStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -117,7 +112,7 @@ export const useTeacherLogin = () => {
       setLoading(true)
     },
     onSuccess: (data) => {
-      loginStore(data, data.accessToken!)
+      setUser(data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Teacher login successful!')
       router.push('/teacher/dashboard')
@@ -125,18 +120,5 @@ export const useTeacherLogin = () => {
     onSettled: () => {
       setLoading(false)
     },
-  })
-}
-
-export const useGetCurrentUser = () => {
-  const { setUser, isAuthenticated, accessToken } = useAuthStore()
-  return useQuery({
-    queryKey: [QUERY_KEYS.USER],
-    queryFn: async () => {
-      const data = await authApi.getCurrentUser()
-      setUser(data)
-      return data
-    },
-    enabled: isAuthenticated && !!accessToken,
   })
 }

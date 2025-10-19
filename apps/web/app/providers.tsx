@@ -7,6 +7,7 @@ import { useError } from '@/hooks/useError'
 import { useErrorStore } from '@/store/error.store'
 import type { AxiosError } from 'axios'
 import type { ApiError } from '@/lib/api'
+import { AuthInitializer } from '@/components/auth-initializer'
 
 function ErrorProvider({ children }: { children: React.ReactNode }) {
   useError()
@@ -43,6 +44,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorProvider>
+        <AuthInitializer />
         {children}
         <Toaster position="top-right" richColors closeButton />
         <ReactQueryDevtools initialIsOpen={false} />

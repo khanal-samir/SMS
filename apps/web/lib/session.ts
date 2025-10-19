@@ -5,13 +5,18 @@ export const COOKIE_NAMES = {
 } as const
 
 export interface SessionCookie {
-  userId: string
   role: Role
   isAuthenticated: boolean
+  expiresAt: number
 }
 
-export function setSessionCookie(data: SessionCookie): void {
-  Cookies.set(COOKIE_NAMES.SESSION, JSON.stringify(data), {
+export function setSessionCookie(data: Omit<SessionCookie, 'expiresAt'>): void {
+  const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+  const sessionData: SessionCookie = {
+    ...data,
+    expiresAt,
+  }
+  Cookies.set(COOKIE_NAMES.SESSION, JSON.stringify(sessionData), {
     expires: 7,
     sameSite: 'lax',
     path: '/',
@@ -26,8 +31,17 @@ export function getSessionCookie(): SessionCookie | null {
   const cookieValue = Cookies.get(COOKIE_NAMES.SESSION)
   if (!cookieValue) return null
   try {
-    return JSON.parse(cookieValue)
+    const session = JSON.parse(cookieValue) as SessionCookie
+
+    // Check if session has expired
+    if (session.expiresAt && Date.now() > session.expiresAt) {
+      removeSessionCookie()
+      return null
+    }
+
+    return session
   } catch {
+    removeSessionCookie()
     return null
   }
 }

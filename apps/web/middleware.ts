@@ -50,15 +50,37 @@ function findRouteConfig(pathname: string): RouteConfig | undefined {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  const sessionCookie = request.cookies.get('user-session')
+  const sessionCookie = request.cookies.get('user-session') //client-side
+  const accessToken = request.cookies.get('accessToken')
+  const refreshToken = request.cookies.get('refreshToken')
+
+  const hasBackendAuth = !!accessToken || !!refreshToken
+
   let session: SessionCookie | null = null
 
   if (sessionCookie?.value) {
-    session = JSON.parse(sessionCookie.value)
+    try {
+      session = JSON.parse(sessionCookie.value) as SessionCookie
+
+      if (session.expiresAt && Date.now() > session.expiresAt) {
+        session = null
+      }
+    } catch {
+      session = null
+    }
   }
 
-  const isAuthenticated = session?.isAuthenticated ?? false
+  const isAuthenticated = session?.isAuthenticated && hasBackendAuth
   const userRole = session?.role
+
+  // If session cookie exists but no backend tokens, clear it and redirect
+  if (session?.isAuthenticated && !hasBackendAuth) {
+    const loginUrl = new URL('/login', request.url)
+    loginUrl.searchParams.set('from', pathname)
+    const response = NextResponse.redirect(loginUrl)
+    response.cookies.delete('user-session')
+    return response
+  }
 
   const routeConfig = findRouteConfig(pathname)
 
