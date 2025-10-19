@@ -3,10 +3,14 @@ import { AppModule } from './app/app.module'
 import { ConfigService } from '@nestjs/config'
 import { Logger } from '@nestjs/common'
 import { ZodValidationPipe } from 'nestjs-zod'
+import cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService>(ConfigService)
+
+  app.use(cookieParser())
+
   app.enableCors({
     origin: configService.get('PUBLIC_WEB_URL'),
     credentials: true,

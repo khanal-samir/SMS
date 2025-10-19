@@ -6,11 +6,14 @@ import { useAuthStore } from '@/store/auth.store'
 import { toast } from 'sonner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Provider, Role } from '@repo/schemas'
+import { useQueryClient } from '@tanstack/react-query'
+import { QUERY_KEYS } from '@/lib/query-keys'
 
 export default function GoogleCallbackPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { login, setLoading } = useAuthStore()
+  const { setUser, setLoading } = useAuthStore()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const handleCallback = () => {
@@ -24,16 +27,14 @@ export default function GoogleCallbackPage() {
         return
       }
 
-      // Get tokens and user data from URL parameters
-      const accessToken = searchParams.get('accessToken')
-      const refreshToken = searchParams.get('refreshToken')
+      // Get user data from URL parameters (cookies already set by backend)
       const userId = searchParams.get('userId')
       const email = searchParams.get('email')
       const name = searchParams.get('name')
       const role = searchParams.get('role')
       const provider = searchParams.get('provider')
 
-      if (!accessToken || !refreshToken || !userId || !email || !name || !role || !provider) {
+      if (!userId || !email || !name || !role || !provider) {
         toast.error('Invalid authentication response')
         setLoading(false)
         router.push('/login')
@@ -46,18 +47,28 @@ export default function GoogleCallbackPage() {
         name: decodeURIComponent(name),
         role: role as Role,
         provider: provider as Provider,
-        refreshToken,
       }
 
-      login(userData, accessToken)
+      setUser(userData)
+      // Invalidate to refetch fresh user data
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Successfully logged in with Google!')
 
       setLoading(false)
-      router.push('/dashboard')
+
+      if (role === 'STUDENT') {
+        router.push('/student/dashboard')
+      } else if (role === 'TEACHER') {
+        router.push('/teacher/dashboard')
+      } else if (role === 'ADMIN') {
+        router.push('/admin/dashboard')
+      } else {
+        router.push('/dashboard')
+      }
     }
 
     handleCallback()
-  }, [searchParams, router, login, setLoading])
+  }, [searchParams, router, setUser, setLoading, queryClient])
 
   return (
     <div className="flex min-h-screen items-center justify-center">
