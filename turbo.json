@@ -8,6 +8,7 @@
       "outputs": [".next/**", "!.next/cache/**"],
       "env": [
         "DATABASE_URL",
+        "BE_PORT",
         "NODE_ENV",
         "JWT_SECRET",
         "JWT_EXPIRES_IN",
