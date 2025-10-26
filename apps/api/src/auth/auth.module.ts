@@ -14,14 +14,17 @@ import { GoogleStrategy } from './strategies/google-oauth.strategy'
 import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
 import { APP_GUARD } from '@nestjs/core/constants'
 import { RolesGuard } from './guards/roles/roles.guard'
+import { MailModule } from 'src/common/mail/mail.module'
 
 @Module({
   imports: [
     UserModule,
+    MailModule,
+    //jwt service instance is created used to sign/verify in service
     JwtModule.registerAsync(jwtConfig.asProvider()), // access token is default here so no injection but for refresh token injection is needed
-    ConfigModule.forFeature(jwtConfig), //makes it injectable in services
-    ConfigModule.forFeature(refreshConfig), // register refresh token config so it can be injected
-    ConfigModule.forFeature(googleOauthConfig), // register google oauth config so it can be injected
+    ConfigModule.forFeature(jwtConfig), //optional
+    ConfigModule.forFeature(refreshConfig),
+    ConfigModule.forFeature(googleOauthConfig),
   ],
   controllers: [AuthController],
   providers: [

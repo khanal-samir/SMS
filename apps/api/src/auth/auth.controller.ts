@@ -7,6 +7,7 @@ import {
   Get,
   Res,
   ForbiddenException,
+  Query,
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
@@ -107,6 +108,7 @@ export class AuthController {
       name: result.name,
       role: result.role,
       provider: result.provider,
+      isEmailVerified: result.isEmailVerified,
     }
   }
 
@@ -126,6 +128,7 @@ export class AuthController {
       name: result.name,
       role: result.role,
       provider: result.provider,
+      isEmailVerified: result.isEmailVerified,
     }
   }
 
@@ -175,5 +178,17 @@ export class AuthController {
     await this.authService.signOut(req.user.id)
     this.clearAuthCookies(res)
     return { message: 'Logged out successfully' }
+  }
+
+  @Public()
+  @Get('verify-email')
+  async verifyEmail(@Query('otp') otpCode: string) {
+    return this.authService.verifyEmail(otpCode)
+  }
+
+  @Public()
+  @Post('resend-verification')
+  async resendVerification(@Body('email') email: string) {
+    return this.authService.resendVerificationEmail(email)
   }
 }

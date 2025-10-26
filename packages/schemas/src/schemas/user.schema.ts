@@ -15,6 +15,9 @@ export const UserSchema = z.object({
   refreshToken: z.string().nullable(),
   role: RoleEnum,
   provider: ProviderEnum,
+  isEmailVerified: z.boolean(),
+  otpCode: z.string().nullable(),
+  otpExpiry: z.date().nullable(),
 })
 export type User = z.infer<typeof UserSchema>
 

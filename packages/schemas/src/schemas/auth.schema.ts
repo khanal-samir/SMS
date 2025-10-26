@@ -22,7 +22,10 @@ export const RefreshResponseSchema = z.object({
 })
 export type RefreshResponse = z.infer<typeof RefreshResponseSchema>
 
-export const AuthResponseSchema = UserSchema.extend({
-  accessToken: z.string().optional(),
-}).omit({ password: true, refreshToken: true })
+export const AuthResponseSchema = UserSchema.omit({
+  password: true,
+  refreshToken: true,
+  otpCode: true,
+  otpExpiry: true,
+})
 export type AuthResponse = z.infer<typeof AuthResponseSchema>

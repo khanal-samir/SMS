@@ -35,4 +35,14 @@ export const authApi = {
   logout: async (): Promise<void> => {
     await apiClient.post('/auth/logout')
   },
+
+  verifyEmail: async (token: string): Promise<void> => {
+    const { data } = await apiClient.get(`/auth/verify-email?token=${token}`)
+    return data
+  },
+
+  resendVerification: async (email: string): Promise<void> => {
+    const { data } = await apiClient.post('/auth/resend-verification', { email })
+    return data
+  },
 }
