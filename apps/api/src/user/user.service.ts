@@ -141,4 +141,39 @@ export class UserService {
       },
     })
   }
+
+  async updatePasswordResetOtp(userId: string, otpCode: string) {
+    this.logger.log(`Updating password reset OTP code for user id: ${userId}`)
+    const passwordResetOtpExpiry = new Date(Date.now() + 2 * 60 * 60 * 1000)
+
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        passwordResetOtp: otpCode,
+        passwordResetOtpExpiry,
+      },
+    })
+  }
+
+  async resetPassword(userId: string, newPassword: string) {
+    this.logger.log(`Resetting password for user id: ${userId}`)
+    const hashedPassword = await this.hashPasswordOrToken(newPassword)
+
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedPassword,
+        passwordResetOtp: null,
+        passwordResetOtpExpiry: null,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        provider: true,
+        isEmailVerified: true,
+      },
+    })
+  }
 }

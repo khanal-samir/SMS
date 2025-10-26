@@ -18,6 +18,8 @@ export const UserSchema = z.object({
   isEmailVerified: z.boolean(),
   otpCode: z.string().nullable(),
   otpExpiry: z.date().nullable(),
+  passwordResetOtp: z.string().nullable(),
+  passwordResetOtpExpiry: z.date().nullable(),
 })
 export type User = z.infer<typeof UserSchema>
 

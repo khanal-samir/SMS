@@ -27,5 +27,30 @@ export const AuthResponseSchema = UserSchema.omit({
   refreshToken: true,
   otpCode: true,
   otpExpiry: true,
+  passwordResetOtp: true,
+  passwordResetOtpExpiry: true,
 })
 export type AuthResponse = z.infer<typeof AuthResponseSchema>
+
+export const ForgotPasswordSchema = z.object({
+  email: z.email('Invalid email address'),
+})
+export type ForgotPasswordDto = z.infer<typeof ForgotPasswordSchema>
+
+export const VerifyPasswordResetOtpSchema = z.object({
+  email: z.email('Invalid email address'),
+  otp: z.string().length(6, 'OTP must be 6 digits'),
+})
+export type VerifyPasswordResetOtpDto = z.infer<typeof VerifyPasswordResetOtpSchema>
+
+export const ResetPasswordSchema = z
+  .object({
+    email: z.email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string().min(6, 'Confirm password must be at least 6 characters'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+export type ResetPasswordDto = z.infer<typeof ResetPasswordSchema>

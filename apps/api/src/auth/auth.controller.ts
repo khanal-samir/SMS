@@ -21,6 +21,9 @@ import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
 import { RolesGuard } from './guards/roles/roles.guard'
 import { Roles } from './decorators/roles.decorator'
 import { ConfigService } from '@nestjs/config'
+import { ForgotPasswordDto } from './dto/forgot-password.dto'
+import { VerifyPasswordResetOtpDto } from './dto/verify-password-reset-otp.dto'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -190,5 +193,23 @@ export class AuthController {
   @Post('resend-verification')
   async resendVerification(@Body('email') email: string) {
     return this.authService.resendVerificationEmail(email)
+  }
+
+  @Public()
+  @Post('forgot-password')
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.email as string)
+  }
+
+  @Public()
+  @Post('verify-reset-otp')
+  async verifyResetOtp(@Body() dto: VerifyPasswordResetOtpDto) {
+    return this.authService.verifyPasswordResetOtp(dto.email as string, dto.otp as string)
+  }
+
+  @Public()
+  @Post('reset-password')
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto.email as string, dto.password as string)
   }
 }

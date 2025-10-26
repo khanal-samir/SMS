@@ -6,6 +6,7 @@ import {
   Logger,
   BadRequestException,
   NotFoundException,
+  BadGatewayException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { CreateUserDto } from 'src/user/dto/create-user.dto'
@@ -188,5 +189,52 @@ export class AuthService {
 
     // Send verification email with OTP
     return await this.mailService.sendVerificationEmail(user.email, user.name, otpCode)
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+
+    if (!user.password)
+      throw new BadRequestException(
+        'This account was created using Google Sign-In. Please login with Google.',
+      )
+
+    const otpCode = this.generateOTP()
+    await Promise.all([
+      this.userService.updatePasswordResetOtp(user.id, otpCode),
+      this.mailService.sendPasswordResetOtpEmail(user.email, user.name, otpCode),
+    ]).catch(() => {
+      throw new BadGatewayException('Something went wrong. Please try again')
+    })
+    return
+  }
+
+  async verifyPasswordResetOtp(email: string, otp: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+
+    if (user.passwordResetOtp !== otp) throw new BadRequestException('Invalid OTP code')
+
+    if (user.passwordResetOtpExpiry && new Date() > user.passwordResetOtpExpiry)
+      throw new BadRequestException('OTP has expired. Please request a new OTP.')
+
+    return
+  }
+
+  async resetPassword(email: string, password: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+
+    if (!user.passwordResetOtp) {
+      throw new BadRequestException('Please verify your OTP first before resetting password.')
+    }
+
+    if (user.passwordResetOtpExpiry && new Date() > user.passwordResetOtpExpiry) {
+      throw new BadRequestException('OTP has expired. Please request a new OTP.')
+    }
+
+    const updatedUser = await this.userService.resetPassword(user.id, password)
+    return updatedUser
   }
 }
