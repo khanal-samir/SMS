@@ -2,15 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/auth.store'
 import { authApi } from '@/api/auth.api'
 import { getSessionCookie, setSessionCookie } from '@/lib/session'
-
-export interface ApiError {
-  statusCode: number
-  message: string
-  error?: string
-  errors?: Array<{
-    message: string //Zod error
-  }>
-}
+import type { ApiResponse } from '@repo/schemas'
 
 const apiClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -27,7 +19,7 @@ let failedQueue: Array<{
 
 apiClient.interceptors.response.use(
   (response) => response,
-  async (error: AxiosError<ApiError>) => {
+  async (error: AxiosError<ApiResponse<null>>) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
 
     const url = originalRequest?.url || ''

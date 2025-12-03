@@ -59,14 +59,12 @@ export class AuthController {
     const value = parseInt(time.slice(0, -1))
 
     switch (unit) {
-      case 's':
-        return value * 1000
       case 'm':
         return value * 60 * 1000
-      case 'h':
-        return value * 60 * 60 * 1000
+
       case 'd':
         return value * 24 * 60 * 60 * 1000
+
       default:
         return 15 * 60 * 1000
     }
@@ -81,7 +79,10 @@ export class AuthController {
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
     const user = await this.authService.registerUser(createUserDto)
-    return user
+    return {
+      message: 'Student registered successfully',
+      data: user,
+    }
   }
 
   @Public()
@@ -91,7 +92,10 @@ export class AuthController {
       ...createUserDto,
       role: 'TEACHER',
     } as CreateUserDto)
-    return user
+    return {
+      message: 'Teacher registered successfully',
+      data: user,
+    }
   }
 
   @Public()
@@ -102,11 +106,14 @@ export class AuthController {
     const result = await this.authService.login(req.user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
-      id: result.id,
-      email: result.email,
-      name: result.name,
-      role: result.role,
-      provider: result.provider,
+      message: 'Login successful',
+      data: {
+        id: result.id,
+        email: result.email,
+        name: result.name,
+        role: result.role,
+        provider: result.provider,
+      },
     }
   }
 
@@ -121,11 +128,14 @@ export class AuthController {
     const result = await this.authService.login(req.user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
-      id: result.id,
-      email: result.email,
-      name: result.name,
-      role: result.role,
-      provider: result.provider,
+      message: 'Login successful',
+      data: {
+        id: result.id,
+        email: result.email,
+        name: result.name,
+        role: result.role,
+        provider: result.provider,
+      },
     }
   }
 
@@ -138,7 +148,10 @@ export class AuthController {
   ) {
     const result = await this.authService.refreshToken(req.user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
-    return { id: result.id }
+    return {
+      message: 'Token refreshed',
+      data: { id: result.id },
+    }
   }
 
   @Public()
@@ -163,8 +176,12 @@ export class AuthController {
   }
 
   @Get('me')
-  getCurrentUser(@Request() req: AuthenticatedRequest) {
-    return this.authService.getCurrentUser(req.user.id)
+  async getCurrentUser(@Request() req: AuthenticatedRequest) {
+    const user = await this.authService.getCurrentUser(req.user.id)
+    return {
+      message: 'Current user fetched',
+      data: user,
+    }
   }
 
   @Roles('ADMIN', 'STUDENT', 'TEACHER')
@@ -174,6 +191,9 @@ export class AuthController {
   async signOut(@Request() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
     await this.authService.signOut(req.user.id)
     this.clearAuthCookies(res)
-    return { message: 'Logged out successfully' }
+    return {
+      message: 'Logged out successfully',
+      data: null,
+    }
   }
 }

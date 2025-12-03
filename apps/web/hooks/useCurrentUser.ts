@@ -12,9 +12,12 @@ export const useCurrentUser = () => {
     queryKey: [QUERY_KEYS.USER],
     queryFn: async () => {
       try {
-        const data = await authApi.getCurrentUser()
-        setUser(data)
-        return data
+        const response = await authApi.getCurrentUser()
+        if (!response.data) {
+          throw new Error('Failed to fetch current user')
+        }
+        setUser(response.data)
+        return response.data
       } catch (error) {
         clearUser()
         throw error

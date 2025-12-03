@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import { authApi } from '@/api/auth.api'
 import { useAuthStore } from '@/store/auth.store'
 import { QUERY_KEYS } from '@/lib/query-keys'
-import type { CreateUserDto, LoginDto } from '@repo/schemas'
+import type { ApiResponse, AuthResponse, CreateUserDto, LoginDto } from '@repo/schemas'
 import { toast } from 'sonner'
 
 export const useRegister = () => {
@@ -35,8 +35,9 @@ export const useLogin = () => {
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: (data) => {
-      setUser(data)
+    onSuccess: (response: ApiResponse<AuthResponse>) => {
+      if (!response.data) return
+      setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Login successful!')
       router.push('/student/dashboard')
@@ -111,8 +112,9 @@ export const useTeacherLogin = () => {
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: (data) => {
-      setUser(data)
+    onSuccess: (response: ApiResponse<AuthResponse>) => {
+      if (!response.data) return
+      setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Teacher login successful!')
       router.push('/teacher/dashboard')
