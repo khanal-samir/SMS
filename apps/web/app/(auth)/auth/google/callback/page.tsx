@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/store/auth.store'
 import { toast } from 'sonner'
@@ -9,7 +9,31 @@ import { Provider, Role } from '@repo/schemas'
 import { useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEYS } from '@/lib/query-keys'
 
+function LoadingCard() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <CardTitle>Authenticating...</CardTitle>
+          <CardDescription>Please wait while we log you in with Google</CardDescription>
+        </CardHeader>
+        <CardContent className="flex justify-center py-8">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+
 export default function GoogleCallbackPage() {
+  return (
+    <Suspense fallback={<LoadingCard />}>
+      <GoogleCallbackHandler />
+    </Suspense>
+  )
+}
+
+function GoogleCallbackHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { setUser, setLoading } = useAuthStore()
@@ -70,17 +94,5 @@ export default function GoogleCallbackPage() {
     handleCallback()
   }, [searchParams, router, setUser, setLoading, queryClient])
 
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle>Authenticating...</CardTitle>
-          <CardDescription>Please wait while we log you in with Google</CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center py-8">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        </CardContent>
-      </Card>
-    </div>
-  )
+  return <LoadingCard />
 }

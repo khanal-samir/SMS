@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+ 
+
+permissions:
+  contents: read
+
+env:
+  NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+  PUBLIC_WEB_URL: ${{ secrets.PUBLIC_WEB_URL }}
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  BE_PORT: ${{ secrets.BE_PORT }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+  SALT: ${{ secrets.SALT }}
+  REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+  REFRESH_TOKEN_EXPIRES_IN: ${{ secrets.REFRESH_TOKEN_EXPIRES_IN }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  GOOGLE_REDIRECT_URI: ${{ secrets.GOOGLE_REDIRECT_URI }}
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        run: pnpm --filter @repo/schemas build
+
+      - name: Generate Prisma client
+        run: pnpm --filter api exec prisma generate
+
+      - name: Lint frontend
+        run: pnpm --filter web lint
+
+      - name: Test frontend (optional)
+        run: pnpm --filter web run --if-present test
+
+      - name: Build frontend
+        run: pnpm --filter web build
+
+      - name: Lint backend
+        run: pnpm --filter api lint
+
+      - name: Test backend
+        run: pnpm --filter api test
+
+      - name: Build backend
+        run: pnpm --filter api build
+
