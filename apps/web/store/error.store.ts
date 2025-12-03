@@ -1,13 +1,13 @@
 import { zustandStore } from './zustand.store'
 import type { AxiosError } from 'axios'
-import type { ApiError } from '@/lib/api'
+import type { ApiResponse } from '@repo/schemas'
 
 type ErrorState = {
-  error: AxiosError<ApiError> | null
+  error: AxiosError<ApiResponse<unknown>> | null
 }
 
 type ErrorActions = {
-  setError: (error: AxiosError<ApiError>) => void
+  setError: (error: AxiosError<ApiResponse<unknown>>) => void
   clearError: () => void
 }
 
