@@ -3,10 +3,10 @@ import {
   Controller,
   Post,
   UseGuards,
-  Request,
   Get,
   Res,
   ForbiddenException,
+  Request,
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
@@ -14,12 +14,14 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto'
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard'
 import { Public } from './decorators/public.decorator'
 import type { AuthenticatedRequest } from './types/auth-user.type'
+import type { AuthUser } from '@repo/schemas'
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth/refresh-auth.guard'
 import { GoogleAuthGuard } from './guards/google/oauth/oauth.guard'
 import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
 import { RolesGuard } from './guards/roles/roles.guard'
 import { Roles } from './decorators/roles.decorator'
 import { ConfigService } from '@nestjs/config'
+import { CurrentUser } from './decorators/current-user.decorator'
 
 @Controller('auth')
 export class AuthController {
@@ -78,6 +80,7 @@ export class AuthController {
   @Public()
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
+    console.log('registerUser', createUserDto)
     const user = await this.authService.registerUser(createUserDto)
     return {
       message: 'Student registered successfully',
@@ -101,9 +104,9 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
-    if (req.user.role !== 'STUDENT') throw new ForbiddenException('Only Students can login here')
-    const result = await this.authService.login(req.user.id)
+  async login(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    if (user.role !== 'STUDENT') throw new ForbiddenException('Only Students can login here')
+    const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
       message: 'Login successful',
@@ -120,12 +123,9 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('teacher/login')
-  async loginTeacher(
-    @Request() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    if (req.user.role !== 'TEACHER') throw new ForbiddenException('Only teachers can login here')
-    const result = await this.authService.login(req.user.id)
+  async loginTeacher(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    if (user.role !== 'TEACHER') throw new ForbiddenException('Only teachers can login here')
+    const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
       message: 'Login successful',
@@ -142,11 +142,8 @@ export class AuthController {
   @Public()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  async refreshToken(
-    @Request() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const result = await this.authService.refreshToken(req.user.id)
+  async refreshToken(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.refreshToken(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
       message: 'Token refreshed',
@@ -176,8 +173,8 @@ export class AuthController {
   }
 
   @Get('me')
-  async getCurrentUser(@Request() req: AuthenticatedRequest) {
-    const user = await this.authService.getCurrentUser(req.user.id)
+  async getCurrentUser(@CurrentUser('id') userId: string) {
+    const user = await this.authService.getCurrentUser(userId)
     return {
       message: 'Current user fetched',
       data: user,
@@ -188,8 +185,8 @@ export class AuthController {
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async signOut(@Request() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
-    await this.authService.signOut(req.user.id)
+  async signOut(@CurrentUser('id') userId: string, @Res({ passthrough: true }) res: Response) {
+    await this.authService.signOut(userId)
     this.clearAuthCookies(res)
     return {
       message: 'Logged out successfully',

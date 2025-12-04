@@ -1,12 +1,15 @@
 import { Controller, Get } from '@nestjs/common'
-import { AppService } from './app.service'
-
+import { Public } from 'src/auth/decorators/public.decorator'
+import * as schemas from '@repo/schemas'
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
+  @Public()
   @Get()
-  getHello(): string {
-    return this.appService.getHello()
+  getHello(): Promise<schemas.ApiResponse<null>> {
+    return Promise.resolve({
+      statusCode: 200,
+      message: 'Hello World',
+      data: null,
+    })
   }
 }

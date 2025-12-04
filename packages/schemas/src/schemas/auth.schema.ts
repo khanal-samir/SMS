@@ -13,16 +13,3 @@ export const AuthUserSchema = z.object({
   role: RoleEnum,
 })
 export type AuthUser = z.infer<typeof AuthUserSchema>
-
-// refresh token response
-export const RefreshResponseSchema = z.object({
-  id: z.cuid(),
-  accessToken: z.string(),
-  refreshToken: z.string(),
-})
-export type RefreshResponse = z.infer<typeof RefreshResponseSchema>
-
-export const AuthResponseSchema = UserSchema.extend({
-  accessToken: z.string().optional(),
-}).omit({ password: true, refreshToken: true })
-export type AuthResponse = z.infer<typeof AuthResponseSchema>

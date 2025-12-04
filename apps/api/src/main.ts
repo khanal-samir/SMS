@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app/app.module'
 import { ConfigService } from '@nestjs/config'
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { Logger } from '@nestjs/common'
 import { ZodValidationPipe } from 'nestjs-zod'
 import cookieParser from 'cookie-parser'
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
@@ -20,15 +20,6 @@ async function bootstrap() {
 
   // Use Zod validation pipe globally for automatic validation
   app.useGlobalPipes(new ZodValidationPipe())
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true, // remove unwanted values
-      transform: true, // transform to dto objects
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  )
 
   app.useGlobalInterceptors(new ResponseInterceptor())
   app.useGlobalFilters(new AllExceptionsFilter())

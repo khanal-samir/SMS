@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { hash, verify } from 'argon2'
@@ -50,14 +50,20 @@ export class UserService {
   }
 
   async findByEmail(email: string) {
-    this.logger.log(`Finding user by email`)
+    this.logger.log(`Finding user by email ${email}`)
+
+    if (!email) {
+      this.logger.warn('findByEmail called without a valid email')
+      throw new BadRequestException('Email is required')
+    }
+
     return await this.prisma.user.findUnique({
       where: { email },
     })
   }
 
   async findOne(userId: string) {
-    this.logger.log(`Finding user by id`)
+    this.logger.log(`Finding user by id ${userId}`)
     return await this.prisma.user.findUnique({
       where: { id: userId },
     })

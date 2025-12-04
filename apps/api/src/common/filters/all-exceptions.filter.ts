@@ -4,6 +4,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common'
 import { Response } from 'express'
 import { ZodError } from 'zod'
@@ -11,6 +12,8 @@ import { ApiError, ApiResponse } from '@repo/schemas'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AllExceptionsFilter.name)
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
     const response = ctx.getResponse<Response>()
@@ -32,34 +35,54 @@ export class AllExceptionsFilter implements ExceptionFilter {
     message: string
     errors?: ApiError[] | null
   } {
-    if (exception instanceof ZodError) {
-      return {
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Validation failed',
-        errors: exception.issues.map((issue) => ({
-          field: issue.path.join('.') || undefined,
-          message: issue.message,
-        })),
-      }
-    }
-
     if (exception instanceof HttpException) {
       const statusCode = exception.getStatus()
-      const response = exception.getResponse()
+      const response = exception.getResponse() as any
+
+      // If this is a validation error coming from ZodValidationPipe or similar,
+      // the HttpException response usually contains structured issues/errors.
+      if (exception.cause instanceof ZodError) {
+        const zodError = exception.cause
+        return {
+          statusCode,
+          message: 'Validation failed',
+          errors: zodError.issues.map((issue) => ({
+            field: issue.path.join('.') || undefined,
+            message: issue.message,
+          })),
+        }
+      }
 
       if (typeof response === 'string') {
         return { statusCode, message: response }
       }
 
-      if (
-        typeof response === 'object' &&
-        response !== null &&
-        'message' in response &&
-        typeof response.message === 'string'
-      ) {
+      if (typeof response === 'object' && response !== null) {
+        const message =
+          typeof response.message === 'string'
+            ? response.message
+            : exception.message || 'An unexpected error occurred'
+
+        // Many validation pipes (including nestjs-zod) put details under `errors` or `issues`
+        const rawIssues: unknown[] =
+          Array.isArray(response.errors) && response.errors.length > 0
+            ? response.errors
+            : Array.isArray(response.issues) && response.issues.length > 0
+              ? response.issues
+              : []
+
+        const errors =
+          rawIssues.length > 0
+            ? rawIssues.map((issue: any) => ({
+                field: Array.isArray(issue.path) ? issue.path.join('.') || undefined : issue.path,
+                message: typeof issue.message === 'string' ? issue.message : String(issue.message),
+              }))
+            : undefined
+
         return {
           statusCode,
-          message: response.message,
+          message,
+          errors: errors ?? undefined,
         }
       }
 
@@ -70,16 +93,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     if (exception instanceof Error) {
+      this.logger.error(exception.stack || exception.message)
       return {
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-        message: exception.message || 'An unexpected error occurred',
+        message: 'Internal server error',
       }
     }
 
+    this.logger.error(`Unknown exception: ${JSON.stringify(exception)}`)
     return {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: 'An unexpected error occurred',
+      message: 'Internal server error',
     }
   }
 }
-
