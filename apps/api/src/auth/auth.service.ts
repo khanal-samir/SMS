@@ -6,8 +6,8 @@ import {
   Logger,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { CreateUserDto } from 'src/user/dto/create-user.dto'
-import { UserService } from 'src/user/user.service'
+import { CreateUserDto } from '@src/user/dto/create-user.dto'
+import { UserService } from '@src/user/user.service'
 import { AuthUser, JwtPayload } from './types/auth-user.type'
 import refreshConfig from './config/refresh.config'
 import type { ConfigType } from '@nestjs/config/dist/types/config.type'
@@ -107,6 +107,9 @@ export class AuthService {
   async validateGoogleUser(googleUser: CreateUserDto) {
     const user = await this.userService.findByEmail(googleUser.email)
     if (user) {
+      if (user.role !== 'STUDENT') {
+        throw new UnauthorizedException('Only students can login with Google')
+      }
       this.logger.log(`Existing user found for Google login: ${user.email}`)
       return user
     }

@@ -11,7 +11,7 @@ export const useRegister = () => {
   const router = useRouter()
 
   return useMutation({
-    mutationFn: (userData: CreateUserDto) => authApi.register(userData),
+    mutationFn: (userData: CreateUserDto) => authApi.register(userData as CreateUserDto),
     onMutate: () => {
       setLoading(true)
     },
@@ -35,8 +35,9 @@ export const useLogin = () => {
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: (data) => {
-      setUser(data)
+    onSuccess: (response) => {
+      if (!response.data) return
+      setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Login successful!')
       router.push('/student/dashboard')
@@ -111,8 +112,9 @@ export const useTeacherLogin = () => {
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: (data) => {
-      setUser(data)
+    onSuccess: (response) => {
+      if (!response.data) return
+      setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
       toast.success('Teacher login successful!')
       router.push('/teacher/dashboard')

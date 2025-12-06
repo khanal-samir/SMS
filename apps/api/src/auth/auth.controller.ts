@@ -3,23 +3,26 @@ import {
   Controller,
   Post,
   UseGuards,
-  Request,
   Get,
   Res,
   ForbiddenException,
+  Request,
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
-import { CreateUserDto } from 'src/user/dto/create-user.dto'
+import { CreateUserDto } from '@src/user/dto/create-user.dto'
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard'
 import { Public } from './decorators/public.decorator'
 import type { AuthenticatedRequest } from './types/auth-user.type'
+import type { AuthUser, User } from '@repo/schemas'
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth/refresh-auth.guard'
 import { GoogleAuthGuard } from './guards/google/oauth/oauth.guard'
 import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
 import { RolesGuard } from './guards/roles/roles.guard'
 import { Roles } from './decorators/roles.decorator'
 import { ConfigService } from '@nestjs/config'
+import { CurrentUser } from './decorators/current-user.decorator'
+import { Role } from '@prisma/client'
 
 @Controller('auth')
 export class AuthController {
@@ -59,14 +62,12 @@ export class AuthController {
     const value = parseInt(time.slice(0, -1))
 
     switch (unit) {
-      case 's':
-        return value * 1000
       case 'm':
         return value * 60 * 1000
-      case 'h':
-        return value * 60 * 60 * 1000
+
       case 'd':
         return value * 24 * 60 * 60 * 1000
+
       default:
         return 15 * 60 * 1000
     }
@@ -78,10 +79,22 @@ export class AuthController {
   }
 
   @Public()
-  @Post('register')
+  @Post('student/register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
-    const user = await this.authService.registerUser(createUserDto)
-    return user
+    const user = await this.authService.registerUser({
+      ...createUserDto,
+      role: Role.STUDENT,
+    } as CreateUserDto)
+    return {
+      message: 'Student registered successfully',
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        provider: user.provider,
+      } as User,
+    }
   }
 
   @Public()
@@ -89,56 +102,68 @@ export class AuthController {
   async registerTeacher(@Body() createUserDto: CreateUserDto) {
     const user = await this.authService.registerUser({
       ...createUserDto,
-      role: 'TEACHER',
+      role: Role.TEACHER,
     } as CreateUserDto)
-    return user
+    return {
+      message: 'Teacher registered successfully',
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        provider: user.provider,
+      } as User,
+    }
   }
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post('login')
-  async login(@Request() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
-    if (req.user.role !== 'STUDENT') throw new ForbiddenException('Only Students can login here')
-    const result = await this.authService.login(req.user.id)
+  @Post('student/login')
+  async login(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    if (user.role !== 'STUDENT') throw new ForbiddenException('Only Students can login here')
+    const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
-      id: result.id,
-      email: result.email,
-      name: result.name,
-      role: result.role,
-      provider: result.provider,
+      message: 'Student login successful',
+      data: {
+        id: result.id,
+        email: result.email,
+        name: result.name,
+        role: result.role,
+        provider: result.provider,
+      } as User,
     }
   }
 
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('teacher/login')
-  async loginTeacher(
-    @Request() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    if (req.user.role !== 'TEACHER') throw new ForbiddenException('Only teachers can login here')
-    const result = await this.authService.login(req.user.id)
+  async loginTeacher(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    if (user.role !== 'TEACHER') throw new ForbiddenException('Only teachers can login here')
+    const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
-      id: result.id,
-      email: result.email,
-      name: result.name,
-      role: result.role,
-      provider: result.provider,
+      message: 'Teacher login successful',
+      data: {
+        id: result.id,
+        email: result.email,
+        name: result.name,
+        role: result.role,
+        provider: result.provider,
+      } as User,
     }
   }
 
   @Public()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  async refreshToken(
-    @Request() req: AuthenticatedRequest,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const result = await this.authService.refreshToken(req.user.id)
+  async refreshToken(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    const result = await this.authService.refreshToken(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
-    return { id: result.id }
+    return {
+      message: 'Token refreshed',
+      data: { id: result.id },
+    }
   }
 
   @Public()
@@ -163,17 +188,30 @@ export class AuthController {
   }
 
   @Get('me')
-  getCurrentUser(@Request() req: AuthenticatedRequest) {
-    return this.authService.getCurrentUser(req.user.id)
+  async getCurrentUser(@CurrentUser('id') userId: string) {
+    const user = await this.authService.getCurrentUser(userId)
+    return {
+      message: 'Current user fetched',
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        provider: user.provider,
+      } as User,
+    }
   }
 
   @Roles('ADMIN', 'STUDENT', 'TEACHER')
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
   @Post('logout')
-  async signOut(@Request() req: AuthenticatedRequest, @Res({ passthrough: true }) res: Response) {
-    await this.authService.signOut(req.user.id)
+  async signOut(@CurrentUser('id') userId: string, @Res({ passthrough: true }) res: Response) {
+    await this.authService.signOut(userId)
     this.clearAuthCookies(res)
-    return { message: 'Logged out successfully' }
+    return {
+      message: 'Logged out successfully',
+      data: null,
+    }
   }
 }

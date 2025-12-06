@@ -6,13 +6,11 @@ export type Role = z.infer<typeof RoleEnum>
 export const ProviderEnum = z.enum(['LOCAL', 'GOOGLE'])
 export type Provider = z.infer<typeof ProviderEnum>
 
-//for db
+//public user schema
 export const UserSchema = z.object({
   id: z.cuid(),
   email: z.email(),
   name: z.string().min(1),
-  password: z.string().nullable(),
-  refreshToken: z.string().nullable(),
   role: RoleEnum,
   provider: ProviderEnum,
 })

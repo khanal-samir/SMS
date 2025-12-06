@@ -1,38 +1,40 @@
 import apiClient from '@/lib/api'
-import { CreateUserDto, LoginDto } from '@repo/schemas'
-import type { AuthResponse } from '@repo/schemas'
+import { CreateUserDto, LoginDto, User } from '@repo/schemas'
+import type { ApiResponse } from '@repo/schemas'
 
 export const authApi = {
-  register: async (userData: CreateUserDto): Promise<AuthResponse> => {
-    const { data } = await apiClient.post('/auth/register', userData)
+  register: async (userData: CreateUserDto): Promise<ApiResponse<User>> => {
+    const { data } = await apiClient.post<ApiResponse<User>>('/auth/student/register', userData)
     return data
   },
 
-  login: async (credentials: LoginDto): Promise<AuthResponse> => {
-    const { data } = await apiClient.post('/auth/login', credentials)
+  login: async (credentials: LoginDto): Promise<ApiResponse<User>> => {
+    const { data } = await apiClient.post<ApiResponse<User>>('/auth/student/login', credentials)
     return data
   },
 
-  teacherRegister: async (userData: CreateUserDto): Promise<AuthResponse> => {
-    const { data } = await apiClient.post('/auth/teacher/register', userData)
+  teacherRegister: async (userData: CreateUserDto): Promise<ApiResponse<User>> => {
+    const { data } = await apiClient.post<ApiResponse<User>>('/auth/teacher/register', userData)
     return data
   },
 
-  teacherLogin: async (credentials: LoginDto): Promise<AuthResponse> => {
-    const { data } = await apiClient.post('/auth/teacher/login', credentials)
+  teacherLogin: async (credentials: LoginDto): Promise<ApiResponse<User>> => {
+    const { data } = await apiClient.post<ApiResponse<User>>('/auth/teacher/login', credentials)
     return data
   },
 
-  refresh: async (): Promise<void> => {
-    await apiClient.post('/auth/refresh')
-  },
-
-  getCurrentUser: async (): Promise<AuthResponse> => {
-    const { data } = await apiClient.get('/auth/me')
+  refresh: async (): Promise<ApiResponse<{ id: string }>> => {
+    const { data } = await apiClient.post<ApiResponse<{ id: string }>>('/auth/refresh')
     return data
   },
 
-  logout: async (): Promise<void> => {
-    await apiClient.post('/auth/logout')
+  getCurrentUser: async (): Promise<ApiResponse<User>> => {
+    const { data } = await apiClient.get<ApiResponse<User>>('/auth/me')
+    return data
+  },
+
+  logout: async (): Promise<ApiResponse<null>> => {
+    const { data } = await apiClient.post<ApiResponse<null>>('/auth/logout')
+    return data
   },
 }

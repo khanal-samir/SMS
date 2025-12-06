@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config'
 import { Logger } from '@nestjs/common'
 import { ZodValidationPipe } from 'nestjs-zod'
 import cookieParser from 'cookie-parser'
+import { ResponseInterceptor } from './common/interceptors/response.interceptor'
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -16,8 +18,11 @@ async function bootstrap() {
     credentials: true,
   })
 
-  // Use Zod validation pipe globally for automatic validation
+  // puts errors inside cause of the exception
   app.useGlobalPipes(new ZodValidationPipe())
+
+  app.useGlobalInterceptors(new ResponseInterceptor())
+  app.useGlobalFilters(new AllExceptionsFilter())
   app.setGlobalPrefix('v1')
 
   const port = configService.get<number>('BE_PORT') ?? 7000

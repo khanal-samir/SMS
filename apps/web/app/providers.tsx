@@ -6,7 +6,7 @@ import { Toaster } from 'sonner'
 import { useError } from '@/hooks/useError'
 import { useErrorStore } from '@/store/error.store'
 import type { AxiosError } from 'axios'
-import type { ApiError } from '@/lib/api'
+import type { ApiResponse } from '@repo/schemas'
 import { AuthInitializer } from '@/components/auth-initializer'
 
 function ErrorProvider({ children }: { children: React.ReactNode }) {
@@ -33,7 +33,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             retry: 1,
             onError: (error: Error) => {
               if ('isAxiosError' in error && error.isAxiosError) {
-                setError(error as AxiosError<ApiError>)
+                setError(error as AxiosError<ApiResponse<unknown>>)
               }
             },
           },
