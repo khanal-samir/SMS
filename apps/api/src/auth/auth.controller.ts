@@ -14,7 +14,7 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto'
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard'
 import { Public } from './decorators/public.decorator'
 import type { AuthenticatedRequest } from './types/auth-user.type'
-import type { AuthUser } from '@repo/schemas'
+import type { AuthUser, User } from '@repo/schemas'
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth/refresh-auth.guard'
 import { GoogleAuthGuard } from './guards/google/oauth/oauth.guard'
 import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
@@ -22,6 +22,7 @@ import { RolesGuard } from './guards/roles/roles.guard'
 import { Roles } from './decorators/roles.decorator'
 import { ConfigService } from '@nestjs/config'
 import { CurrentUser } from './decorators/current-user.decorator'
+import { Role } from '@prisma/client'
 
 @Controller('auth')
 export class AuthController {
@@ -78,12 +79,21 @@ export class AuthController {
   }
 
   @Public()
-  @Post('register')
+  @Post('student/register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
-    const user = await this.authService.registerUser(createUserDto)
+    const user = await this.authService.registerUser({
+      ...createUserDto,
+      role: Role.STUDENT,
+    } as CreateUserDto)
     return {
       message: 'Student registered successfully',
-      data: user,
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        provider: user.provider,
+      } as User,
     }
   }
 
@@ -92,30 +102,36 @@ export class AuthController {
   async registerTeacher(@Body() createUserDto: CreateUserDto) {
     const user = await this.authService.registerUser({
       ...createUserDto,
-      role: 'TEACHER',
+      role: Role.TEACHER,
     } as CreateUserDto)
     return {
       message: 'Teacher registered successfully',
-      data: user,
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        provider: user.provider,
+      } as User,
     }
   }
 
   @Public()
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post('student/login')
   async login(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
     if (user.role !== 'STUDENT') throw new ForbiddenException('Only Students can login here')
     const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
-      message: 'Login successful',
+      message: 'Student login successful',
       data: {
         id: result.id,
         email: result.email,
         name: result.name,
         role: result.role,
         provider: result.provider,
-      },
+      } as User,
     }
   }
 
@@ -127,14 +143,14 @@ export class AuthController {
     const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
-      message: 'Login successful',
+      message: 'Teacher login successful',
       data: {
         id: result.id,
         email: result.email,
         name: result.name,
         role: result.role,
         provider: result.provider,
-      },
+      } as User,
     }
   }
 
@@ -176,7 +192,13 @@ export class AuthController {
     const user = await this.authService.getCurrentUser(userId)
     return {
       message: 'Current user fetched',
-      data: user,
+      data: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        provider: user.provider,
+      } as User,
     }
   }
 
