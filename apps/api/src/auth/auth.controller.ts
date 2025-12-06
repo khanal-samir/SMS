@@ -80,7 +80,6 @@ export class AuthController {
   @Public()
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
-    console.log('registerUser', createUserDto)
     const user = await this.authService.registerUser(createUserDto)
     return {
       message: 'Student registered successfully',

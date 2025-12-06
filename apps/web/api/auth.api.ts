@@ -1,31 +1,25 @@
 import apiClient from '@/lib/api'
 import { CreateUserDto, LoginDto } from '@repo/schemas'
-import type { AuthResponse, ApiResponse } from '@repo/schemas'
+import type { ApiResponse } from '@repo/schemas'
 
 export const authApi = {
-  register: async (userData: CreateUserDto): Promise<ApiResponse<AuthResponse>> => {
-    const { data } = await apiClient.post<ApiResponse<AuthResponse>>('/auth/register', userData)
+  register: async (userData: CreateUserDto): Promise<ApiResponse> => {
+    const { data } = await apiClient.post<ApiResponse>('/auth/register', userData)
     return data
   },
 
-  login: async (credentials: LoginDto): Promise<ApiResponse<AuthResponse>> => {
-    const { data } = await apiClient.post<ApiResponse<AuthResponse>>('/auth/login', credentials)
+  login: async (credentials: LoginDto): Promise<ApiResponse> => {
+    const { data } = await apiClient.post<ApiResponse>('/auth/login', credentials)
     return data
   },
 
-  teacherRegister: async (userData: CreateUserDto): Promise<ApiResponse<AuthResponse>> => {
-    const { data } = await apiClient.post<ApiResponse<AuthResponse>>(
-      '/auth/teacher/register',
-      userData,
-    )
+  teacherRegister: async (userData: CreateUserDto): Promise<ApiResponse> => {
+    const { data } = await apiClient.post<ApiResponse>('/auth/teacher/register', userData)
     return data
   },
 
-  teacherLogin: async (credentials: LoginDto): Promise<ApiResponse<AuthResponse>> => {
-    const { data } = await apiClient.post<ApiResponse<AuthResponse>>(
-      '/auth/teacher/login',
-      credentials,
-    )
+  teacherLogin: async (credentials: LoginDto): Promise<ApiResponse> => {
+    const { data } = await apiClient.post<ApiResponse>('/auth/teacher/login', credentials)
     return data
   },
 
@@ -34,8 +28,8 @@ export const authApi = {
     return data
   },
 
-  getCurrentUser: async (): Promise<ApiResponse<AuthResponse>> => {
-    const { data } = await apiClient.get<ApiResponse<AuthResponse>>('/auth/me')
+  getCurrentUser: async (): Promise<ApiResponse> => {
+    const { data } = await apiClient.get<ApiResponse>('/auth/me')
     return data
   },
 

@@ -18,7 +18,7 @@ async function bootstrap() {
     credentials: true,
   })
 
-  // Use Zod validation pipe globally for automatic validation
+  // puts errors inside cause of the exception
   app.useGlobalPipes(new ZodValidationPipe())
 
   app.useGlobalInterceptors(new ResponseInterceptor())

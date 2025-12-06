@@ -37,10 +37,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
   } {
     if (exception instanceof HttpException) {
       const statusCode = exception.getStatus()
-      const response = exception.getResponse() as any
+      const response = exception.getResponse() as Record<string, unknown>
 
-      // If this is a validation error coming from ZodValidationPipe or similar,
-      // the HttpException response usually contains structured issues/errors.
       if (exception.cause instanceof ZodError) {
         const zodError = exception.cause
         return {
