@@ -12,14 +12,17 @@
         "NODE_ENV",
         "JWT_SECRET",
         "JWT_EXPIRES_IN",
-        "SALT",
         "REFRESH_TOKEN_SECRET",
         "REFRESH_TOKEN_EXPIRES_IN",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
         "GOOGLE_REDIRECT_URI",
         "NEXT_PUBLIC_API_URL",
-        "PUBLIC_WEB_URL"
+        "PUBLIC_WEB_URL",
+        "SMTP_HOST",
+        "SMTP_USER",
+        "SMTP_PASSWORD",
+        "SMTP_FROM"
       ]
     },
     "lint": {
