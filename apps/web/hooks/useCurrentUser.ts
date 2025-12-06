@@ -25,6 +25,7 @@ export const useCurrentUser = () => {
     },
     enabled: !!sessionCookie?.isAuthenticated,
     retry: false,
+    staleTime: 5 * 60 * 1000, //user data rarely changes
   })
 
   return {
