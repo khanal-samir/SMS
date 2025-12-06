@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common'
-import type { AuthUser } from '../types/auth-user.type'
+import type { AuthUser } from '@repo/schemas'
 
 //  * - @CurrentUser()        -> returns the full AuthUser
 //  * - @CurrentUser('id')    -> returns the user id

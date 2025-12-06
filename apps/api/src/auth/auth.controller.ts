@@ -13,7 +13,6 @@ import { AuthService } from './auth.service'
 import { CreateUserDto } from '@src/user/dto/create-user.dto'
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard'
 import { Public } from './decorators/public.decorator'
-import type { AuthenticatedRequest } from './types/auth-user.type'
 import type { AuthUser, User } from '@repo/schemas'
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth/refresh-auth.guard'
 import { GoogleAuthGuard } from './guards/google/oauth/oauth.guard'
@@ -174,10 +173,10 @@ export class AuthController {
   @Public()
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleCallback(@Request() req: AuthenticatedRequest, @Res() res: Response) {
+  async googleCallback(@CurrentUser() user: User, @Res() res: Response) {
     const frontendUrl = this.configService.get('PUBLIC_WEB_URL')
     try {
-      const response = await this.authService.login(req.user.id)
+      const response = await this.authService.login(user.id)
       // Set cookies before redirect
       this.setAuthCookies(res, response.accessToken, response.refreshToken)
       const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}`

@@ -19,13 +19,7 @@ export function AuthInitializer() {
 
   const isPublicRoute = publicRoutes.some((route) => pathname === route)
 
-  const { refetch, isError } = useCurrentUser()
-
-  useEffect(() => {
-    if (!isPublicRoute) {
-      refetch()
-    }
-  }, [isPublicRoute, pathname, refetch])
+  const { isError } = useCurrentUser()
 
   useEffect(() => {
     if (isError && !isPublicRoute) {
