@@ -4,7 +4,7 @@ import { Public } from '../auth/decorators/public.decorator'
 @Controller()
 export class AppController {
   @Public()
-  @Get()
+  @Get('health')
   getHello(): Promise<schemas.ApiResponse<null>> {
     return Promise.resolve({
       statusCode: 200,
