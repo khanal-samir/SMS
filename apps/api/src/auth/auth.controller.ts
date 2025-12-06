@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
-import { CreateUserDto } from 'src/user/dto/create-user.dto'
+import { CreateUserDto } from '@src/user/dto/create-user.dto'
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard'
 import { Public } from './decorators/public.decorator'
 import type { AuthenticatedRequest } from './types/auth-user.type'

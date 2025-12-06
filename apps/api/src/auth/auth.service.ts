@@ -6,8 +6,8 @@ import {
   Logger,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { CreateUserDto } from 'src/user/dto/create-user.dto'
-import { UserService } from 'src/user/user.service'
+import { CreateUserDto } from '@src/user/dto/create-user.dto'
+import { UserService } from '@src/user/user.service'
 import { AuthUser, JwtPayload } from './types/auth-user.type'
 import refreshConfig from './config/refresh.config'
 import type { ConfigType } from '@nestjs/config/dist/types/config.type'
