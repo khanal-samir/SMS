@@ -1,6 +1,6 @@
 import { zustandStore } from './zustand.store'
 import { setSessionCookie, removeSessionCookie } from '@/lib/session'
-import type { AuthResponse as User } from '@repo/schemas'
+import type { User } from '@repo/schemas'
 
 export interface AuthState {
   user: User | null
