@@ -8,17 +8,21 @@ datasource db {
 }
 
 model User {
-  id           String   @unique @default(cuid())
-  email        String   @unique
-  password     String?
-  name         String
-  refreshToken String?
-  role         Role     @default(STUDENT)
-  provider     Provider @default(LOCAL)
+  id                     String    @unique @default(cuid())
+  email                  String    @unique
+  password               String?
+  name                   String
+  refreshToken           String?
+  role                   Role      @default(STUDENT)
+  provider               Provider  @default(LOCAL)
+  isEmailVerified        Boolean   @default(false)
+  otpCode                String?
+  otpExpiry              DateTime?
+  passwordResetOtp       String?
+  passwordResetOtpExpiry DateTime?
 
   @@index([id])
-  @@index([role])
-  @@index([email])
+  @@index([id, role])
 }
 
 enum Provider {
