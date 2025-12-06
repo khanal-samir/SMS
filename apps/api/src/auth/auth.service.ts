@@ -4,6 +4,9 @@ import {
   Injectable,
   UnauthorizedException,
   Logger,
+  NotFoundException,
+  BadRequestException,
+  BadGatewayException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { CreateUserDto } from '@src/user/dto/create-user.dto'
@@ -11,21 +14,39 @@ import { UserService } from '@src/user/user.service'
 import { AuthUser, JwtPayload } from '@repo/schemas'
 import refreshConfig from './config/refresh.config'
 import type { ConfigType } from '@nestjs/config/dist/types/config.type'
+import { MailService } from '@src/common/mail/mail.service'
+
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name)
 
   constructor(
     private readonly userService: UserService,
+    private readonly mailService: MailService,
     private readonly jwtService: JwtService, // default access token
     @Inject(refreshConfig.KEY) // DI injection for refresh token
     private refreshTokenConfig: ConfigType<typeof refreshConfig>,
   ) {}
 
+  private generateOTP(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString()
+  }
+
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.userService.findByEmail(createUserDto.email)
     if (user) throw new ConflictException('User with given email already exists!')
-    return this.userService.create(createUserDto)
+
+    if (createUserDto.role === 'TEACHER') {
+      const optCode = this.generateOTP()
+      const [newTeacher] = await Promise.all([
+        this.userService.create(createUserDto, false, optCode),
+        this.mailService.sendVerificationEmail(createUserDto.email, createUserDto.name, optCode),
+      ])
+      return newTeacher
+    }
+
+    //student auto verify
+    return this.userService.create(createUserDto, true, null)
   }
 
   async login(userId: string) {
@@ -40,6 +61,7 @@ export class AuthService {
       name: user.name,
       role: user.role,
       provider: user.provider,
+      isEmailVerified: user.isEmailVerified,
     }
   }
 
@@ -54,7 +76,12 @@ export class AuthService {
         'This account was created using Google Sign-In. Please login with Google.',
       )
     }
-
+    // Check if teacher has verified email
+    if (user.role === 'TEACHER' && !user.isEmailVerified) {
+      throw new UnauthorizedException(
+        'Please verify your email address before logging in. Check your inbox for the OTP code.',
+      )
+    }
     const isPasswordMatched = await this.userService.comparePasswordOrToken(password, user.password)
     if (!isPasswordMatched) throw new UnauthorizedException('Invalid Credentials!')
     return { id: user.id, role: user.role }
@@ -127,11 +154,77 @@ export class AuthService {
       name: user.name,
       role: user.role,
       provider: user.provider,
-      refreshToken: user.refreshToken,
+      isEmailVerified: user.isEmailVerified,
     }
   }
 
   async signOut(userId: string) {
     return await this.userService.updateHashedRefreshToken(userId, null)
+  }
+
+  async verifyEmail(otpCode: string) {
+    const user = await this.userService.findByOTP(otpCode)
+    if (!user) throw new NotFoundException('Invalid OTP code')
+
+    if (user.isEmailVerified) throw new BadRequestException('Email already verified')
+
+    if (user.otpExpiry && new Date() > user.otpExpiry) {
+      throw new BadRequestException('OTP has expired. Please request a new OTP.')
+    }
+
+    return await this.userService.verifyUserEmail(user.id)
+  }
+
+  async resendVerificationEmail(email: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+
+    if (user.isEmailVerified) throw new BadRequestException('Email already verified')
+
+    if (user.role !== 'TEACHER')
+      throw new BadRequestException('Only teachers require email verification')
+
+    const otpCode = this.generateOTP()
+    return Promise.all([
+      this.userService.updateOTP(user.id, otpCode),
+      this.mailService.sendVerificationEmail(user.email, user.name, otpCode),
+    ])
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+
+    if (!user.password)
+      throw new BadRequestException(
+        'This account was created using Google Sign-In. Please login with Google.',
+      )
+
+    const otpCode = this.generateOTP()
+    await Promise.all([
+      this.userService.updatePasswordResetOtp(user.id, otpCode),
+      this.mailService.sendPasswordResetEmail(user.email, user.name, otpCode),
+    ]).catch(() => {
+      throw new BadGatewayException('Something went wrong. Please try again')
+    })
+    return
+  }
+
+  async verifyPasswordResetOtp(email: string, otp: string) {
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+
+    if (user.passwordResetOtp !== otp) throw new BadRequestException('Invalid OTP code')
+
+    if (user.passwordResetOtpExpiry && new Date() > user.passwordResetOtpExpiry)
+      throw new BadRequestException('OTP has expired. Please request a new OTP.')
+    return
+  }
+
+  async resetPassword(email: string, otp: string, password: string) {
+    await this.verifyPasswordResetOtp(email, otp)
+    const user = await this.userService.findByEmail(email)
+    if (!user) throw new NotFoundException('User not found')
+    return await this.userService.resetPassword(user.id, password)
   }
 }

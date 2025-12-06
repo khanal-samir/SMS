@@ -6,7 +6,8 @@ import {
   Get,
   Res,
   ForbiddenException,
-  Request,
+  Query,
+  HttpCode,
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
@@ -22,6 +23,9 @@ import { Roles } from './decorators/roles.decorator'
 import { ConfigService } from '@nestjs/config'
 import { CurrentUser } from './decorators/current-user.decorator'
 import { Role } from '@prisma/client'
+import { ForgotPasswordDto } from './dto/forgot-password.dto'
+import { VerifyPasswordResetOtpDto } from './dto/verify-password-reset-otp.dto'
+import { ResetPasswordDto } from './dto/reset-password.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -86,13 +90,7 @@ export class AuthController {
     } as CreateUserDto)
     return {
       message: 'Student registered successfully',
-      data: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        provider: user.provider,
-      } as User,
+      data: user as User,
     }
   }
 
@@ -105,13 +103,7 @@ export class AuthController {
     } as CreateUserDto)
     return {
       message: 'Teacher registered successfully',
-      data: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        provider: user.provider,
-      } as User,
+      data: user as User,
     }
   }
 
@@ -130,6 +122,7 @@ export class AuthController {
         name: result.name,
         role: result.role,
         provider: result.provider,
+        isEmailVerified: result.isEmailVerified,
       } as User,
     }
   }
@@ -149,6 +142,7 @@ export class AuthController {
         name: result.name,
         role: result.role,
         provider: result.provider,
+        isEmailVerified: result.isEmailVerified,
       } as User,
     }
   }
@@ -179,7 +173,7 @@ export class AuthController {
       const response = await this.authService.login(user.id)
       // Set cookies before redirect
       this.setAuthCookies(res, response.accessToken, response.refreshToken)
-      const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}`
+      const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}&isEmailVerified=${response.isEmailVerified}`
       res.redirect(callbackUrl)
     } catch {
       res.redirect(`${frontendUrl}/auth/google/callback?error=Authentication failed`)
@@ -191,13 +185,7 @@ export class AuthController {
     const user = await this.authService.getCurrentUser(userId)
     return {
       message: 'Current user fetched',
-      data: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        provider: user.provider,
-      } as User,
+      data: user as User,
     }
   }
 
@@ -210,6 +198,64 @@ export class AuthController {
     this.clearAuthCookies(res)
     return {
       message: 'Logged out successfully',
+      data: null,
+    }
+  }
+
+  @Public()
+  @Get('verify-email')
+  async verifyEmail(@Query('otp') otpCode: string) {
+    await this.authService.verifyEmail(otpCode)
+    return {
+      message: 'Email verified successfully',
+      data: null,
+    }
+  }
+
+  @HttpCode(200)
+  @Public()
+  @Post('resend-verification')
+  async resendVerification(@Body('email') email: string) {
+    await this.authService.resendVerificationEmail(email)
+    return {
+      message: 'Verification email sent successfully',
+      data: null,
+    }
+  }
+
+  @HttpCode(200)
+  @Public()
+  @Post('forgot-password')
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    await this.authService.forgotPassword(dto.email as string)
+    return {
+      message: 'Password reset email sent successfully',
+      data: null,
+    }
+  }
+
+  @HttpCode(200)
+  @Public()
+  @Post('verify-reset-otp')
+  async verifyResetOtp(@Body() dto: VerifyPasswordResetOtpDto) {
+    await this.authService.verifyPasswordResetOtp(dto.email as string, dto.otp as string)
+    return {
+      message: 'Password reset email sent successfully',
+      data: null,
+    }
+  }
+
+  @HttpCode(200)
+  @Public()
+  @Post('reset-password')
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    await this.authService.resetPassword(
+      dto.email as string,
+      dto.otp as string,
+      dto.password as string,
+    )
+    return {
+      message: 'Password reset successfully',
       data: null,
     }
   }

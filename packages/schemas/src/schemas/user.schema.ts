@@ -13,6 +13,7 @@ export const UserSchema = z.object({
   name: z.string().min(1),
   role: RoleEnum,
   provider: ProviderEnum,
+  isEmailVerified: z.boolean(),
 })
 export type User = z.infer<typeof UserSchema>
 

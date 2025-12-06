@@ -57,8 +57,9 @@ function GoogleCallbackHandler() {
       const name = searchParams.get('name')
       const role = searchParams.get('role')
       const provider = searchParams.get('provider')
+      const isEmailVerified = searchParams.get('isEmailVerified')
 
-      if (!userId || !email || !name || !role || !provider) {
+      if (!userId || !email || !name || !role || !provider || !isEmailVerified) {
         toast.error('Invalid authentication response')
         setLoading(false)
         router.push('/login')
@@ -71,6 +72,7 @@ function GoogleCallbackHandler() {
         name: decodeURIComponent(name),
         role: role as Role,
         provider: provider as Provider,
+        isEmailVerified: isEmailVerified === 'true',
       }
 
       setUser(userData)
