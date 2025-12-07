@@ -84,6 +84,13 @@ export class AuthController {
   @Public()
   @Post('student/register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
+    if (this.configService.get('ADMIN_EMAILS').includes(createUserDto.email)) {
+      const user = await this.authService.registerAdmin(createUserDto)
+      return {
+        message: 'Admin registered successfully',
+        data: user as User,
+      }
+    }
     const user = await this.authService.registerUser({
       ...createUserDto,
       role: Role.STUDENT,
@@ -97,6 +104,13 @@ export class AuthController {
   @Public()
   @Post('teacher/register')
   async registerTeacher(@Body() createUserDto: CreateUserDto) {
+    if (this.configService.get('ADMIN_EMAILS').includes(createUserDto.email)) {
+      const user = await this.authService.registerAdmin(createUserDto)
+      return {
+        message: 'Admin registered successfully',
+        data: user as User,
+      }
+    }
     const user = await this.authService.registerUser({
       ...createUserDto,
       role: Role.TEACHER,
@@ -227,7 +241,7 @@ export class AuthController {
   @Public()
   @Post('forgot-password')
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
-    await this.authService.forgotPassword(dto.email as string)
+    await this.authService.forgotPassword(dto.email)
     return {
       message: 'Password reset email sent successfully',
       data: null,
@@ -238,7 +252,7 @@ export class AuthController {
   @Public()
   @Post('verify-reset-otp')
   async verifyResetOtp(@Body() dto: VerifyPasswordResetOtpDto) {
-    await this.authService.verifyPasswordResetOtp(dto.email as string, dto.otp as string)
+    await this.authService.verifyPasswordResetOtp(dto.email, dto.otp)
     return {
       message: 'Password reset email sent successfully',
       data: null,
@@ -249,11 +263,7 @@ export class AuthController {
   @Public()
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto) {
-    await this.authService.resetPassword(
-      dto.email as string,
-      dto.otp as string,
-      dto.password as string,
-    )
+    await this.authService.resetPassword(dto.email, dto.otp, dto.password)
     return {
       message: 'Password reset successfully',
       data: null,
