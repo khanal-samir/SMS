@@ -8,6 +8,7 @@ import {
   ForbiddenException,
   Query,
   HttpCode,
+  UseFilters,
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
@@ -26,6 +27,7 @@ import { Role } from '@prisma/client'
 import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { VerifyPasswordResetOtpDto } from './dto/verify-password-reset-otp.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { GoogleAuthExceptionFilter } from './filters/google-auth.filter'
 
 @Controller('auth')
 export class AuthController {
@@ -180,6 +182,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(GoogleAuthGuard)
+  @UseFilters(GoogleAuthExceptionFilter)
   @Get('google/callback')
   async googleCallback(@CurrentUser() user: User, @Res() res: Response) {
     const frontendUrl = this.configService.get('PUBLIC_WEB_URL')
@@ -189,8 +192,9 @@ export class AuthController {
       this.setAuthCookies(res, response.accessToken, response.refreshToken)
       const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}&isEmailVerified=${response.isEmailVerified}`
       res.redirect(callbackUrl)
-    } catch {
-      res.redirect(`${frontendUrl}/auth/google/callback?error=Authentication failed`)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Authentication failed'
+      res.redirect(`${frontendUrl}/auth/google/callback?error=${encodeURIComponent(errorMessage)}`)
     }
   }
 
