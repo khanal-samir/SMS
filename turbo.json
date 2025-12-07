@@ -22,7 +22,8 @@
         "SMTP_HOST",
         "SMTP_USER",
         "SMTP_PASSWORD",
-        "SMTP_FROM"
+        "SMTP_FROM",
+        "ADMIN_EMAILS"
       ]
     },
     "lint": {
@@ -40,6 +41,9 @@
       "persistent": true
     },
     "db:deploy": {
+      "cache": false
+    },
+    "db:studio": {
       "cache": false
     },
     "db:reset": { "cache": false }

@@ -8,6 +8,7 @@ import {
   ForbiddenException,
   Query,
   HttpCode,
+  UseFilters,
 } from '@nestjs/common'
 import type { Response } from 'express'
 import { AuthService } from './auth.service'
@@ -26,6 +27,7 @@ import { Role } from '@prisma/client'
 import { ForgotPasswordDto } from './dto/forgot-password.dto'
 import { VerifyPasswordResetOtpDto } from './dto/verify-password-reset-otp.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
+import { GoogleAuthExceptionFilter } from './filters/google-auth.filter'
 
 @Controller('auth')
 export class AuthController {
@@ -84,6 +86,13 @@ export class AuthController {
   @Public()
   @Post('student/register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
+    if (this.configService.get('ADMIN_EMAILS').includes(createUserDto.email)) {
+      const user = await this.authService.registerAdmin(createUserDto)
+      return {
+        message: 'Admin registered successfully',
+        data: user as User,
+      }
+    }
     const user = await this.authService.registerUser({
       ...createUserDto,
       role: Role.STUDENT,
@@ -97,6 +106,13 @@ export class AuthController {
   @Public()
   @Post('teacher/register')
   async registerTeacher(@Body() createUserDto: CreateUserDto) {
+    if (this.configService.get('ADMIN_EMAILS').includes(createUserDto.email)) {
+      const user = await this.authService.registerAdmin(createUserDto)
+      return {
+        message: 'Admin registered successfully',
+        data: user as User,
+      }
+    }
     const user = await this.authService.registerUser({
       ...createUserDto,
       role: Role.TEACHER,
@@ -166,6 +182,7 @@ export class AuthController {
 
   @Public()
   @UseGuards(GoogleAuthGuard)
+  @UseFilters(GoogleAuthExceptionFilter)
   @Get('google/callback')
   async googleCallback(@CurrentUser() user: User, @Res() res: Response) {
     const frontendUrl = this.configService.get('PUBLIC_WEB_URL')
@@ -175,8 +192,9 @@ export class AuthController {
       this.setAuthCookies(res, response.accessToken, response.refreshToken)
       const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}&isEmailVerified=${response.isEmailVerified}`
       res.redirect(callbackUrl)
-    } catch {
-      res.redirect(`${frontendUrl}/auth/google/callback?error=Authentication failed`)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Authentication failed'
+      res.redirect(`${frontendUrl}/auth/google/callback?error=${encodeURIComponent(errorMessage)}`)
     }
   }
 
@@ -227,7 +245,7 @@ export class AuthController {
   @Public()
   @Post('forgot-password')
   async forgotPassword(@Body() dto: ForgotPasswordDto) {
-    await this.authService.forgotPassword(dto.email as string)
+    await this.authService.forgotPassword(dto.email)
     return {
       message: 'Password reset email sent successfully',
       data: null,
@@ -238,7 +256,7 @@ export class AuthController {
   @Public()
   @Post('verify-reset-otp')
   async verifyResetOtp(@Body() dto: VerifyPasswordResetOtpDto) {
-    await this.authService.verifyPasswordResetOtp(dto.email as string, dto.otp as string)
+    await this.authService.verifyPasswordResetOtp(dto.email, dto.otp)
     return {
       message: 'Password reset email sent successfully',
       data: null,
@@ -249,11 +267,7 @@ export class AuthController {
   @Public()
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto) {
-    await this.authService.resetPassword(
-      dto.email as string,
-      dto.otp as string,
-      dto.password as string,
-    )
+    await this.authService.resetPassword(dto.email, dto.otp, dto.password)
     return {
       message: 'Password reset successfully',
       data: null,

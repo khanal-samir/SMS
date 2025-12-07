@@ -15,6 +15,7 @@ import { AuthUser, JwtPayload } from '@repo/schemas'
 import refreshConfig from './config/refresh.config'
 import type { ConfigType } from '@nestjs/config/dist/types/config.type'
 import { MailService } from '@src/common/mail/mail.service'
+import { Role } from '@prisma/client'
 
 @Injectable()
 export class AuthService {
@@ -32,6 +33,17 @@ export class AuthService {
     return Math.floor(100000 + Math.random() * 900000).toString()
   }
 
+  async registerAdmin(createUserDto: CreateUserDto) {
+    const user = await this.userService.create(
+      {
+        ...createUserDto,
+        role: Role.ADMIN,
+      },
+      true,
+      null,
+    )
+    return user
+  }
   async registerUser(createUserDto: CreateUserDto) {
     const user = await this.userService.findByEmail(createUserDto.email)
     if (user) throw new ConflictException('User with given email already exists!')
@@ -140,6 +152,7 @@ export class AuthService {
       this.logger.log(`Existing user found for Google login: ${user.email}`)
       return user
     }
+
     this.logger.log(`Creating new user for Google OAuth: ${googleUser.email}`)
     return await this.userService.createOAuthUser(googleUser)
   }
