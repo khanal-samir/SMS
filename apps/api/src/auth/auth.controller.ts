@@ -11,6 +11,15 @@ import {
   UseFilters,
 } from '@nestjs/common'
 import type { Response } from 'express'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiQuery,
+  ApiBearerAuth,
+  ApiCookieAuth,
+} from '@nestjs/swagger'
 import { AuthService } from './auth.service'
 import { CreateUserDto } from '@src/user/dto/create-user.dto'
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard'
@@ -29,6 +38,7 @@ import { VerifyPasswordResetOtpDto } from './dto/verify-password-reset-otp.dto'
 import { ResetPasswordDto } from './dto/reset-password.dto'
 import { GoogleAuthExceptionFilter } from './filters/google-auth.filter'
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -83,6 +93,28 @@ export class AuthController {
     res.clearCookie('refreshToken', { path: '/' })
   }
 
+  @ApiOperation({
+    summary: 'Register a new student',
+    description: 'Creates a new student account. If email is in admin list, creates admin instead.',
+  })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Student registered successfully',
+    schema: {
+      example: {
+        message: 'Student registered successfully',
+        data: {
+          id: 'uuid',
+          name: 'John Doe',
+          email: 'student@example.com',
+          role: 'STUDENT',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request - Invalid input data' })
+  @ApiResponse({ status: 409, description: 'Conflict - Email already exists' })
   @Public()
   @Post('student/register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
@@ -90,7 +122,12 @@ export class AuthController {
       const user = await this.authService.registerAdmin(createUserDto)
       return {
         message: 'Admin registered successfully',
-        data: user as User,
+        data: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
       }
     }
     const user = await this.authService.registerUser({
@@ -99,10 +136,37 @@ export class AuthController {
     } as CreateUserDto)
     return {
       message: 'Student registered successfully',
-      data: user as User,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     }
   }
 
+  @ApiOperation({
+    summary: 'Register a new teacher',
+    description: 'Creates a new teacher account. If email is in admin list, creates admin instead.',
+  })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'Teacher registered successfully',
+    schema: {
+      example: {
+        message: 'Teacher registered successfully',
+        data: {
+          id: 'uuid',
+          name: 'Jane Smith',
+          email: 'teacher@example.com',
+          role: 'TEACHER',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request - Invalid input data' })
+  @ApiResponse({ status: 409, description: 'Conflict - Email already exists' })
   @Public()
   @Post('teacher/register')
   async registerTeacher(@Body() createUserDto: CreateUserDto) {
@@ -110,7 +174,12 @@ export class AuthController {
       const user = await this.authService.registerAdmin(createUserDto)
       return {
         message: 'Admin registered successfully',
-        data: user as User,
+        data: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
       }
     }
     const user = await this.authService.registerUser({
@@ -119,10 +188,47 @@ export class AuthController {
     } as CreateUserDto)
     return {
       message: 'Teacher registered successfully',
-      data: user as User,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     }
   }
 
+  @ApiOperation({
+    summary: 'Student login',
+    description:
+      'Authenticates a student user with email and password. Sets httpOnly cookies for tokens.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['email', 'password'],
+      properties: {
+        email: { type: 'string', example: 'student@example.com' },
+        password: { type: 'string', example: 'password123' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful - Cookies set',
+    schema: {
+      example: {
+        message: 'Student login successful',
+        data: {
+          id: 'uuid',
+          name: 'John Doe',
+          email: 'student@example.com',
+          role: 'STUDENT',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid credentials' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Only students can login here' })
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('student/login')
@@ -134,15 +240,45 @@ export class AuthController {
       message: 'Student login successful',
       data: {
         id: result.id,
-        email: result.email,
         name: result.name,
+        email: result.email,
         role: result.role,
-        provider: result.provider,
-        isEmailVerified: result.isEmailVerified,
-      } as User,
+      },
     }
   }
 
+  @ApiOperation({
+    summary: 'Teacher login',
+    description:
+      'Authenticates a teacher user with email and password. Sets httpOnly cookies for tokens.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['email', 'password'],
+      properties: {
+        email: { type: 'string', example: 'teacher@example.com' },
+        password: { type: 'string', example: 'password123' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful - Cookies set',
+    schema: {
+      example: {
+        message: 'Teacher login successful',
+        data: {
+          id: 'uuid',
+          name: 'Jane Smith',
+          email: 'teacher@example.com',
+          role: 'TEACHER',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid credentials' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Only teachers can login here' })
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('teacher/login')
@@ -154,15 +290,29 @@ export class AuthController {
       message: 'Teacher login successful',
       data: {
         id: result.id,
-        email: result.email,
         name: result.name,
+        email: result.email,
         role: result.role,
-        provider: result.provider,
-        isEmailVerified: result.isEmailVerified,
-      } as User,
+      },
     }
   }
 
+  @ApiOperation({
+    summary: 'Refresh access token',
+    description: 'Uses refresh token from cookie to generate new access and refresh tokens.',
+  })
+  @ApiCookieAuth('refreshToken')
+  @ApiResponse({
+    status: 200,
+    description: 'Tokens refreshed successfully - New cookies set',
+    schema: {
+      example: {
+        message: 'Token refreshed',
+        data: { id: 'uuid' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid or expired refresh token' })
   @Public()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
@@ -175,11 +325,30 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Initiate Google OAuth login',
+    description: 'Redirects to Google consent page for OAuth authentication.',
+  })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirect to Google OAuth consent page',
+  })
   @Public()
   @UseGuards(GoogleAuthGuard)
   @Get('google/login') //consent page
   googleLogin() {}
 
+  @ApiOperation({
+    summary: 'Google OAuth callback',
+    description:
+      'Handles Google OAuth callback, creates/authenticates user, sets cookies, and redirects to frontend.',
+  })
+  @ApiQuery({ name: 'code', required: false, description: 'OAuth authorization code from Google' })
+  @ApiQuery({ name: 'state', required: false, description: 'OAuth state parameter' })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirect to frontend with user data or error',
+  })
   @Public()
   @UseGuards(GoogleAuthGuard)
   @UseFilters(GoogleAuthExceptionFilter)
@@ -190,7 +359,7 @@ export class AuthController {
       const response = await this.authService.login(user.id)
       // Set cookies before redirect
       this.setAuthCookies(res, response.accessToken, response.refreshToken)
-      const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&email=${encodeURIComponent(response.email)}&name=${encodeURIComponent(response.name)}&role=${response.role}&provider=${response.provider}&isEmailVerified=${response.isEmailVerified}`
+      const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&name=${encodeURIComponent(response.name)}&email=${encodeURIComponent(response.email)}&role=${response.role}`
       res.redirect(callbackUrl)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Authentication failed'
@@ -198,15 +367,59 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Get current user',
+    description: "Fetches the authenticated user's profile information.",
+  })
+  @ApiBearerAuth()
+  @ApiCookieAuth('accessToken')
+  @ApiResponse({
+    status: 200,
+    description: 'Current user fetched successfully',
+    schema: {
+      example: {
+        message: 'Current user fetched',
+        data: {
+          id: 'uuid',
+          name: 'John Doe',
+          email: 'user@example.com',
+          role: 'STUDENT',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized - No valid token provided' })
   @Get('me')
   async getCurrentUser(@CurrentUser('id') userId: string) {
     const user = await this.authService.getCurrentUser(userId)
     return {
       message: 'Current user fetched',
-      data: user as User,
+      data: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     }
   }
 
+  @ApiOperation({
+    summary: 'Logout user',
+    description: 'Logs out the authenticated user and clears authentication cookies.',
+  })
+  @ApiBearerAuth()
+  @ApiCookieAuth('accessToken')
+  @ApiResponse({
+    status: 200,
+    description: 'Logged out successfully',
+    schema: {
+      example: {
+        message: 'Logged out successfully',
+        data: null,
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized - No valid token provided' })
   @Roles('ADMIN', 'STUDENT', 'TEACHER')
   @UseGuards(RolesGuard)
   @UseGuards(JwtAuthGuard)
@@ -220,6 +433,27 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Verify email address',
+    description: 'Verifies user email address using OTP code sent to email.',
+  })
+  @ApiQuery({
+    name: 'otp',
+    required: true,
+    description: 'One-time password code sent to email',
+    example: '123456',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Email verified successfully',
+    schema: {
+      example: {
+        message: 'Email verified successfully',
+        data: null,
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request - Invalid or expired OTP' })
   @Public()
   @Get('verify-email')
   async verifyEmail(@Query('otp') otpCode: string) {
@@ -230,6 +464,30 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Resend verification email',
+    description: 'Sends a new verification email with OTP code to the user.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['email'],
+      properties: {
+        email: { type: 'string', example: 'user@example.com' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Verification email sent successfully',
+    schema: {
+      example: {
+        message: 'Verification email sent successfully',
+        data: null,
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Not found - User not found' })
   @HttpCode(200)
   @Public()
   @Post('resend-verification')
@@ -241,6 +499,22 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Request password reset',
+    description: "Sends a password reset OTP code to the user's email address.",
+  })
+  @ApiBody({ type: ForgotPasswordDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset email sent successfully',
+    schema: {
+      example: {
+        message: 'Password reset email sent successfully',
+        data: null,
+      },
+    },
+  })
+  @ApiResponse({ status: 404, description: 'Not found - User not found' })
   @HttpCode(200)
   @Public()
   @Post('forgot-password')
@@ -252,6 +526,22 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Verify password reset OTP',
+    description: 'Verifies the password reset OTP code before allowing password reset.',
+  })
+  @ApiBody({ type: VerifyPasswordResetOtpDto })
+  @ApiResponse({
+    status: 200,
+    description: 'OTP verified successfully',
+    schema: {
+      example: {
+        message: 'Password reset email sent successfully',
+        data: null,
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request - Invalid or expired OTP' })
   @HttpCode(200)
   @Public()
   @Post('verify-reset-otp')
@@ -263,6 +553,22 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({
+    summary: 'Reset password',
+    description: 'Resets user password using verified OTP code and new password.',
+  })
+  @ApiBody({ type: ResetPasswordDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successfully',
+    schema: {
+      example: {
+        message: 'Password reset successfully',
+        data: null,
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request - Invalid or expired OTP' })
   @HttpCode(200)
   @Public()
   @Post('reset-password')
