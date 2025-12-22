@@ -27,7 +27,7 @@ async function bootstrap() {
 
   //Swagger setup
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Pasal API Documentation')
+    .setTitle('SMS API Documentation')
     .setDescription('Backend API documentation')
     .setVersion('1.0')
     .build()
