@@ -48,7 +48,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(createUserDto.email)
     if (user) throw new ConflictException('User with given email already exists!')
 
-    if (createUserDto.role === 'TEACHER') {
+    if (createUserDto.role === Role.TEACHER) {
       const optCode = this.generateOTP()
       const [newTeacher] = await Promise.all([
         this.userService.create(createUserDto, false, optCode),
@@ -89,7 +89,7 @@ export class AuthService {
       )
     }
     // Check if teacher has verified email
-    if (user.role === 'TEACHER' && !user.isEmailVerified) {
+    if (user.role === Role.TEACHER && !user.isEmailVerified) {
       throw new UnauthorizedException(
         'Please verify your email address before logging in. Check your inbox for the OTP code.',
       )
@@ -194,7 +194,7 @@ export class AuthService {
 
     if (user.isEmailVerified) throw new BadRequestException('Email already verified')
 
-    if (user.role !== 'TEACHER')
+    if (user.role !== Role.TEACHER)
       throw new BadRequestException('Only teachers require email verification')
 
     const otpCode = this.generateOTP()

@@ -283,7 +283,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('teacher/login')
   async loginTeacher(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
-    if (user.role !== 'TEACHER') throw new ForbiddenException('Only teachers can login here')
+    if (user.role !== Role.TEACHER) throw new ForbiddenException('Only teachers can login here')
     const result = await this.authService.login(user.id)
     this.setAuthCookies(res, result.accessToken, result.refreshToken)
     return {
