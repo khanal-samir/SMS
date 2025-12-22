@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/store/auth.store'
 import { toast } from 'sonner'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Provider, Role } from '@repo/schemas'
+import { Role } from '@repo/schemas'
 import { useQueryClient } from '@tanstack/react-query'
 import { QUERY_KEYS } from '@/lib/query-keys'
 
@@ -53,13 +53,11 @@ function GoogleCallbackHandler() {
 
       // Get user data from URL parameters (cookies already set by backend)
       const userId = searchParams.get('userId')
-      const email = searchParams.get('email')
       const name = searchParams.get('name')
+      const email = searchParams.get('email')
       const role = searchParams.get('role')
-      const provider = searchParams.get('provider')
-      const isEmailVerified = searchParams.get('isEmailVerified')
 
-      if (!userId || !email || !name || !role || !provider || !isEmailVerified) {
+      if (!userId || !name || !email || !role) {
         toast.error('Invalid authentication response')
         setLoading(false)
         router.push('/login')
@@ -68,11 +66,9 @@ function GoogleCallbackHandler() {
 
       const userData = {
         id: userId,
-        email: decodeURIComponent(email),
         name: decodeURIComponent(name),
+        email: decodeURIComponent(email),
         role: role as Role,
-        provider: provider as Provider,
-        isEmailVerified: isEmailVerified === 'true',
       }
 
       setUser(userData)
