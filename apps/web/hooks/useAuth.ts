@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import { authApi } from '@/api/auth.api'
 import { useAuthStore } from '@/store/auth.store'
 import { QUERY_KEYS } from '@/lib/query-keys'
-import type { CreateUserDto, LoginDto } from '@repo/schemas'
+import type { CreateUserDto, LoginDto, ResetPasswordDto } from '@repo/schemas'
 import { toast } from 'sonner'
 
 export const useRegister = () => {
@@ -82,10 +82,10 @@ export const useGoogleAuth = () => {
   return { initiateGoogleLogin }
 }
 
-export const useTeacherRegister = () => {
+export const useTeacherRegister = (
+  setShowVerifyDialog: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
   const { setLoading } = useAuthStore()
-  const router = useRouter()
-
   return useMutation({
     mutationFn: (userData: CreateUserDto) =>
       authApi.teacherRegister({ ...userData, role: 'TEACHER' }),
@@ -93,8 +93,8 @@ export const useTeacherRegister = () => {
       setLoading(true)
     },
     onSuccess: () => {
-      toast.success('Teacher registration successful!')
-      router.push('/teacher/login')
+      toast.success('Registration successful! Please verify your email.')
+      setShowVerifyDialog(true)
     },
     onSettled: () => {
       setLoading(false)
@@ -144,6 +144,44 @@ export const useAdminLogin = () => {
     },
     onSettled: () => {
       setLoading(false)
+    },
+  })
+}
+
+export const useVerifyEmail = () => {
+  return useMutation({
+    mutationFn: (otpCode: string) => authApi.verifyEmail(otpCode),
+    onSuccess: () => {
+      toast.success('Email verified successfully!')
+    },
+  })
+}
+
+export const useResendVerification = () => {
+  return useMutation({
+    mutationFn: (email: string) => authApi.resendVerification(email),
+    onSuccess: () => {
+      toast.success('Verification email sent! Check your inbox.')
+    },
+  })
+}
+
+export const useForgotPassword = () => {
+  return useMutation({
+    mutationFn: (email: string) => authApi.forgotPassword({ email }),
+    onSuccess: () => {
+      toast.success('Password reset email sent!')
+    },
+  })
+}
+
+export const useResetPassword = () => {
+  const router = useRouter()
+  return useMutation({
+    mutationFn: (data: ResetPasswordDto) => authApi.resetPassword(data),
+    onSuccess: () => {
+      toast.success('Password reset successfully! Please login with your new password.')
+      router.push('/login')
     },
   })
 }

@@ -17,10 +17,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CreateUserSchema, type CreateUserDto } from '@repo/schemas'
 import Link from 'next/link'
 import { useTeacherRegister } from '@/hooks/useAuth'
+import { useState } from 'react'
+import { VerifyEmailDialog } from '@/components/verify-email-dialog'
+import { useRouter } from 'next/navigation'
 
 export function TeacherRegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
-  const { mutate: register, isPending } = useTeacherRegister()
-
+  const [showVerifyDialog, setShowVerifyDialog] = useState(false)
+  const { mutate: register, isPending } = useTeacherRegister(setShowVerifyDialog)
+  const router = useRouter()
   const form = useForm<CreateUserDto>({
     resolver: zodResolver(CreateUserSchema),
     defaultValues: {
@@ -32,6 +36,10 @@ export function TeacherRegisterForm({ className, ...props }: React.ComponentProp
 
   const onSubmit = (data: CreateUserDto) => {
     register({ ...data, role: 'TEACHER' })
+  }
+  const handleVerified = () => {
+    setShowVerifyDialog(false)
+    router.push('/teacher/login')
   }
 
   return (
@@ -105,6 +113,12 @@ export function TeacherRegisterForm({ className, ...props }: React.ComponentProp
           </Form>
         </CardContent>
       </Card>
+      <VerifyEmailDialog
+        open={showVerifyDialog}
+        onOpenChange={setShowVerifyDialog}
+        email={form.getValues('email') || ''}
+        onVerified={handleVerified}
+      />
     </div>
   )
 }
