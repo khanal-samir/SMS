@@ -20,6 +20,7 @@ model User {
   otpExpiry              DateTime?
   passwordResetOtp       String?
   passwordResetOtpExpiry DateTime?
+  isTeacherApproved      Boolean   @default(false)
 
   @@index([id])
   @@index([id, role])
