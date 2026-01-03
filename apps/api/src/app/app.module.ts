@@ -5,9 +5,10 @@ import { AuthModule } from 'src/auth/auth.module'
 import { UserModule } from 'src/user/user.module'
 import { PrismaModule } from 'src/prisma/prisma.module'
 import { envSchema } from 'src/config/env.config'
-
+import { EventEmitterModule } from '@nestjs/event-emitter'
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
     PrismaModule,
