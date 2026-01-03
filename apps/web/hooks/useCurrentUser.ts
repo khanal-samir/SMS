@@ -7,7 +7,6 @@ import { getSessionCookie } from '@/lib/session'
 export const useCurrentUser = () => {
   const { setUser, clearUser } = useAuthStore()
   const sessionCookie = getSessionCookie()
-
   const query = useQuery({
     queryKey: [QUERY_KEYS.USER],
     queryFn: async () => {

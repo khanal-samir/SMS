@@ -15,9 +15,14 @@ export function AuthInitializer() {
     '/teacher/register',
     '/auth/google/callback',
     '/',
+    '/forgot-password',
+    '/reset-password',
+    '/admin/access',
   ]
 
-  const isPublicRoute = publicRoutes.some((route) => pathname === route)
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(route + '?'),
+  )
 
   const { isError } = useCurrentUser()
 

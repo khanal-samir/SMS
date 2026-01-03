@@ -1,4 +1,3 @@
-// src/hooks/useError.ts
 import { useEffect } from 'react'
 import { useErrorStore } from '@/store/error.store'
 import { toast } from 'sonner'

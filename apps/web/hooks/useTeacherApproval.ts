@@ -8,7 +8,7 @@ export const usePendingTeachers = () => {
     queryKey: [QUERY_KEYS.PENDING_TEACHERS],
     queryFn: async () => {
       const response = await userApi.getPendingTeachers()
-      return response.data || []
+      return response.data
     },
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 60 * 1000, // Refetch every minute
@@ -20,13 +20,9 @@ export const useApproveTeacher = () => {
 
   return useMutation({
     mutationFn: (teacherId: string) => userApi.approveTeacher(teacherId),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PENDING_TEACHERS] })
-      toast.success('Teacher approved successfully!')
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Failed to approve teacher')
+      toast.success(data.message)
     },
   })
 }
-

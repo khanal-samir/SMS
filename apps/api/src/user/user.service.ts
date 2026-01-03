@@ -198,8 +198,6 @@ export class UserService {
         email: true,
         name: true,
         role: true,
-        provider: true,
-        isEmailVerified: true,
       },
     })
 
@@ -221,9 +219,6 @@ export class UserService {
         email: true,
         name: true,
         role: true,
-        provider: true,
-        isEmailVerified: true,
-        isTeacherApproved: true,
       },
       orderBy: {
         email: 'asc',
