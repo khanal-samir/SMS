@@ -298,6 +298,56 @@ export class AuthController {
   }
 
   @ApiOperation({
+    summary: 'Admin login',
+    description:
+      'Authenticates an admin user with email and password. Sets httpOnly cookies for tokens.',
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['email', 'password'],
+      properties: {
+        email: { type: 'string', example: 'admin@example.com' },
+        password: { type: 'string', example: 'password123' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful - Cookies set',
+    schema: {
+      example: {
+        message: 'Admin login successful',
+        data: {
+          id: 'uuid',
+          name: 'Admin User',
+          email: 'admin@example.com',
+          role: 'ADMIN',
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized - Invalid credentials' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Only admins can login here' })
+  @Public()
+  @UseGuards(LocalAuthGuard)
+  @Post('admin/login')
+  async loginAdmin(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
+    if (user.role !== Role.ADMIN) throw new ForbiddenException('Only admins can login here')
+    const result = await this.authService.login(user.id)
+    this.setAuthCookies(res, result.accessToken, result.refreshToken)
+    return {
+      message: 'Admin login successful',
+      data: {
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        role: result.role,
+      },
+    }
+  }
+
+  @ApiOperation({
     summary: 'Refresh access token',
     description: 'Uses refresh token from cookie to generate new access and refresh tokens.',
   })

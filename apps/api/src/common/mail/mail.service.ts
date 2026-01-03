@@ -129,4 +129,57 @@ export class MailService {
       throw error
     }
   }
+
+  async sendTeacherApprovedEmail(email: string, name: string) {
+    const publicWebUrl = this.configService.get<string>('PUBLIC_WEB_URL') ?? ''
+    const teacherDashboardUrl = `${publicWebUrl}/teacher/login`
+
+    try {
+      await this.transporter.sendMail({
+        from: `"SMS Platform" <${this.mailConfiguration.from}>`,
+        to: email,
+        subject: 'Your Teacher Account Has Been Approved',
+        html: `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Account Approved</title>
+            </head>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <div style="background-color: #f8f9fa; padding: 30px; border-radius: 10px;">
+                <h1 style="color: #2c3e50; margin-bottom: 20px;">🎉 Account Approved!</h1>
+                <p style="font-size: 16px; margin-bottom: 20px;">Hi ${name},</p>
+                <p style="font-size: 16px; margin-bottom: 20px;">
+                  Great news! Your teacher account has been approved by the administrator. 
+                  You can now log in and access your teacher portal.
+                </p>
+                <div style="text-align: center; margin: 30px 0;">
+                  <a href="${teacherDashboardUrl}" 
+                     style="background-color: #28a745; color: white; padding: 14px 28px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                    Go to Teacher Portal
+                  </a>
+                </div>
+                <p style="font-size: 14px; color: #666; margin-top: 30px;">
+                  If the button doesn't work, copy and paste this link into your browser:
+                </p>
+                <p style="font-size: 14px; color: #28a745; word-break: break-all;">
+                  ${teacherDashboardUrl}
+                </p>
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+                <p style="font-size: 12px; color: #999;">
+                  Welcome to the SMS Platform! We're excited to have you on board.
+                </p>
+              </div>
+            </body>
+          </html>
+        `,
+      })
+      this.logger.log(`Teacher approved email sent to ${email}`)
+    } catch (error) {
+      this.logger.error(`Failed to send teacher approved email to ${email}`, error)
+      throw error
+    }
+  }
 }

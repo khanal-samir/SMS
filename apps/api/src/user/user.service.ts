@@ -2,20 +2,24 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { hash, verify } from 'argon2'
+import { MailService } from '@src/common/mail/mail.service'
 
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name)
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
+  ) {}
   async create(
     createUserDto: CreateUserDto,
     isEmailVerified = false,
     otpCode: string | null = null,
+    isTeacherApproved: boolean = true,
   ) {
     const { password, ...user } = createUserDto
     const hashedPassword = await this.hashPasswordOrToken(password)
     const otpExpiry = otpCode ? new Date(Date.now() + 2 * 60 * 60 * 1000) : null
-
     return await this.prisma.user.create({
       data: {
         password: hashedPassword,
@@ -23,6 +27,7 @@ export class UserService {
         isEmailVerified,
         otpCode,
         otpExpiry,
+        isTeacherApproved,
         ...user,
       },
       select: {
@@ -177,6 +182,51 @@ export class UserService {
         role: true,
         provider: true,
         isEmailVerified: true,
+      },
+    })
+  }
+
+  async approveTeacher(userId: string) {
+    this.logger.log(`Approving teacher for user id: ${userId}`)
+    const teacher = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isTeacherApproved: true,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        provider: true,
+        isEmailVerified: true,
+      },
+    })
+
+    await this.mailService.sendTeacherApprovedEmail(teacher.email, teacher.name)
+    this.logger.log(`Approval email sent to teacher ${teacher.email}`)
+    return teacher
+  }
+
+  async getPendingTeachers() {
+    this.logger.log(`Getting pending teachers`)
+    return await this.prisma.user.findMany({
+      where: {
+        role: 'TEACHER',
+        isEmailVerified: true,
+        isTeacherApproved: false,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        provider: true,
+        isEmailVerified: true,
+        isTeacherApproved: true,
+      },
+      orderBy: {
+        email: 'asc',
       },
     })
   }
