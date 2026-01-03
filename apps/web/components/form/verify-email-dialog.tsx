@@ -26,14 +26,15 @@ export function VerifyEmailDialog({
   onVerified,
 }: VerifyEmailDialogProps) {
   const [otp, setOtp] = useState('')
-  const { mutate: verifyEmail, isPending: isVerifying } = useVerifyEmail()
+  const { mutate: verifyEmail, isPending: isVerifying } = useVerifyEmail({
+    onVerified,
+    onOpenChange,
+  })
   const { mutate: resendVerification, isPending: isResending } = useResendVerification()
 
   const handleComplete = (value: string) => {
     if (value.length === 6) {
       verifyEmail(value)
-      onVerified()
-      onOpenChange(false)
       setOtp('')
     }
   }

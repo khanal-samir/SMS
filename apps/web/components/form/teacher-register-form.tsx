@@ -18,7 +18,7 @@ import { CreateUserSchema, type CreateUserDto } from '@repo/schemas'
 import Link from 'next/link'
 import { useTeacherRegister } from '@/hooks/useAuth'
 import { useState } from 'react'
-import { VerifyEmailDialog } from '@/components/verify-email-dialog'
+import { VerifyEmailDialog } from '@/components/form/verify-email-dialog'
 import { useRouter } from 'next/navigation'
 
 export function TeacherRegisterForm({ className, ...props }: React.ComponentProps<'div'>) {

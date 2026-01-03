@@ -15,8 +15,8 @@ export const useRegister = () => {
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: () => {
-      toast.success('Registration successful!')
+    onSuccess: (data) => {
+      toast.success(data.message)
       router.push('/login')
     },
     onSettled: () => {
@@ -39,7 +39,7 @@ export const useLogin = () => {
       if (!response.data) return
       setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
-      toast.success('Login successful!')
+      toast.success(response.message)
       router.push('/student/dashboard')
     },
     onSettled: () => {
@@ -58,10 +58,10 @@ export const useLogout = () => {
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       clearUser()
       queryClient.clear()
-      toast.success('Logged out successfully')
+      toast.success(data.message)
       router.push('/login')
     },
     onSettled: () => {
@@ -92,8 +92,8 @@ export const useTeacherRegister = (
     onMutate: () => {
       setLoading(true)
     },
-    onSuccess: () => {
-      toast.success('Registration successful! Please verify your email.')
+    onSuccess: (data) => {
+      toast.success(data.message)
       setShowVerifyDialog(true)
     },
     onSettled: () => {
@@ -116,7 +116,7 @@ export const useTeacherLogin = () => {
       if (!response.data) return
       setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
-      toast.success('Teacher login successful!')
+      toast.success(response.message)
       router.push('/teacher/dashboard')
     },
     onSettled: () => {
@@ -139,7 +139,7 @@ export const useAdminLogin = () => {
       if (!response.data) return
       setUser(response.data)
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
-      toast.success('Admin login successful!')
+      toast.success(response.message)
       router.push('/admin/dashboard')
     },
     onSettled: () => {
@@ -148,11 +148,19 @@ export const useAdminLogin = () => {
   })
 }
 
-export const useVerifyEmail = () => {
+export const useVerifyEmail = ({
+  onVerified,
+  onOpenChange,
+}: {
+  onVerified: () => void
+  onOpenChange: (open: boolean) => void
+}) => {
   return useMutation({
     mutationFn: (otpCode: string) => authApi.verifyEmail(otpCode),
-    onSuccess: () => {
-      toast.success('Email verified successfully!')
+    onSuccess: (data) => {
+      toast.success(data.message)
+      onVerified()
+      onOpenChange(false)
     },
   })
 }
@@ -160,8 +168,8 @@ export const useVerifyEmail = () => {
 export const useResendVerification = () => {
   return useMutation({
     mutationFn: (email: string) => authApi.resendVerification(email),
-    onSuccess: () => {
-      toast.success('Verification email sent! Check your inbox.')
+    onSuccess: (data) => {
+      toast.success(data.message)
     },
   })
 }
@@ -169,8 +177,8 @@ export const useResendVerification = () => {
 export const useForgotPassword = () => {
   return useMutation({
     mutationFn: (email: string) => authApi.forgotPassword({ email }),
-    onSuccess: () => {
-      toast.success('Password reset email sent!')
+    onSuccess: (data) => {
+      toast.success(data.message)
     },
   })
 }
@@ -179,8 +187,8 @@ export const useResetPassword = () => {
   const router = useRouter()
   return useMutation({
     mutationFn: (data: ResetPasswordDto) => authApi.resetPassword(data),
-    onSuccess: () => {
-      toast.success('Password reset successfully! Please login with your new password.')
+    onSuccess: (data) => {
+      toast.success(data.message)
       router.push('/login')
     },
   })

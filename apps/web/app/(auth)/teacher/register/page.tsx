@@ -1,5 +1,5 @@
 import { GalleryVerticalEnd } from 'lucide-react'
-import { TeacherRegisterForm } from '@/components/teacher-register-form'
+import { TeacherRegisterForm } from '@/components/form/teacher-register-form'
 
 export default function TeacherRegisterPage() {
   return (

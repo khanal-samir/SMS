@@ -23,7 +23,8 @@
         "SMTP_USER",
         "SMTP_PASSWORD",
         "SMTP_FROM",
-        "ADMIN_EMAILS"
+        "ADMIN_EMAILS",
+        "ADMIN_SECRET_KEY"
       ]
     },
     "lint": {

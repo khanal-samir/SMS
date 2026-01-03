@@ -1,5 +1,5 @@
 import { GalleryVerticalEnd } from 'lucide-react'
-import { ResetPasswordForm } from '@/components/reset-password-form'
+import { ResetPasswordForm } from '@/components/form/reset-password-form'
 import { Suspense } from 'react'
 
 export default function ResetPasswordPage() {
