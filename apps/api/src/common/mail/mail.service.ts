@@ -77,7 +77,7 @@ export class MailService {
 
   async sendPasswordResetEmail(email: string, name: string, token: string) {
     const publicWebUrl = this.configService.get<string>('PUBLIC_WEB_URL') ?? ''
-    const resetUrl = `${publicWebUrl}/reset-password?token=${token}`
+    const resetUrl = `${publicWebUrl}/reset-password?token=${token}&email=${email}`
 
     try {
       await this.transporter.sendMail({

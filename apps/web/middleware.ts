@@ -15,6 +15,7 @@ const ROUTE_CONFIG: RouteConfig[] = [
   { pattern: '/', isPublic: true },
   { pattern: '/forgot-password', isPublic: true },
   { pattern: '/auth/google/callback', isPublic: true },
+  { pattern: '/reset-password', isPublic: true },
 
   // Student auth routes
   { pattern: '/login', isPublic: true, isAuthRoute: true },

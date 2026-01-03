@@ -59,4 +59,19 @@ export const authApi = {
     const { data } = await apiClient.post<ApiResponse<null>>('/auth/resend-verification', { email })
     return data
   },
+
+  forgotPassword: async (dto: ForgotPasswordDto): Promise<ApiResponse<null>> => {
+    const { data } = await apiClient.post<ApiResponse<null>>('/auth/forgot-password', dto)
+    return data
+  },
+
+  verifyPasswordResetOtp: async (dto: VerifyPasswordResetOtpDto): Promise<ApiResponse<null>> => {
+    const { data } = await apiClient.post<ApiResponse<null>>('/auth/verify-reset-otp', dto)
+    return data
+  },
+
+  resetPassword: async (data: ResetPasswordDto): Promise<ApiResponse<null>> => {
+    const response = await apiClient.post<ApiResponse<null>>('/auth/reset-password', data)
+    return response.data
+  },
 }
