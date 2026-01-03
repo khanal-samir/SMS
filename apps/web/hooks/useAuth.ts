@@ -124,3 +124,26 @@ export const useTeacherLogin = () => {
     },
   })
 }
+
+export const useAdminLogin = () => {
+  const { setUser, setLoading } = useAuthStore()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (credentials: LoginDto) => authApi.adminLogin(credentials),
+    onMutate: () => {
+      setLoading(true)
+    },
+    onSuccess: (response) => {
+      if (!response.data) return
+      setUser(response.data)
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] })
+      toast.success('Admin login successful!')
+      router.push('/admin/dashboard')
+    },
+    onSettled: () => {
+      setLoading(false)
+    },
+  })
+}

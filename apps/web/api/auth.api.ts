@@ -23,6 +23,11 @@ export const authApi = {
     return data
   },
 
+  adminLogin: async (credentials: LoginDto): Promise<ApiResponse<User>> => {
+    const { data } = await apiClient.post<ApiResponse<User>>('/auth/admin/login', credentials)
+    return data
+  },
+
   refresh: async (): Promise<ApiResponse<{ id: string }>> => {
     const { data } = await apiClient.post<ApiResponse<{ id: string }>>('/auth/refresh')
     return data

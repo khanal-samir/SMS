@@ -24,8 +24,11 @@ const ROUTE_CONFIG: RouteConfig[] = [
   { pattern: '/teacher/login', isPublic: true, isAuthRoute: true },
   { pattern: '/teacher/register', isPublic: true, isAuthRoute: true },
 
+  // Admin auth routes (using less obvious path)
+  { pattern: '/admin/access', isPublic: true, isAuthRoute: true },
+
   // Role-based routes
-  { pattern: /^\/admin($|\/)/, allowedRoles: ['ADMIN'] },
+  { pattern: /^\/admin\/(?!access)/, allowedRoles: ['ADMIN'] }, // Exclude access route
   { pattern: /^\/teacher\/(?!login|register)/, allowedRoles: ['TEACHER', 'ADMIN'] }, // Exclude login/register
   { pattern: /^\/student($|\/)/, allowedRoles: ['STUDENT', 'ADMIN'] },
 ]

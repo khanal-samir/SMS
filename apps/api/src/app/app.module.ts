@@ -5,9 +5,14 @@ import { AuthModule } from 'src/auth/auth.module'
 import { UserModule } from 'src/user/user.module'
 import { PrismaModule } from 'src/prisma/prisma.module'
 import { envSchema } from 'src/config/env.config'
+import { EventEmitterModule } from '@nestjs/event-emitter'
+import { APP_GUARD } from '@nestjs/core/constants'
+import { RolesGuard } from 'src/auth/guards/roles/roles.guard'
+import { JwtAuthGuard } from 'src/auth/guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
     PrismaModule,
@@ -25,6 +30,15 @@ import { envSchema } from 'src/config/env.config'
     }),
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD, //global guard
+      useClass: JwtAuthGuard, //@UseGuard(JwtAuthGuard)
+    },
+    {
+      provide: APP_GUARD, //global guard
+      useClass: RolesGuard, //@UseGuard(Roles)
+    },
+  ],
 })
 export class AppModule {}

@@ -11,9 +11,6 @@ import { JwtStrategy } from './strategies/jwt.strategy'
 import { RefreshStrategy } from './strategies/refresh-token.strategy'
 import googleOauthConfig from './config/google-oauth.config'
 import { GoogleStrategy } from './strategies/google-oauth.strategy'
-import { JwtAuthGuard } from './guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
-import { APP_GUARD } from '@nestjs/core/constants'
-import { RolesGuard } from './guards/roles/roles.guard'
 import { MailModule } from '@src/common/mail/mail.module'
 
 @Module({
@@ -26,20 +23,6 @@ import { MailModule } from '@src/common/mail/mail.module'
     ConfigModule.forFeature(googleOauthConfig), // register google oauth config so it can be injected
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    RefreshStrategy,
-    GoogleStrategy,
-    {
-      provide: APP_GUARD, //global guard
-      useClass: JwtAuthGuard, //@UseGuard(JwtAuthGuard)
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard, //@UseGuard(Roles)
-    },
-  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshStrategy, GoogleStrategy],
 })
 export class AuthModule {}

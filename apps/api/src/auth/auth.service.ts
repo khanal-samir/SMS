@@ -51,7 +51,7 @@ export class AuthService {
     if (createUserDto.role === Role.TEACHER) {
       const optCode = this.generateOTP()
       const [newTeacher] = await Promise.all([
-        this.userService.create(createUserDto, false, optCode),
+        this.userService.create(createUserDto, false, optCode, false),
         this.mailService.sendVerificationEmail(createUserDto.email, createUserDto.name, optCode),
       ])
       return newTeacher
@@ -92,6 +92,11 @@ export class AuthService {
     if (user.role === Role.TEACHER && !user.isEmailVerified) {
       throw new UnauthorizedException(
         'Please verify your email address before logging in. Check your inbox for the OTP code.',
+      )
+    }
+    if (user.role === Role.TEACHER && !user.isTeacherApproved) {
+      throw new UnauthorizedException(
+        'Your account is pending approval from the admin. You will be notified once approved.',
       )
     }
     const isPasswordMatched = await this.userService.comparePasswordOrToken(password, user.password)
@@ -185,7 +190,7 @@ export class AuthService {
       throw new BadRequestException('OTP has expired. Please request a new OTP.')
     }
 
-    return await this.userService.verifyUserEmail(user.id)
+    return this.userService.verifyUserEmail(user.id)
   }
 
   async resendVerificationEmail(email: string) {
