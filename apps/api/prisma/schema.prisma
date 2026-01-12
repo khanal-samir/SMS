@@ -21,10 +21,169 @@ model User {
   passwordResetOtp       String?
   passwordResetOtpExpiry DateTime?
   isTeacherApproved      Boolean   @default(false)
+  batchId                String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  // Relations
+  batch            Batch?            @relation(fields: [batchId], references: [id])
+  studentSemesters StudentSemester[]
+  subjectTeachers  SubjectTeacher[]
+
+  // announcements    Announcement[]
+  // chatGroupMembers ChatGroupMember[]
 
   @@index([id])
   @@index([id, role])
 }
+
+model Batch {
+  id                String    @id @default(cuid())
+  batchYear         Int       @unique
+  startDate         DateTime
+  endDate           DateTime?
+  totalStudents     Int
+  currentSemesterId String?
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  // Relations
+  users           User[]
+  currentSemester Semester? @relation(fields: [currentSemesterId], references: [id])
+}
+
+model Semester {
+  id             String         @id @default(cuid())
+  semesterNumber SemesterNumber
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relations
+  batches          Batch[]
+  studentSemesters StudentSemester[]
+  subjects         Subject[]
+}
+
+model StudentSemester {
+  id         String                @id @default(cuid())
+  studentId  String
+  semesterId String
+  enrolledAt DateTime              @default(now())
+  status     StudentSemesterStatus @default(ACTIVE)
+
+  // Relations
+  student  User     @relation(fields: [studentId], references: [id])
+  semester Semester @relation(fields: [semesterId], references: [id])
+
+  @@unique([studentId, semesterId])
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  subjectCode String   @unique
+  subjectName String
+  semesterId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  semester        Semester         @relation(fields: [semesterId], references: [id])
+  subjectTeachers SubjectTeacher[]
+}
+
+model SubjectTeacher {
+  id         String   @id @default(cuid())
+  subjectId  String
+  teacherId  String
+  assignedAt DateTime @default(now())
+  isActive   Boolean  @default(true)
+
+  // Relations
+  subject Subject @relation(fields: [subjectId], references: [id])
+  teacher User    @relation(fields: [teacherId], references: [id])
+
+  // resources   Resource[]
+  // assignments Assignment[]
+
+  @@unique([subjectId, teacherId])
+}
+
+// model Resource {
+//   id               String       @id @default(cuid())
+//   title            String
+//   description      String?
+//   resourceType     ResourceType
+//   fileUrl          String?
+//   externalLink     String?
+//   isPublished      Boolean      @default(false)
+//   publishedAt      DateTime?
+//   createdAt        DateTime     @default(now())
+//   updatedAt        DateTime     @updatedAt
+//   subjectTeacherId String
+
+//   // Relations
+//   subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id])
+
+//   @@index([id])
+// }
+
+// model Assignment {
+//   id               String   @id @default(cuid())
+//   title            String
+//   description      String?
+//   dueDate          DateTime
+//   createdAt        DateTime @default(now())
+//   updatedAt        DateTime @updatedAt
+//   isPublished      Boolean  @default(false)
+//   subjectTeacherId String
+
+//   // Relations
+//   subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id])
+
+//   @@index([id])
+// }
+
+// model Announcement {
+//   id          String   @id @default(cuid())
+//   title       String
+//   message     String
+//   createdById String
+//   createdAt   DateTime @default(now())
+//   isPublished Boolean  @default(false)
+
+//   // Relations
+//   createdBy User @relation(fields: [createdById], references: [id])
+
+//   @@index([id])
+// }
+
+// model ChatGroup {
+//   id        String   @id @default(cuid())
+//   batchId   String
+//   name      String
+//   createdAt DateTime @default(now())
+
+//   // Relations
+//   batch   Batch             @relation(fields: [batchId], references: [id])
+//   members ChatGroupMember[]
+
+//   @@index([id])
+// }
+
+// model ChatGroupMember {
+//   id          String   @id @default(cuid())
+//   chatGroupId String
+//   userId      String
+//   joinedAt    DateTime @default(now())
+
+//   // Relations
+//   chatGroup ChatGroup @relation(fields: [chatGroupId], references: [id])
+//   user      User      @relation(fields: [userId], references: [id])
+
+//   @@unique([chatGroupId, userId])
+//   @@index([id])
+// }
 
 enum Provider {
   LOCAL
@@ -36,3 +195,29 @@ enum Role {
   TEACHER
   STUDENT
 }
+
+enum StudentSemesterStatus {
+  ACTIVE
+  COMPLETED
+  FAILED
+}
+
+enum SemesterNumber {
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+  FIFTH
+  SIXTH
+  SEVENTH
+  EIGHTH
+}
+
+// enum ResourceType {
+//   PDF
+//   VIDEO
+//   DOCUMENT
+//   LINK
+//   ASSIGNMENT
+//   NOTES
+// }
