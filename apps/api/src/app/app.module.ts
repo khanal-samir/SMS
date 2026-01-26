@@ -9,6 +9,10 @@ import { EventEmitterModule } from '@nestjs/event-emitter'
 import { APP_GUARD } from '@nestjs/core/constants'
 import { RolesGuard } from 'src/auth/guards/roles/roles.guard'
 import { JwtAuthGuard } from 'src/auth/guards/jwt/jwt-auth.guard.ts/jwt-auth.guard'
+import { SeedModule } from 'src/seed/seed.module'
+import { SemesterModule } from 'src/semester/semester.module'
+import { SubjectModule } from 'src/subject/subject.module'
+import { BatchModule } from 'src/batch/batch.module'
 
 @Module({
   imports: [
@@ -16,6 +20,10 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt/jwt-auth.guard.ts/jwt-auth.gua
     AuthModule,
     UserModule,
     PrismaModule,
+    SeedModule,
+    SemesterModule,
+    SubjectModule,
+    BatchModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {
