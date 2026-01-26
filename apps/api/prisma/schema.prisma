@@ -55,7 +55,7 @@ model Batch {
 
 model Semester {
   id             String         @id @default(cuid())
-  semesterNumber SemesterNumber
+  semesterNumber SemesterNumber @unique
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
