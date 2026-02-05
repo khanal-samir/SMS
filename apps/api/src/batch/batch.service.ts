@@ -10,7 +10,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { SemesterService } from 'src/semester/semester.service'
 import { CreateBatchDto, EnrollStudentDto } from './dto'
 import { StudentEnrolledEvent, STUDENT_ENROLLED_EVENT } from './events'
-import { Role } from '@prisma/client'
+import { Role, StudentSemesterStatus } from '@prisma/client'
 
 @Injectable()
 export class BatchService {
@@ -40,8 +40,8 @@ export class BatchService {
     const batch = await this.prisma.batch.create({
       data: {
         batchYear: createBatchDto.batchYear,
-        startDate: new Date(createBatchDto.startDate),
-        endDate: createBatchDto.endDate ? new Date(createBatchDto.endDate) : null,
+        startDate: new Date(String(createBatchDto.startDate)),
+        endDate: createBatchDto.endDate ? new Date(String(createBatchDto.endDate)) : null,
         totalStudents: 0,
         currentSemesterId: firstSemester.id,
         isActive: true,
@@ -103,28 +103,22 @@ export class BatchService {
 
     // Verify batch exists and is active
     const batch = await this.prisma.batch.findUnique({
-      where: { id: batchId },
+      where: { id: batchId, isActive: true },
     })
 
     if (!batch) {
-      throw new NotFoundException(`Batch with id ${batchId} not found`)
-    }
-
-    if (!batch.isActive) {
-      throw new BadRequestException(`Batch ${batchId} is not active`)
+      throw new NotFoundException(`Batch with id ${batchId} not found or is not active`)
     }
 
     // Verify student exists and is a student role
     const student = await this.prisma.user.findUnique({
-      where: { id: enrollStudentDto.studentId },
+      where: { id: enrollStudentDto.studentId, role: Role.STUDENT },
     })
 
     if (!student) {
-      throw new NotFoundException(`Student with id ${enrollStudentDto.studentId} not found`)
-    }
-
-    if (student.role !== Role.STUDENT) {
-      throw new BadRequestException(`User ${enrollStudentDto.studentId} is not a student`)
+      throw new NotFoundException(
+        `Student with id ${enrollStudentDto.studentId} not found or is not a student`,
+      )
     }
 
     if (student.batchId) {
@@ -158,7 +152,7 @@ export class BatchService {
     // Emit the student enrolled event
     this.eventEmitter.emit(
       STUDENT_ENROLLED_EVENT,
-      new StudentEnrolledEvent(enrollStudentDto.studentId, batchId),
+      new StudentEnrolledEvent(enrollStudentDto.studentId as string, batchId),
     )
 
     this.logger.log(
@@ -169,83 +163,84 @@ export class BatchService {
 
   async advanceSemester(batchId: string) {
     this.logger.log(`Advancing semester for batch: ${batchId}`)
-
-    const batch = await this.prisma.batch.findUnique({
-      where: { id: batchId },
-      include: {
-        currentSemester: true,
-      },
-    })
-
-    if (!batch) {
-      throw new NotFoundException(`Batch with id ${batchId} not found`)
-    }
-
-    if (!batch.isActive) {
-      throw new BadRequestException(`Batch ${batchId} is not active`)
-    }
-
-    if (!batch.currentSemester) {
-      throw new BadRequestException(`Batch ${batchId} has no current semester`)
-    }
-
-    const nextSemesterNumber = this.semesterService.getNextSemester(
-      batch.currentSemester.semesterNumber,
-    )
-
-    if (!nextSemesterNumber) {
-      throw new BadRequestException(`Batch ${batchId} is already in the final semester (EIGHTH)`)
-    }
-
-    // Get the next semester
-    const nextSemester = await this.semesterService.findOneByNumber(nextSemesterNumber)
-
-    // Update all active student semesters to COMPLETED
-    await this.prisma.studentSemester.updateMany({
-      where: {
-        semesterId: batch.currentSemesterId!,
-        status: 'ACTIVE',
-        student: {
-          batchId: batchId,
-        },
-      },
-      data: {
-        status: 'COMPLETED',
-      },
-    })
-
-    // Update batch to next semester
-    const updatedBatch = await this.prisma.batch.update({
-      where: { id: batchId },
-      data: {
-        currentSemesterId: nextSemester.id,
-      },
-      include: {
-        currentSemester: true,
-      },
-    })
-
-    // Create new StudentSemester records for all students in the batch
-    const students = await this.prisma.user.findMany({
-      where: { batchId },
-      select: { id: true },
-    })
-
-    for (const student of students) {
-      await this.prisma.studentSemester.create({
-        data: {
-          studentId: student.id,
-          semesterId: nextSemester.id,
-          status: 'ACTIVE',
+    return this.prisma.$transaction(async (tx) => {
+      const batch = await tx.batch.findUnique({
+        where: { id: batchId, isActive: true },
+        include: {
+          currentSemester: true,
         },
       })
-    }
 
-    this.logger.log(
-      `Advanced batch ${batchId} from ${batch.currentSemester.semesterNumber} to ${nextSemester.semesterNumber}`,
-    )
+      if (!batch) {
+        throw new NotFoundException(`Batch with id ${batchId} not found or is not active`)
+      }
 
-    return updatedBatch
+      if (!batch.currentSemester) {
+        throw new BadRequestException(`Batch ${batchId} has no current semester`)
+      }
+
+      // Return only enum
+      const nextSemesterNumber = this.semesterService.getNextSemester(
+        batch.currentSemester.semesterNumber,
+      )
+
+      if (!nextSemesterNumber) {
+        throw new BadRequestException(`Batch ${batchId} is already in the final semester (EIGHTH)`)
+      }
+      const nextSemester = await tx.semester.findUnique({
+        where: { semesterNumber: nextSemesterNumber },
+        select: { id: true, semesterNumber: true },
+      })
+
+      if (!nextSemester) {
+        throw new NotFoundException(`Semester ${nextSemesterNumber} not found`)
+      }
+
+      const [updatedBatch] = await Promise.all([
+        // update batch current semester
+        tx.batch.update({
+          where: { id: batchId },
+          data: {
+            currentSemesterId: nextSemester.id,
+          },
+        }),
+        // update all active student semesters in this batch to completed
+        tx.studentSemester.updateMany({
+          where: {
+            semesterId: batch.currentSemesterId!,
+            status: StudentSemesterStatus.ACTIVE,
+            student: {
+              batchId: batchId,
+            },
+          },
+          data: {
+            status: StudentSemesterStatus.COMPLETED,
+          },
+        }),
+      ])
+
+      const students = await tx.user.findMany({
+        where: { batchId },
+        select: { id: true },
+      })
+
+      if (students.length > 0) {
+        await tx.studentSemester.createMany({
+          data: students.map((student) => ({
+            studentId: student.id,
+            semesterId: nextSemester.id,
+            status: StudentSemesterStatus.ACTIVE,
+          })),
+          skipDuplicates: true,
+        })
+      }
+
+      this.logger.log(
+        `Advanced batch ${batchId} from ${batch.currentSemester.semesterNumber} to ${nextSemester.semesterNumber}`,
+      )
+
+      return updatedBatch
+    })
   }
 
   async getStudentsInBatch(batchId: string) {

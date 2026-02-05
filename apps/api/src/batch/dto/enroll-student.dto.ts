@@ -1,9 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
+import { EnrollStudentSchema } from '@repo/schemas'
+import { createZodDto } from 'nestjs-zod'
 
-export class EnrollStudentDto {
-  @ApiProperty({ description: 'Student ID to enroll', example: 'clxyz123abc' })
-  @IsNotEmpty()
-  @IsString()
-  studentId: string
-}
+export class EnrollStudentDto extends createZodDto(EnrollStudentSchema) {}
