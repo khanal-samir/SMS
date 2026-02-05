@@ -14,7 +14,7 @@ export const envSchema = z.object({
   SMTP_USER: z.string().min(1),
   SMTP_PASSWORD: z.string().min(1),
   SMTP_FROM: z.email(),
-  ADMIN_EMAILS: z.string().min(1),
+  ADMIN_EMAILS: z.string().transform((val) => val.split(',').map((email) => email.trim())),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
   BE_PORT: z.coerce.number().optional().default(7000),
 })
