@@ -8,7 +8,7 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { SemesterService } from 'src/semester/semester.service'
-import { CreateBatchDto, EnrollStudentDto, EnrollStudentsDto } from './dto'
+import { CreateBatchDto, EnrollStudentDto } from './dto'
 import { StudentEnrolledEvent, STUDENT_ENROLLED_EVENT } from './events'
 import { Role } from '@prisma/client'
 
@@ -133,23 +133,26 @@ export class BatchService {
       )
     }
 
-    // Update student's batchId
-    const updatedStudent = await this.prisma.user.update({
-      where: { id: enrollStudentDto.studentId },
-      data: { batchId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        batchId: true,
-      },
-    })
+    const updatedStudent = await this.prisma.$transaction(async (tx) => {
+      const student = await tx.user.update({
+        where: { id: enrollStudentDto.studentId },
+        data: {
+          batchId,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          batchId: true,
+        },
+      })
+      await tx.batch.update({
+        where: { id: batchId },
+        data: { totalStudents: { increment: 1 } },
+      })
 
-    // Update batch totalStudents count
-    await this.prisma.batch.update({
-      where: { id: batchId },
-      data: { totalStudents: { increment: 1 } },
+      return student
     })
 
     // Emit the student enrolled event
@@ -162,31 +165,6 @@ export class BatchService {
       `Successfully enrolled student: ${enrollStudentDto.studentId} in batch: ${batchId}`,
     )
     return updatedStudent
-  }
-
-  async enrollStudents(batchId: string, enrollStudentsDto: EnrollStudentsDto) {
-    this.logger.log(
-      `Enrolling ${enrollStudentsDto.studentIds.length} students in batch: ${batchId}`,
-    )
-
-    const results = {
-      success: [] as string[],
-      failed: [] as { studentId: string; error: string }[],
-    }
-
-    for (const studentId of enrollStudentsDto.studentIds) {
-      try {
-        await this.enrollStudent(batchId, { studentId })
-        results.success.push(studentId)
-      } catch (error) {
-        results.failed.push({
-          studentId,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        })
-      }
-    }
-
-    return results
   }
 
   async advanceSemester(batchId: string) {

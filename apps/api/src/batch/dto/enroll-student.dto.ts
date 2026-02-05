@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsArray, ArrayMinSize } from 'class-validator'
+import { IsNotEmpty, IsString } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class EnrollStudentDto {
@@ -6,17 +6,4 @@ export class EnrollStudentDto {
   @IsNotEmpty()
   @IsString()
   studentId: string
-}
-
-export class EnrollStudentsDto {
-  @ApiProperty({
-    description: 'Array of student IDs to enroll',
-    example: ['clxyz123abc', 'clxyz456def'],
-    type: [String],
-  })
-  @IsNotEmpty()
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsString({ each: true })
-  studentIds: string[]
 }

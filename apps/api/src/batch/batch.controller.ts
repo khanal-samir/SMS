@@ -3,7 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { Role } from '@prisma/client'
 import { Roles } from 'src/auth/decorators/roles.decorator'
 import { BatchService } from './batch.service'
-import { CreateBatchDto, EnrollStudentDto, EnrollStudentsDto } from './dto'
+import { CreateBatchDto, EnrollStudentDto } from './dto'
 
 @ApiTags('Batch Management')
 @Controller('batches')
@@ -62,20 +62,6 @@ export class BatchController {
     return {
       message: 'Student enrolled successfully',
       data: student,
-    }
-  }
-
-  @Post(':id/enroll-batch')
-  @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Enroll multiple students in a batch' })
-  @ApiParam({ name: 'id', description: 'Batch ID' })
-  @ApiResponse({ status: 200, description: 'Students enrollment results' })
-  @ApiResponse({ status: 404, description: 'Batch not found' })
-  async enrollStudents(@Param('id') id: string, @Body() enrollStudentsDto: EnrollStudentsDto) {
-    const results = await this.batchService.enrollStudents(id, enrollStudentsDto)
-    return {
-      message: `Enrolled ${results.success.length} students, ${results.failed.length} failed`,
-      data: results,
     }
   }
 

@@ -32,6 +32,7 @@ export class StudentEnrollmentListener {
       const existingStudentSemester = await this.prisma.studentSemester.findUnique({
         where: {
           studentId_semesterId: {
+            // composite unique query check schema for unique relation
             studentId: event.studentId,
             semesterId: batch.currentSemesterId,
           },
