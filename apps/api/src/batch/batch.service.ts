@@ -46,9 +46,6 @@ export class BatchService {
         currentSemesterId: firstSemester.id,
         isActive: true,
       },
-      include: {
-        currentSemester: true,
-      },
     })
 
     this.logger.log(
@@ -60,12 +57,6 @@ export class BatchService {
   async findAll() {
     this.logger.log('Finding all batches')
     return await this.prisma.batch.findMany({
-      include: {
-        currentSemester: true,
-        _count: {
-          select: { users: true },
-        },
-      },
       orderBy: { batchYear: 'desc' },
     })
   }
@@ -74,21 +65,6 @@ export class BatchService {
     this.logger.log(`Finding batch by id: ${id}`)
     const batch = await this.prisma.batch.findUnique({
       where: { id },
-      include: {
-        currentSemester: {
-          include: {
-            subjects: true,
-          },
-        },
-        users: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-          },
-        },
-      },
     })
 
     if (!batch) {
@@ -152,7 +128,7 @@ export class BatchService {
     // Emit the student enrolled event
     this.eventEmitter.emit(
       STUDENT_ENROLLED_EVENT,
-      new StudentEnrolledEvent(enrollStudentDto.studentId as string, batchId),
+      new StudentEnrolledEvent(enrollStudentDto.studentId, batchId),
     )
 
     this.logger.log(
@@ -248,6 +224,7 @@ export class BatchService {
 
     const batch = await this.prisma.batch.findUnique({
       where: { id: batchId },
+      select: { id: true },
     })
 
     if (!batch) {
@@ -263,14 +240,7 @@ export class BatchService {
         id: true,
         name: true,
         email: true,
-        studentSemesters: {
-          include: {
-            semester: true,
-          },
-          orderBy: {
-            enrolledAt: 'desc',
-          },
-        },
+        batchId: true,
       },
     })
   }

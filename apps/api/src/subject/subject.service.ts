@@ -26,9 +26,7 @@ export class SubjectService {
             },
           },
         },
-        include: {
-          semester: true,
-        },
+
         orderBy: { subjectCode: 'asc' },
       })
     }
@@ -37,17 +35,11 @@ export class SubjectService {
       const currentSemesterId = await this.accessScopeService.getStudentCurrentSemesterId(user.id)
       return await this.prisma.subject.findMany({
         where: { semesterId: currentSemesterId },
-        include: {
-          semester: true,
-        },
         orderBy: { subjectCode: 'asc' },
       })
     }
 
     return await this.prisma.subject.findMany({
-      include: {
-        semester: true,
-      },
       orderBy: { subjectCode: 'asc' },
     })
   }
@@ -61,9 +53,6 @@ export class SubjectService {
     }
     return await this.prisma.subject.findMany({
       where: this.buildSubjectWhereClause(semesterId, user),
-      include: {
-        semester: true,
-      },
       orderBy: { subjectCode: 'asc' },
     })
   }
@@ -72,20 +61,6 @@ export class SubjectService {
     this.logger.log(`Finding subject by id: ${id}`)
     const subject = await this.prisma.subject.findUnique({
       where: { id },
-      include: {
-        semester: true,
-        subjectTeachers: {
-          include: {
-            teacher: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-        },
-      },
     })
 
     if (!subject) {
@@ -109,9 +84,6 @@ export class SubjectService {
     this.logger.log(`Finding subject by code: ${subjectCode}`)
     const subject = await this.prisma.subject.findUnique({
       where: { subjectCode },
-      include: {
-        semester: true,
-      },
     })
 
     if (!subject) {
