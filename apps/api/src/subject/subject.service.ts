@@ -92,6 +92,29 @@ export class SubjectService {
 
     return subject
   }
+  async findAllAssignedTeachers(subjectId: string, user?: AuthUser) {
+    this.logger.log(`Finding all assigned teachers for subject id: ${subjectId}`)
+    const subject = await this.prisma.subject.findUnique({
+      where: { id: subjectId },
+      select: { semesterId: true },
+    })
+    if (!subject) {
+      throw new NotFoundException(`Subject with id ${subjectId} not found`)
+    }
+    const canAccessSubject = await this.accessScopeService.canAccessSubject(
+      subject.semesterId,
+      subjectId,
+      user,
+    )
+    if (!canAccessSubject) {
+      throw new NotFoundException(`Subject with id ${subjectId} not found or access denied`)
+    }
+    return await this.prisma.subjectTeacher.findMany({
+      where: { subjectId, isActive: true },
+      include: { teacher: true },
+      orderBy: { teacher: { name: 'asc' } },
+    })
+  }
 
   private buildSubjectWhereClause(semesterId: string, user?: AuthUser) {
     if (user?.role === Role.TEACHER) {

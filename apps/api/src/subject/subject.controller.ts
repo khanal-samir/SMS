@@ -62,4 +62,21 @@ export class SubjectController {
       data: subject,
     }
   }
+
+  @Get(':id/teachers')
+  @Roles(Role.ADMIN, Role.TEACHER)
+  @ApiOperation({
+    summary: 'Get all assigned teachers for a subject',
+    description: 'Admin: any subject. Teacher: assigned subjects only.',
+  })
+  @ApiParam({ name: 'id', description: 'Subject ID' })
+  @ApiResponse({ status: 200, description: 'List of assigned teachers for the subject' })
+  @ApiResponse({ status: 404, description: 'Subject not found' })
+  async findAllAssignedTeachers(@Param('id') subjectId: string, @CurrentUser() user: AuthUser) {
+    const teachers = await this.subjectService.findAllAssignedTeachers(subjectId, user)
+    return {
+      message: 'Assigned teachers retrieved successfully',
+      data: teachers,
+    }
+  }
 }
