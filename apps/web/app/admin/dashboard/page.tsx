@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth.store'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,6 +10,7 @@ import { Loader2 } from 'lucide-react'
 
 export default function AdminDashboard() {
   const { user } = useAuthStore()
+  const router = useRouter()
   const { mutate: logout, isPending } = useLogout()
   const { data: pendingTeachers, isLoading: isLoadingTeachers } = usePendingTeachers()
   const { mutate: approveTeacher } = useApproveTeacher()
@@ -137,6 +139,24 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-600">Manage students, teachers, and admins</p>
               </div>
               <Button className="mt-4 w-full">Manage Users</Button>
+            </CardContent>
+          </Card>
+
+          {/* Batch Management Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">🎓 Batch Management</CardTitle>
+              <CardDescription>Manage student batches and enrollment</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">
+                  Create batches, enroll students, and advance semesters
+                </p>
+              </div>
+              <Button className="mt-4 w-full" onClick={() => router.push('/admin/batches')}>
+                Manage Batches
+              </Button>
             </CardContent>
           </Card>
 

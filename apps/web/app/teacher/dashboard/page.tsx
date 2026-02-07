@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth.store'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -6,6 +7,7 @@ import { useLogout } from '@/hooks/useAuth'
 
 export default function TeacherDashboard() {
   const { user } = useAuthStore()
+  const router = useRouter()
   const { mutate: logout, isPending } = useLogout()
 
   return (
@@ -77,6 +79,26 @@ export default function TeacherDashboard() {
               </div>
               <Button className="mt-4 w-full" variant="outline">
                 View Students
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Batches Card */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">🎓 Batches</CardTitle>
+              <CardDescription>View student batches</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">View batches and their enrolled students</p>
+              </div>
+              <Button
+                className="mt-4 w-full"
+                variant="outline"
+                onClick={() => router.push('/teacher/batches')}
+              >
+                View Batches
               </Button>
             </CardContent>
           </Card>
