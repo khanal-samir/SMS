@@ -24,7 +24,7 @@ export class BatchController {
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.TEACHER)
   @ApiOperation({ summary: 'Get all batches' })
   @ApiResponse({ status: 200, description: 'List of all batches' })
   async findAll() {
@@ -32,6 +32,18 @@ export class BatchController {
     return {
       message: 'Batches retrieved successfully',
       data: batches,
+    }
+  }
+
+  @Get('unenrolled-students')
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Get all students not enrolled in any batch' })
+  @ApiResponse({ status: 200, description: 'List of unenrolled students' })
+  async getUnenrolledStudents() {
+    const students = await this.batchService.getUnenrolledStudents()
+    return {
+      message: 'Unenrolled students retrieved successfully',
+      data: students,
     }
   }
 

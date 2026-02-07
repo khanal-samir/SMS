@@ -244,4 +244,21 @@ export class BatchService {
       },
     })
   }
+
+  async getUnenrolledStudents() {
+    this.logger.log('Getting unenrolled students')
+
+    return await this.prisma.user.findMany({
+      where: {
+        role: Role.STUDENT,
+        batchId: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+      orderBy: { name: 'asc' },
+    })
+  }
 }
