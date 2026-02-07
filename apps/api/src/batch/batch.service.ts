@@ -65,6 +65,16 @@ export class BatchService {
     this.logger.log(`Finding batch by id: ${id}`)
     const batch = await this.prisma.batch.findUnique({
       where: { id },
+      include: {
+        users: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
     })
 
     if (!batch) {
@@ -179,6 +189,11 @@ export class BatchService {
           data: {
             currentSemesterId: nextSemester.id,
           },
+          select: {
+            id: true,
+            batchYear: true,
+            currentSemesterId: true,
+          },
         }),
         // update all active student semesters in this batch to completed
         tx.studentSemester.updateMany({
@@ -241,6 +256,7 @@ export class BatchService {
         name: true,
         email: true,
         batchId: true,
+        role: true,
       },
     })
   }
