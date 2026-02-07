@@ -1,5 +1,7 @@
 export * from './schemas/user.schema'
 export * from './schemas/auth.schema'
 export * from './schemas/batch.schema'
+export * from './schemas/semester.schema'
+export * from './schemas/subject.schema'
 export * from './schemas/admin.schema'
 export * from './types/api-response'
