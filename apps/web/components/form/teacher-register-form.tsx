@@ -44,9 +44,9 @@ export function TeacherRegisterForm({ className, ...props }: React.ComponentProp
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Create your teacher account</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="font-display text-2xl font-bold">Create teacher account</CardTitle>
           <CardDescription>Sign up with your email and password</CardDescription>
         </CardHeader>
         <CardContent>
@@ -99,13 +99,20 @@ export function TeacherRegisterForm({ className, ...props }: React.ComponentProp
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
+              <Button
+                type="submit"
+                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
+                disabled={isPending}
+              >
                 {isPending ? 'Creating account...' : 'Create Account'}
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">
                 Already have an account?{' '}
-                <Link href="/teacher/login" className="underline">
+                <Link
+                  href="/teacher/login"
+                  className="font-medium text-brand-accent underline-offset-4 hover:underline"
+                >
                   Sign in
                 </Link>
               </p>

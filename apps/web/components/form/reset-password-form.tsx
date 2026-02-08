@@ -17,6 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { ResetPasswordSchema, type ResetPasswordDto } from '@repo/schemas'
 import { useResetPassword } from '@/hooks/useAuth'
 import { useSearchParams } from 'next/navigation'
+
 export function ResetPasswordForm({ className, ...props }: React.ComponentProps<'div'>) {
   const searchParams = useSearchParams()
   const emailParam = searchParams.get('email') || ''
@@ -40,9 +41,9 @@ export function ResetPasswordForm({ className, ...props }: React.ComponentProps<
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Reset Password</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="font-display text-2xl font-bold">Reset Password</CardTitle>
           <CardDescription>
             {otpParam
               ? 'Enter your new password below.'
@@ -80,7 +81,11 @@ export function ResetPasswordForm({ className, ...props }: React.ComponentProps<
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
+              <Button
+                type="submit"
+                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
+                disabled={isPending}
+              >
                 {isPending ? 'Resetting...' : 'Reset Password'}
               </Button>
             </form>
