@@ -1,6 +1,7 @@
 'use client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ThemeProvider } from 'next-themes'
 import { useState } from 'react'
 import { Toaster } from 'sonner'
 import { useError } from '@/hooks/useError'
@@ -42,13 +43,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   )
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ErrorProvider>
-        <AuthInitializer />
-        {children}
-        <Toaster position="top-right" richColors closeButton />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </ErrorProvider>
-    </QueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+      <QueryClientProvider client={queryClient}>
+        <ErrorProvider>
+          <AuthInitializer />
+          {children}
+          <Toaster position="top-right" richColors closeButton />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ErrorProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }

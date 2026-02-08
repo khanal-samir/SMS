@@ -35,9 +35,9 @@ export function TeacherLoginForm({ className, ...props }: React.ComponentProps<'
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Teacher Sign in</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="font-display text-2xl font-bold">Teacher Sign In</CardTitle>
           <CardDescription>Login with your email and password</CardDescription>
         </CardHeader>
         <CardContent>
@@ -67,7 +67,15 @@ export function TeacherLoginForm({ className, ...props }: React.ComponentProps<'
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <div className="flex items-center">
+                      <FormLabel>Password</FormLabel>
+                      <Link
+                        href="/forgot-password"
+                        className="ml-auto text-xs text-brand-accent underline-offset-4 hover:underline font-medium"
+                      >
+                        Forgot your password?
+                      </Link>
+                    </div>
                     <FormControl>
                       <Input type="password" {...field} disabled={isPending} />
                     </FormControl>
@@ -76,13 +84,20 @@ export function TeacherLoginForm({ className, ...props }: React.ComponentProps<'
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? 'Logging in...' : 'Login'}
+              <Button
+                type="submit"
+                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
+                disabled={isPending}
+              >
+                {isPending ? 'Signing in...' : 'Sign In'}
               </Button>
 
               <p className="text-center text-sm text-muted-foreground">
                 Don&apos;t have an account?{' '}
-                <Link href="/teacher/register" className="underline">
+                <Link
+                  href="/teacher/register"
+                  className="font-medium text-brand-accent underline-offset-4 hover:underline"
+                >
                   Create one
                 </Link>
               </p>
