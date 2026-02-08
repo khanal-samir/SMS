@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { authApi } from '@/api/auth.api'
+import { authApi } from '@/apis/auth.api'
 import { useAuthStore } from '@/store/auth.store'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import type { CreateUserDto, LoginDto, ResetPasswordDto } from '@repo/schemas'
