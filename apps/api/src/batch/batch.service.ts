@@ -139,7 +139,7 @@ export class BatchService {
 
   async advanceSemester(batchId: string) {
     this.logger.log(`Advancing semester for batch: ${batchId}`)
-    return this.prisma.$transaction(async (tx) => {
+    return await this.prisma.$transaction(async (tx) => {
       const batch = await tx.batch.findUnique({
         where: { id: batchId, isActive: true },
         include: {
