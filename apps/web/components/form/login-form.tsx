@@ -38,9 +38,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="font-display text-2xl font-bold">Welcome back</CardTitle>
           <CardDescription>Login with your Google account or Email</CardDescription>
         </CardHeader>
         <CardContent>
@@ -49,7 +49,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
               <Button
                 variant="outline"
                 type="button"
-                className="w-full"
+                className="w-full h-10 font-medium"
                 onClick={initiateGoogleLogin}
                 disabled={isPending}
               >
@@ -113,7 +113,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                       <FormLabel>Password</FormLabel>
                       <Link
                         href="/forgot-password"
-                        className="ml-auto text-sm underline-offset-4 hover:underline"
+                        className="ml-auto text-xs text-brand-accent underline-offset-4 hover:underline font-medium"
                       >
                         Forgot your password?
                       </Link>
@@ -126,13 +126,20 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? 'Logging in...' : 'Login'}
+              <Button
+                type="submit"
+                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
+                disabled={isPending}
+              >
+                {isPending ? 'Signing in...' : 'Sign In'}
               </Button>
 
-              <FormDescription className="text-center">
+              <FormDescription className="text-center text-sm">
                 Don&apos;t have an account?{' '}
-                <Link href="/register" className="underline">
+                <Link
+                  href="/register"
+                  className="font-medium text-brand-accent underline-offset-4 hover:underline"
+                >
                   Sign up
                 </Link>
               </FormDescription>
@@ -140,13 +147,13 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
           </Form>
         </CardContent>
       </Card>
-      <p className="px-6 text-center text-sm text-muted-foreground">
+      <p className="px-2 text-center text-xs text-muted-foreground">
         By clicking continue, you agree to our{' '}
-        <Link href="/terms" className="underline">
+        <Link href="/terms" className="underline underline-offset-4 hover:text-foreground">
           Terms of Service
         </Link>{' '}
         and{' '}
-        <Link href="/privacy" className="underline">
+        <Link href="/privacy" className="underline underline-offset-4 hover:text-foreground">
           Privacy Policy
         </Link>
         .

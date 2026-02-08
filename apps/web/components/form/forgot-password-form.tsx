@@ -34,9 +34,9 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Forgot Password</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="font-display text-2xl font-bold">Forgot Password</CardTitle>
           <CardDescription>
             Enter your email address and we&apos;ll send you a link to reset your password.
           </CardDescription>
@@ -63,13 +63,20 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
+              <Button
+                type="submit"
+                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
+                disabled={isPending}
+              >
                 {isPending ? 'Sending...' : 'Send Reset Link'}
               </Button>
 
               <div className="text-center text-sm">
                 Remember your password?{' '}
-                <Link href="/login" className="underline underline-offset-4">
+                <Link
+                  href="/login"
+                  className="font-medium text-brand-accent underline-offset-4 hover:underline"
+                >
                   Back to Login
                 </Link>
               </div>
@@ -77,10 +84,17 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           </Form>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
-      </div>
+      <p className="px-2 text-center text-xs text-muted-foreground">
+        By clicking continue, you agree to our{' '}
+        <Link href="/terms" className="underline underline-offset-4 hover:text-foreground">
+          Terms of Service
+        </Link>{' '}
+        and{' '}
+        <Link href="/privacy" className="underline underline-offset-4 hover:text-foreground">
+          Privacy Policy
+        </Link>
+        .
+      </p>
     </div>
   )
 }

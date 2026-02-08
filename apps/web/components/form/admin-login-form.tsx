@@ -34,9 +34,9 @@ export function AdminLoginForm({ className, ...props }: React.ComponentProps<'di
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="text-xl">Sign in</CardTitle>
+      <Card className="border-border/60 shadow-sm">
+        <CardHeader className="text-center pb-2">
+          <CardTitle className="font-display text-2xl font-bold">Admin Sign In</CardTitle>
           <CardDescription>Enter your credentials to continue</CardDescription>
         </CardHeader>
         <CardContent>
@@ -75,8 +75,12 @@ export function AdminLoginForm({ className, ...props }: React.ComponentProps<'di
                 )}
               />
 
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? 'Logging in...' : 'Login'}
+              <Button
+                type="submit"
+                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
+                disabled={isPending}
+              >
+                {isPending ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
           </Form>
