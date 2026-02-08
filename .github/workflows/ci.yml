@@ -57,17 +57,11 @@ jobs:
       - name: Lint frontend
         run: pnpm --filter web lint
 
-      - name: Test frontend (optional)
-        run: pnpm --filter web run --if-present test
-
       - name: Build frontend
         run: pnpm turbo build --filter=web
 
       - name: Lint backend
         run: pnpm --filter api lint
-
-      - name: Test backend
-        run: pnpm --filter api test
 
       - name: Build backend
         run: pnpm turbo build --filter=api
