@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+.env
+.env.*
+*.md
+.git
+.gitignore
+.eslintrc*
+.prettierrc*
+jest.config.*
+tsconfig.tsbuildinfo
