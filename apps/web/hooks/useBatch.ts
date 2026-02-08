@@ -56,9 +56,6 @@ export const useCreateBatch = () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCHES] })
       toast.success(data.message)
     },
-    onError: () => {
-      toast.error('Failed to create batch')
-    },
   })
 }
 
@@ -68,14 +65,13 @@ export const useEnrollStudent = (batchId: string) => {
   return useMutation({
     mutationFn: (dto: EnrollStudentDto) => batchApi.enrollStudent(batchId, dto),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH_STUDENTS, batchId] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCHES] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH, batchId] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UNENROLLED_STUDENTS] })
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH_STUDENTS, batchId] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCHES] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH, batchId] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UNENROLLED_STUDENTS] }),
+      ])
       toast.success(data.message)
-    },
-    onError: () => {
-      toast.error('Failed to enroll student')
     },
   })
 }
@@ -86,12 +82,11 @@ export const useAdvanceSemester = () => {
   return useMutation({
     mutationFn: (batchId: string) => batchApi.advanceSemester(batchId),
     onSuccess: (data, batchId) => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCHES] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH, batchId] })
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCHES] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH, batchId] }),
+      ])
       toast.success(data.message)
-    },
-    onError: () => {
-      toast.error('Failed to advance semester')
     },
   })
 }
