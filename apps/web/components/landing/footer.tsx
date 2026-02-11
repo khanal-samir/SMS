@@ -12,9 +12,7 @@ export function LandingFooter() {
                 <GraduationCap className="size-5" />
               </div>
               <div className="flex flex-col">
-                <span className="font-display text-lg font-bold text-brand-foreground">
-                  PNC CSIT
-                </span>
+                <span className="font-display text-lg font-bold text-brand-foreground">SMS</span>
                 <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-brand-foreground/40">
                   College
                 </span>
@@ -84,7 +82,7 @@ export function LandingFooter() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-brand-foreground/10 pt-8 sm:flex-row">
           <p className="text-xs text-brand-foreground/40">
-            &copy; {new Date().getFullYear()} PNC CSIT College. All rights reserved.
+            &copy; {new Date().getFullYear()} SMS College. All rights reserved.
           </p>
           <div className="flex gap-6">
             {['Twitter', 'Facebook', 'LinkedIn'].map((social) => (

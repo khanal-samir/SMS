@@ -144,12 +144,11 @@
     @apply bg-background text-foreground font-body antialiased;
   }
 
-  /* Refined typography defaults */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display tracking-tight;
+    @apply tracking-tight;
   }
 }
 

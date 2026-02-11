@@ -27,7 +27,7 @@ export function LandingHero() {
           className="mb-8 inline-flex items-center gap-2 rounded-full border border-brand-foreground/10 bg-brand-foreground/5 px-4 py-1.5 text-xs font-medium tracking-wide text-brand-foreground/70"
         >
           <span className="inline-block size-1.5 rounded-full bg-brand-accent animate-pulse" />
-          PNC CSIT College Management System
+          SMS College Management System
         </motion.div>
 
         <motion.h1
