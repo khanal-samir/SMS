@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { authApi } from '@/api/auth.api'
+import { authApi } from '@/apis/auth.api'
 import { useAuthStore } from '@/store/auth.store'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import { getSessionCookie } from '@/lib/session'

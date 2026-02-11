@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/auth.store'
-import { authApi } from '@/api/auth.api'
+import { authApi } from '@/apis/auth.api'
 import { getSessionCookie, setSessionCookie } from '@/lib/session'
 import type { ApiResponse } from '@repo/schemas'
 

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { batchApi } from '@/api/batch.api'
+import { batchApi } from '@/apis/batch.api'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import { toast } from 'sonner'
 import type { CreateBatchDto, EnrollStudentDto } from '@repo/schemas'
