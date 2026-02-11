@@ -83,7 +83,7 @@ export function AuthSidePanel() {
             <GraduationCap className="size-5" />
           </div>
           <div className="flex flex-col">
-            <span className="font-display text-lg font-bold leading-tight">PNC CSIT</span>
+            <span className="font-display text-lg font-bold leading-tight">SMS</span>
             <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-brand-foreground/40">
               College
             </span>

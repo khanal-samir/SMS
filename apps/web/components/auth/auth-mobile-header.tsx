@@ -8,7 +8,7 @@ export function AuthMobileHeader() {
         <div className="flex size-9 items-center justify-center rounded-lg bg-brand text-brand-foreground">
           <GraduationCap className="size-4" />
         </div>
-        <span className="font-display text-base font-bold">PNC CSIT</span>
+        <span className="font-display text-base font-bold">SMS</span>
       </Link>
     </div>
   )

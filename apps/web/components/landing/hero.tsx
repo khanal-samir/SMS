@@ -6,8 +6,8 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const stats = [
-  { value: '500+', label: 'Students' },
-  { value: '50+', label: 'Faculty Members' },
+  { value: '100+', label: 'Students' },
+  { value: '20+', label: 'Faculty Members' },
   { value: '30+', label: 'Courses' },
 ] as const
 
