@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
 import { useLogout } from '@/hooks/useAuth'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -147,13 +146,6 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
                     </Badge>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">Theme</span>
-                    <ThemeToggle />
-                  </div>
-                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => logout()}
