@@ -112,7 +112,7 @@ export class SeedService implements OnModuleInit {
       return
     }
 
-    const defaultPassword = await hash('Password123!')
+    const defaultPassword = await hash('12345678')
 
     const batches = [
       {
@@ -177,7 +177,7 @@ export class SeedService implements OnModuleInit {
         name: 'Ishaan Teacher',
         email: 'teacher3@gmail.com',
         role: Role.TEACHER,
-        isEmailVerified: false,
+        isEmailVerified: true,
         isTeacherApproved: false,
       },
       {

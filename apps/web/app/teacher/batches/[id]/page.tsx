@@ -5,6 +5,7 @@ import { useBatch, useBatchStudents } from '@/hooks/useBatch'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, ArrowLeft } from 'lucide-react'
+import { formatShortDate } from '@/lib/formatters'
 
 export default function TeacherBatchDetailPage() {
   const params = useParams()
@@ -13,14 +14,6 @@ export default function TeacherBatchDetailPage() {
 
   const { data: batch, isLoading: isLoadingBatch } = useBatch(batchId)
   const { data: students, isLoading: isLoadingStudents } = useBatchStudents(batchId)
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
 
   if (isLoadingBatch) {
     return (
@@ -71,7 +64,7 @@ export default function TeacherBatchDetailPage() {
               <CardDescription>Start Date</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{formatDate(batch.startDate)}</p>
+              <p className="text-2xl font-bold">{formatShortDate(batch.startDate)}</p>
             </CardContent>
           </Card>
           <Card>

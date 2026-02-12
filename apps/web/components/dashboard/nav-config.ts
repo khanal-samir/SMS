@@ -10,10 +10,6 @@ import {
   FolderOpen,
   FileText,
   type LucideIcon,
-  Shield,
-  Bell,
-  Database,
-  ScrollText,
 } from 'lucide-react'
 
 export interface NavItem {
@@ -30,10 +26,7 @@ export interface NavGroup {
 export const adminNavGroups: NavGroup[] = [
   {
     label: 'Overview',
-    items: [
-      { title: 'Dashboard', url: '/admin/dashboard', icon: LayoutDashboard },
-      { title: 'Analytics', url: '/admin/analytics', icon: BarChart3 },
-    ],
+    items: [{ title: 'Dashboard', url: '/admin/dashboard', icon: LayoutDashboard }],
   },
   {
     label: 'Management',
@@ -45,13 +38,7 @@ export const adminNavGroups: NavGroup[] = [
   },
   {
     label: 'System',
-    items: [
-      { title: 'Settings', url: '/admin/settings', icon: Settings },
-      { title: 'Security', url: '/admin/security', icon: Shield },
-      { title: 'Notifications', url: '/admin/notifications', icon: Bell },
-      { title: 'Database', url: '/admin/database', icon: Database },
-      { title: 'Logs', url: '/admin/logs', icon: ScrollText },
-    ],
+    items: [{ title: 'Settings', url: '/admin/settings', icon: Settings }],
   },
 ]
 
@@ -63,11 +50,9 @@ export const teacherNavGroups: NavGroup[] = [
   {
     label: 'Teaching',
     items: [
-      { title: 'My Classes', url: '/teacher/classes', icon: BookOpen },
-      { title: 'Students', url: '/teacher/students', icon: Users },
+      { title: 'Subjects', url: '/teacher/subjects', icon: BarChart3 },
       { title: 'Batches', url: '/teacher/batches', icon: GraduationCap },
       { title: 'Assignments', url: '/teacher/assignments', icon: ClipboardList },
-      { title: 'Grade Book', url: '/teacher/grades', icon: FileText },
     ],
   },
   {
@@ -75,8 +60,6 @@ export const teacherNavGroups: NavGroup[] = [
     items: [
       { title: 'Schedule', url: '/teacher/schedule', icon: Calendar },
       { title: 'Resources', url: '/teacher/resources', icon: FolderOpen },
-      { title: 'Reports', url: '/teacher/reports', icon: BarChart3 },
-      { title: 'Settings', url: '/teacher/settings', icon: Settings },
     ],
   },
 ]

@@ -4,18 +4,11 @@ import { useRouter } from 'next/navigation'
 import { useBatches } from '@/hooks/useBatch'
 import { Button } from '@/components/ui/button'
 import { Loader2, ArrowLeft } from 'lucide-react'
+import { formatShortDate } from '@/lib/formatters'
 
 export default function TeacherBatchesPage() {
   const router = useRouter()
   const { data: batches, isLoading } = useBatches()
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -73,10 +66,10 @@ export default function TeacherBatchesPage() {
                       <span className="text-sm font-semibold text-gray-900">{batch.batchYear}</span>
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
-                      {formatDate(batch.startDate)}
+                      {formatShortDate(batch.startDate)}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
-                      {batch.endDate ? formatDate(batch.endDate) : '-'}
+                      {batch.endDate ? formatShortDate(batch.endDate) : '-'}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
                       {batch.totalStudents}

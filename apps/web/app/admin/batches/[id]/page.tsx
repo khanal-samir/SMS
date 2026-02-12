@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog'
 import { EnrollStudentForm } from '@/components/form/enroll-student-form'
 import { Loader2, ArrowLeft, UserPlus, ChevronRight } from 'lucide-react'
+import { formatShortDate } from '@/lib/formatters'
 
 export default function AdminBatchDetailPage() {
   const params = useParams()
@@ -27,14 +28,6 @@ export default function AdminBatchDetailPage() {
 
   const [isEnrollDialogOpen, setIsEnrollDialogOpen] = useState(false)
   const [showAdvanceConfirm, setShowAdvanceConfirm] = useState(false)
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
 
   const handleAdvanceSemester = () => {
     advanceSemester(batchId, {
@@ -155,7 +148,7 @@ export default function AdminBatchDetailPage() {
               <CardDescription>Start Date</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">{formatDate(batch.startDate)}</p>
+              <p className="text-2xl font-bold">{formatShortDate(batch.startDate)}</p>
             </CardContent>
           </Card>
           <Card>
