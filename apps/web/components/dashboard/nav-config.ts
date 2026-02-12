@@ -74,8 +74,6 @@ export const studentNavGroups: NavGroup[] = [
     items: [
       { title: 'Courses', url: '/student/courses', icon: BookOpen },
       { title: 'Assignments', url: '/student/assignments', icon: ClipboardList },
-      { title: 'Grades', url: '/student/grades', icon: FileText },
-      { title: 'Schedule', url: '/student/schedule', icon: Calendar },
     ],
   },
   {
