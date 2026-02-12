@@ -1,4 +1,42 @@
 import { z } from 'zod'
+import { UserSchema } from './user.schema'
+
+//create batch and findall batch array response
+export const BatchResponseSchema = z.object({
+  id: z.cuid(),
+  batchYear: z.number().int(),
+  startDate: z.string(),
+  endDate: z.string().nullable(),
+  totalStudents: z.number().int(),
+  currentSemesterId: z.string().nullable(),
+  isActive: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+})
+export type BatchResponse = z.infer<typeof BatchResponseSchema>
+
+// find one batch response
+export const BatchDetailResponseSchema = BatchResponseSchema.extend({
+  users: z.array(UserSchema),
+})
+export type BatchDetailResponse = z.infer<typeof BatchDetailResponseSchema>
+
+export const BatchAdvanceSemesterResponseSchema = z.object({
+  id: z.cuid(),
+  batchYear: z.number().int(),
+  currentSemesterId: z.cuid(),
+})
+export type BatchAdvanceSemesterResponse = z.infer<typeof BatchAdvanceSemesterResponseSchema>
+
+// enroll student and get all enrolled students response
+export const BatchEnrolledStudentResponseSchema = UserSchema.extend({
+  batchId: z.cuid(),
+})
+export type BatchEnrolledStudentResponse = z.infer<typeof BatchEnrolledStudentResponseSchema>
+
+// this will be array of students not enrolled in any batch
+export const UnenrolledStudentResponseSchema = UserSchema.omit({ role: true })
+export type UnenrolledStudentResponse = z.infer<typeof UnenrolledStudentResponseSchema>
 
 export const CreateBatchSchema = z.object({
   batchYear: z.number().int().min(2000, 'Batch year must be 2000 or later'),

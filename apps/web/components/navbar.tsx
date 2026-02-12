@@ -35,14 +35,12 @@ export function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative flex size-10 items-center justify-center rounded-lg bg-brand text-brand-foreground transition-transform duration-300 group-hover:scale-105">
+          <div className="relative flex size-10 items-center justify-center rounded-lg bg-brand-accent text-brand-accent-foreground transition-transform duration-300 group-hover:scale-105">
             <GraduationCap className="size-5" />
             <div className="absolute inset-0 rounded-lg gold-glow opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           </div>
           <div className="flex flex-col">
-            <span className="font-display text-lg font-bold leading-tight tracking-tight">
-              PNC CSIT
-            </span>
+            <span className="font-display text-lg font-bold leading-tight tracking-tight">SMS</span>
             <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
               College
             </span>

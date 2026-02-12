@@ -6,8 +6,8 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 const stats = [
-  { value: '500+', label: 'Students' },
-  { value: '50+', label: 'Faculty Members' },
+  { value: '100+', label: 'Students' },
+  { value: '20+', label: 'Faculty Members' },
   { value: '30+', label: 'Courses' },
 ] as const
 
@@ -27,7 +27,7 @@ export function LandingHero() {
           className="mb-8 inline-flex items-center gap-2 rounded-full border border-brand-foreground/10 bg-brand-foreground/5 px-4 py-1.5 text-xs font-medium tracking-wide text-brand-foreground/70"
         >
           <span className="inline-block size-1.5 rounded-full bg-brand-accent animate-pulse" />
-          PNC CSIT College Management System
+          SMS College Management System
         </motion.div>
 
         <motion.h1

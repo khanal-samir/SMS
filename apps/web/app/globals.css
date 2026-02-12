@@ -1,8 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -95,47 +93,6 @@
   --sidebar-ring: oklch(0.65 0.06 260);
 }
 
-.dark {
-  --background: oklch(0.13 0.02 260);
-  --foreground: oklch(0.93 0.005 80);
-  --card: oklch(0.17 0.025 260);
-  --card-foreground: oklch(0.93 0.005 80);
-  --popover: oklch(0.17 0.025 260);
-  --popover-foreground: oklch(0.93 0.005 80);
-  --primary: oklch(0.93 0.005 80);
-  --primary-foreground: oklch(0.17 0.025 260);
-  --secondary: oklch(0.22 0.03 260);
-  --secondary-foreground: oklch(0.93 0.005 80);
-  --muted: oklch(0.22 0.03 260);
-  --muted-foreground: oklch(0.65 0.03 260);
-  --accent: oklch(0.22 0.03 260);
-  --accent-foreground: oklch(0.93 0.005 80);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.5 0.04 260);
-
-  --brand: oklch(0.15 0.03 260);
-  --brand-foreground: oklch(0.93 0.005 80);
-  --brand-accent: oklch(0.78 0.15 75);
-  --brand-accent-foreground: oklch(0.15 0.03 260);
-  --brand-muted: oklch(0.25 0.035 260);
-
-  --chart-1: oklch(0.78 0.15 75);
-  --chart-2: oklch(0.6 0.12 260);
-  --chart-3: oklch(0.55 0.1 200);
-  --chart-4: oklch(0.7 0.13 160);
-  --chart-5: oklch(0.65 0.16 340);
-  --sidebar: oklch(0.17 0.025 260);
-  --sidebar-foreground: oklch(0.93 0.005 80);
-  --sidebar-primary: oklch(0.78 0.15 75);
-  --sidebar-primary-foreground: oklch(0.15 0.03 260);
-  --sidebar-accent: oklch(0.22 0.03 260);
-  --sidebar-accent-foreground: oklch(0.93 0.005 80);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.5 0.04 260);
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -144,12 +101,11 @@
     @apply bg-background text-foreground font-body antialiased;
   }
 
-  /* Refined typography defaults */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display tracking-tight;
+    @apply tracking-tight;
   }
 }
 

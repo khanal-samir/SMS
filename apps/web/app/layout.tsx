@@ -17,9 +17,9 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'PNC CSIT | Student Management System',
+  title: ' Student Management System',
   description:
-    'PNC CSIT College — A modern platform for managing students, teachers, courses, and academic operations.',
+    'A modern platform for managing students, teachers, courses, and academic operations.',
 }
 
 export default function RootLayout({
