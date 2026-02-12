@@ -61,6 +61,7 @@ export default function AdminBatchesPage() {
             <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
           </div>
         ) : batches && batches.length > 0 ? (
+          // TODO: use shadcn table
           <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
