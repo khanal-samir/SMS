@@ -8,7 +8,6 @@ import {
   ClipboardList,
   Calendar,
   FolderOpen,
-  FileText,
   type LucideIcon,
 } from 'lucide-react'
 
