@@ -32,7 +32,7 @@ export const adminNavGroups: NavGroup[] = [
     items: [
       { title: 'Users', url: '/admin/users', icon: Users },
       { title: 'Batches', url: '/admin/batches', icon: GraduationCap },
-      { title: 'Courses', url: '/admin/courses', icon: BookOpen },
+      { title: 'Semesters', url: '/admin/semesters', icon: BookOpen },
     ],
   },
   {

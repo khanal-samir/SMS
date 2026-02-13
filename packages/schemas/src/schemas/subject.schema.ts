@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { UserSchema } from './user.schema'
 
 export const SubjectResponseSchema = z.object({
   id: z.cuid(),
@@ -16,11 +17,13 @@ export const SubjectTeacherResponseSchema = z.object({
   teacherId: z.string(),
   assignedAt: z.string(),
   isActive: z.boolean(),
-  teacher: z.object({
-    id: z.cuid(),
-    name: z.string(),
-    email: z.string(),
-    role: z.literal('TEACHER'),
-  }),
+  teacher: UserSchema.refine(
+    (data) => {
+      return data.role === 'TEACHER'
+    },
+    {
+      message: 'User must have the role of TEACHER',
+    },
+  ),
 })
 export type SubjectTeacherResponse = z.infer<typeof SubjectTeacherResponseSchema>

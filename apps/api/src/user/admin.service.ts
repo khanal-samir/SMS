@@ -60,6 +60,27 @@ export class AdminService {
     })
   }
 
+  async getApprovedTeachers() {
+    this.logger.log('Getting approved teachers')
+    return await this.prisma.user.findMany({
+      where: {
+        role: 'TEACHER',
+        isEmailVerified: true,
+        isTeacherApproved: true,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        image: true,
+        role: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    })
+  }
+
   async assignTeacherToSubject(teacherId: string, subjectId: string) {
     this.logger.log(`Assigning teacher ${teacherId} to subject ${subjectId}`)
 
