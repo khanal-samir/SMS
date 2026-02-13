@@ -72,6 +72,7 @@ export class BatchService {
             name: true,
             email: true,
             role: true,
+            image: true,
           },
         },
       },
@@ -124,6 +125,7 @@ export class BatchService {
           name: true,
           email: true,
           role: true,
+          image: true,
           batchId: true,
         },
       })
@@ -257,6 +259,7 @@ export class BatchService {
         email: true,
         batchId: true,
         role: true,
+        image: true,
       },
     })
   }
@@ -273,6 +276,7 @@ export class BatchService {
         id: true,
         name: true,
         email: true,
+        image: true,
       },
       orderBy: { name: 'asc' },
     })
