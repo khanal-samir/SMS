@@ -10,8 +10,9 @@ export const usePendingTeachers = () => {
       const response = await userApi.getPendingTeachers()
       return response.data
     },
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 60 * 1000, // Refetch every minute
+    staleTime: 60 * 1000, // 1 minute
+    gcTime: 10 * 60 * 1000,
+    refetchInterval: 60 * 1000, // refetch even if no component is using data or rerendering
   })
 }
 

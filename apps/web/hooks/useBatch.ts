@@ -11,7 +11,6 @@ export const useBatches = () => {
       const response = await batchApi.getAllBatches()
       return response.data
     },
-    staleTime: 30 * 1000,
   })
 }
 
@@ -34,6 +33,8 @@ export const useBatchStudents = (batchId: string) => {
       return response.data
     },
     enabled: !!batchId,
+    staleTime: 2 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   })
 }
 
@@ -44,6 +45,8 @@ export const useUnenrolledStudents = () => {
       const response = await batchApi.getUnenrolledStudents()
       return response.data
     },
+    staleTime: 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   })
 }
 

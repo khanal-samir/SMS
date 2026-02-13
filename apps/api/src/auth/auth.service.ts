@@ -49,6 +49,7 @@ export class AuthService {
     if (user) throw new ConflictException('User with given email already exists!')
 
     if (createUserDto.role === Role.TEACHER) {
+      this.logger.log(`Registering new teacher with email: ${createUserDto.email}`)
       const optCode = this.generateOTP()
       const [newTeacher] = await Promise.all([
         this.userService.create(createUserDto, false, optCode, false),
@@ -57,6 +58,7 @@ export class AuthService {
       return newTeacher
     }
 
+    this.logger.log(`Registering new student with email: ${createUserDto.email}`)
     //student auto verify
     return this.userService.create(createUserDto, true, null)
   }
@@ -65,6 +67,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateTokens(userId)
     const hashedRT = await this.userService.hashPasswordOrToken(refreshToken)
     const user = await this.userService.updateHashedRefreshToken(userId, hashedRT)
+    this.logger.log(`User logged in with ID: ${userId}, email: ${user.email}`)
     return {
       id: userId,
       accessToken,
@@ -101,6 +104,7 @@ export class AuthService {
     }
     const isPasswordMatched = await this.userService.comparePasswordOrToken(password, user.password)
     if (!isPasswordMatched) throw new UnauthorizedException('Invalid Credentials!')
+    this.logger.log(`User authenticated with email: ${email}`)
     return { id: user.id, role: user.role }
   }
 
@@ -109,6 +113,7 @@ export class AuthService {
     this.logger.log(`Validating JWT user with ID: ${userId}`)
     const user = await this.userService.findOne(userId)
     if (!user) throw new UnauthorizedException('User not found!')
+    this.logger.log(`JWT user validated successfully with email: ${user.email}`)
     return { id: user.id, role: user.role }
   }
 
@@ -121,6 +126,7 @@ export class AuthService {
       user.refreshToken,
     )
     if (!isRTMatched) throw new UnauthorizedException('Invalid Refresh Token!')
+    this.logger.log(`Refresh token validated for user with ID: ${userId}`)
     return { id: user.id, role: user.role }
   }
 
@@ -129,6 +135,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateTokens(userId)
     const hashedRT = await this.userService.hashPasswordOrToken(refreshToken)
     await this.userService.updateHashedRefreshToken(userId, hashedRT)
+    this.logger.log(`Refresh token updated for user with ID: ${userId}`)
     return {
       id: userId,
       accessToken,
@@ -165,7 +172,7 @@ export class AuthService {
   async getCurrentUser(userId: string) {
     const user = await this.userService.findOne(userId)
     if (!user) throw new UnauthorizedException('User not found!')
-
+    this.logger.log(`Fetched current user with ID: ${userId}, email: ${user.email}`)
     return {
       id: user.id,
       email: user.email,
@@ -177,6 +184,7 @@ export class AuthService {
   }
 
   async signOut(userId: string) {
+    this.logger.log(`Signing out user with ID: ${userId}`)
     return await this.userService.updateHashedRefreshToken(userId, null)
   }
 

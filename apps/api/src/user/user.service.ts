@@ -98,7 +98,7 @@ export class UserService {
   }
 
   async hashPasswordOrToken(password: string) {
-    this.logger.log(`Hashing password/token`)
+    this.logger.log(`Hashing password or token`)
     return await hash(password)
   }
 
