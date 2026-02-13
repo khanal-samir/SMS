@@ -1,15 +1,12 @@
 'use client'
 import { useState } from 'react'
-import { useAuthStore } from '@/store/auth.store'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useLogout } from '@/hooks/useAuth'
 import { usePendingTeachers, useApproveTeacher } from '@/hooks/useTeacherApproval'
+import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-header'
 import { Loader2 } from 'lucide-react'
 
 export default function AdminDashboard() {
-  const { user } = useAuthStore()
-  const { mutate: logout, isPending } = useLogout()
   const { data: pendingTeachers, isLoading: isLoadingTeachers } = usePendingTeachers()
   const { mutate: approveTeacher } = useApproveTeacher()
   const [approvingId, setApprovingId] = useState<string | null>(null)
@@ -17,18 +14,13 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-6xl">
-        <header className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-600">Welcome back, {user?.name}!</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="rounded bg-red-100 px-2 py-1 text-sm text-red-800">Admin</span>
-            <Button onClick={() => logout()} disabled={isPending} variant="outline">
-              {isPending ? 'Logging out...' : 'Logout'}
-            </Button>
-          </div>
-        </header>
+        <DashboardPageHeader
+          title="Admin Dashboard"
+          roleBadge={{
+            text: 'Admin',
+            className: 'bg-red-100 text-red-800',
+          }}
+        />
 
         <Card className="mb-6">
           <CardHeader>
