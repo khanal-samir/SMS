@@ -23,6 +23,18 @@ export class UserController {
   }
 
   @Roles(Role.ADMIN)
+  @Get('/approved-teachers')
+  @ApiOperation({ summary: 'Get all approved teachers' })
+  @ApiResponse({ status: 200, description: 'List of approved teachers' })
+  async getApprovedTeachers() {
+    const teachers = await this.adminService.getApprovedTeachers()
+    return {
+      message: 'Approved teachers retrieved successfully',
+      data: teachers,
+    }
+  }
+
+  @Roles(Role.ADMIN)
   @Put('/approve-teachers/:id')
   @ApiOperation({ summary: 'Approve a teacher account' })
   @ApiResponse({ status: 200, description: 'Teacher approved successfully' })

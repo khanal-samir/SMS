@@ -111,7 +111,17 @@ export class SubjectService {
     }
     return await this.prisma.subjectTeacher.findMany({
       where: { subjectId, isActive: true },
-      include: { teacher: true },
+      include: {
+        teacher: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            image: true,
+          },
+        },
+      },
       orderBy: { teacher: { name: 'asc' } },
     })
   }

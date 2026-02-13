@@ -67,8 +67,49 @@ export class SemesterService {
 
   async findOneById(id: string, user?: AuthUser) {
     this.logger.log(`Finding semester by id: ${id}`)
+    const subjectTeachersInclude = {
+      where: { isActive: true },
+      include: {
+        teacher: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            image: true,
+          },
+        },
+      },
+      orderBy: { teacher: { name: 'asc' as const } },
+    }
+
+    const baseSubjectsInclude = {
+      orderBy: { subjectCode: 'asc' as const },
+      include: {
+        subjectTeachers: subjectTeachersInclude,
+      },
+    }
+
+    const subjectsInclude =
+      user?.role === Role.TEACHER
+        ? {
+            ...baseSubjectsInclude,
+            where: {
+              subjectTeachers: {
+                some: {
+                  teacherId: user.id,
+                  isActive: true,
+                },
+              },
+            },
+          }
+        : baseSubjectsInclude
+
     const semester = await this.prisma.semester.findUnique({
       where: { id },
+      include: {
+        subjects: subjectsInclude,
+      },
     })
 
     if (!semester) {

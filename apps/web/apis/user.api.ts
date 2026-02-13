@@ -1,6 +1,5 @@
 import apiClient from '@/lib/api'
-import { User } from '@repo/schemas'
-import type { ApiResponse } from '@repo/schemas'
+import type { ApiResponse, AssignTeacherSubjectDto, User } from '@repo/schemas'
 
 export const userApi = {
   getPendingTeachers: async (): Promise<ApiResponse<User[]>> => {
@@ -10,6 +9,24 @@ export const userApi = {
 
   approveTeacher: async (teacherId: string): Promise<ApiResponse<User>> => {
     const { data } = await apiClient.put<ApiResponse<User>>(`/user/approve-teachers/${teacherId}`)
+    return data
+  },
+
+  getApprovedTeachers: async (): Promise<ApiResponse<User[]>> => {
+    const { data } = await apiClient.get<ApiResponse<User[]>>('/user/approved-teachers')
+    return data
+  },
+
+  assignTeacherSubject: async (dto: AssignTeacherSubjectDto): Promise<ApiResponse<unknown>> => {
+    const { data } = await apiClient.post<ApiResponse<unknown>>('/user/assign-teacher-subject', dto)
+    return data
+  },
+
+  unassignTeacherSubject: async (dto: AssignTeacherSubjectDto): Promise<ApiResponse<unknown>> => {
+    const { data } = await apiClient.post<ApiResponse<unknown>>(
+      '/user/unassign-teacher-subject',
+      dto,
+    )
     return data
   },
 }
