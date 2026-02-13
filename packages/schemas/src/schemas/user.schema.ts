@@ -11,6 +11,7 @@ export const UserSchema = z.object({
   id: z.cuid(),
   email: z.email(),
   name: z.string().min(1),
+  image: z.url().optional().nullable(),
   role: RoleEnum,
 })
 export type User = z.infer<typeof UserSchema>
@@ -20,6 +21,7 @@ export const CreateUserSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  image: z.url().optional().nullable(),
   role: RoleEnum.optional(),
 })
 export type CreateUserDto = z.infer<typeof CreateUserSchema>

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
 import { useLogout } from '@/hooks/useAuth'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -30,6 +30,7 @@ import {
   SidebarSeparator,
 } from '@/components/ui/sidebar'
 import type { NavGroup } from '@/components/dashboard/nav-config'
+import { RoleEnum } from '@repo/schemas'
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   navGroups: NavGroup[]
@@ -50,7 +51,13 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
     : '?'
 
   const roleBadgeLabel =
-    user?.role === 'ADMIN' ? 'Admin' : user?.role === 'TEACHER' ? 'Teacher' : 'Student'
+    user?.role === RoleEnum.enum.ADMIN
+      ? 'Admin'
+      : user?.role === RoleEnum.enum.TEACHER
+        ? 'Teacher'
+        : 'Student'
+
+  const avatarSrc = user?.image ?? undefined
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -113,6 +120,9 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
                   <Avatar className="size-8 rounded-lg">
+                    {avatarSrc ? (
+                      <AvatarImage src={avatarSrc} alt={user?.name ?? 'User avatar'} />
+                    ) : null}
                     <AvatarFallback className="rounded-lg bg-brand-accent text-brand-accent-foreground text-xs font-medium">
                       {userInitials}
                     </AvatarFallback>
@@ -133,6 +143,9 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="size-8 rounded-lg">
+                      {avatarSrc ? (
+                        <AvatarImage src={avatarSrc} alt={user?.name ?? 'User avatar'} />
+                      ) : null}
                       <AvatarFallback className="rounded-lg bg-brand-accent text-brand-accent-foreground text-xs font-medium">
                         {userInitials}
                       </AvatarFallback>

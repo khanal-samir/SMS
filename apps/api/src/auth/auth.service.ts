@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   async registerAdmin(createUserDto: CreateUserDto) {
-    const user = await this.userService.create(
+    return this.userService.create(
       {
         ...createUserDto,
         role: Role.ADMIN,
@@ -42,11 +42,10 @@ export class AuthService {
       true,
       null,
     )
-    return user
   }
   async registerUser(createUserDto: CreateUserDto) {
-    const user = await this.userService.findByEmail(createUserDto.email)
-    if (user) throw new ConflictException('User with given email already exists!')
+    const existingUser = await this.userService.findByEmail(createUserDto.email)
+    if (existingUser) throw new ConflictException('User with given email already exists!')
 
     if (createUserDto.role === Role.TEACHER) {
       this.logger.log(`Registering new teacher with email: ${createUserDto.email}`)
@@ -74,8 +73,8 @@ export class AuthService {
       refreshToken,
       email: user.email,
       name: user.name,
+      image: user.image,
       role: user.role,
-      provider: user.provider,
       isEmailVerified: user.isEmailVerified,
     }
   }
@@ -177,8 +176,8 @@ export class AuthService {
       id: user.id,
       email: user.email,
       name: user.name,
+      image: user.image,
       role: user.role,
-      provider: user.provider,
       isEmailVerified: user.isEmailVerified,
     }
   }

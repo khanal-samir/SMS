@@ -30,8 +30,8 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
-        provider: true,
         isEmailVerified: true,
       },
     })
@@ -54,8 +54,8 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
-        provider: true,
         isEmailVerified: true,
       },
     })
@@ -90,8 +90,8 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
-        provider: true,
         isEmailVerified: true,
       },
     })
@@ -127,8 +127,8 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
-        provider: true,
         isEmailVerified: true,
       },
     })
@@ -175,8 +175,8 @@ export class UserService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
-        provider: true,
         isEmailVerified: true,
       },
     })

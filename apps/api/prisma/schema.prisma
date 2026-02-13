@@ -12,6 +12,7 @@ model User {
   email                  String    @unique
   password               String?
   name                   String
+  image                  String?
   refreshToken           String?
   role                   Role      @default(STUDENT)
   provider               Provider  @default(LOCAL)

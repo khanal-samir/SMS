@@ -56,6 +56,7 @@ function GoogleCallbackHandler() {
       const name = searchParams.get('name')
       const email = searchParams.get('email')
       const role = searchParams.get('role')
+      const image = searchParams.get('image')
 
       if (!userId || !name || !email || !role) {
         toast.error('Invalid authentication response')
@@ -68,6 +69,7 @@ function GoogleCallbackHandler() {
         id: userId,
         name: decodeURIComponent(name),
         email: decodeURIComponent(email),
+        image: image ? decodeURIComponent(image) : null,
         role: role as Role,
       }
 

@@ -29,6 +29,7 @@ export class AdminService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
       },
     })
@@ -50,6 +51,7 @@ export class AdminService {
         id: true,
         email: true,
         name: true,
+        image: true,
         role: true,
       },
       orderBy: {

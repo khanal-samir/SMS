@@ -126,6 +126,7 @@ export class AuthController {
           id: user.id,
           name: user.name,
           email: user.email,
+          image: user.image,
           role: user.role,
         },
       }
@@ -140,6 +141,7 @@ export class AuthController {
         id: user.id,
         name: user.name,
         email: user.email,
+        image: user.image,
         role: user.role,
       },
     }
@@ -178,6 +180,7 @@ export class AuthController {
           id: user.id,
           name: user.name,
           email: user.email,
+          image: user.image,
           role: user.role,
         },
       }
@@ -192,6 +195,7 @@ export class AuthController {
         id: user.id,
         name: user.name,
         email: user.email,
+        image: user.image,
         role: user.role,
       },
     }
@@ -242,6 +246,7 @@ export class AuthController {
         id: result.id,
         name: result.name,
         email: result.email,
+        image: result.image,
         role: result.role,
       },
     }
@@ -292,6 +297,7 @@ export class AuthController {
         id: result.id,
         name: result.name,
         email: result.email,
+        image: result.image,
         role: result.role,
       },
     }
@@ -342,6 +348,7 @@ export class AuthController {
         id: result.id,
         name: result.name,
         email: result.email,
+        image: result.image,
         role: result.role,
       },
     }
@@ -409,7 +416,7 @@ export class AuthController {
       const response = await this.authService.login(user.id)
       // Set cookies before redirect
       this.setAuthCookies(res, response.accessToken, response.refreshToken)
-      const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&name=${encodeURIComponent(response.name)}&email=${encodeURIComponent(response.email)}&role=${response.role}`
+      const callbackUrl = `${frontendUrl}/auth/google/callback?userId=${response.id}&name=${encodeURIComponent(response.name)}&email=${encodeURIComponent(response.email)}&role=${response.role}&image=${encodeURIComponent(user.image ?? '')}`
       res.redirect(callbackUrl)
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Authentication failed'
@@ -448,6 +455,7 @@ export class AuthController {
         id: user.id,
         name: user.name,
         email: user.email,
+        image: user.image,
         role: user.role,
       },
     }
