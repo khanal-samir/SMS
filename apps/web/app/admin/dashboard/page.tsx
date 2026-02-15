@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { usePendingTeachers, useApproveTeacher } from '@/hooks/useTeacherApproval'
 import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-header'
 import { Loader2 } from 'lucide-react'
+import { UserAvatar } from '@/components/ui/user-avatar'
 
 export default function AdminDashboard() {
   const { data: pendingTeachers, isLoading: isLoadingTeachers } = usePendingTeachers()
@@ -50,11 +51,7 @@ export default function AdminDashboard() {
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                          <span className="text-sm font-semibold">
-                            {teacher.name.charAt(0).toUpperCase()}
-                          </span>
-                        </div>
+                        <UserAvatar name={teacher.name} />
                         <div>
                           <p className="font-semibold text-gray-900">{teacher.name}</p>
                           <p className="text-sm text-gray-500">{teacher.email}</p>

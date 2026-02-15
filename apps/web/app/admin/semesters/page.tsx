@@ -1,9 +1,10 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Loader2, ArrowLeft } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useSemesters } from '@/hooks/useSemester'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/ui/page-header'
 import {
   Table,
   TableBody,
@@ -21,16 +22,11 @@ export default function AdminSemestersPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={() => router.push('/admin/dashboard')}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Dashboard
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Semester Management</h1>
-            <p className="text-gray-600">View all semesters and their subjects</p>
-          </div>
-        </div>
+        <PageHeader
+          backButton={{ href: '/admin/dashboard', label: 'Dashboard' }}
+          title="Semester Management"
+          description="View all semesters and their subjects"
+        />
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
