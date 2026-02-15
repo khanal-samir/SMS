@@ -44,15 +44,6 @@ export const batchApi = {
     return data
   },
 
-  getBatchStudents: async (
-    batchId: string,
-  ): Promise<ApiResponse<BatchEnrolledStudentResponse[]>> => {
-    const { data } = await apiClient.get<ApiResponse<BatchEnrolledStudentResponse[]>>(
-      `/batches/${batchId}/students`,
-    )
-    return data
-  },
-
   getUnenrolledStudents: async (): Promise<ApiResponse<UnenrolledStudentResponse[]>> => {
     const { data } = await apiClient.get<ApiResponse<UnenrolledStudentResponse[]>>(
       '/batches/unenrolled-students',

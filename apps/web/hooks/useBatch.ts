@@ -25,19 +25,6 @@ export const useBatch = (id: string) => {
   })
 }
 
-export const useBatchStudents = (batchId: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.BATCH_STUDENTS, batchId],
-    queryFn: async () => {
-      const response = await batchApi.getBatchStudents(batchId)
-      return response.data
-    },
-    enabled: !!batchId,
-    staleTime: 2 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  })
-}
-
 export const useUnenrolledStudents = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.UNENROLLED_STUDENTS],
@@ -69,7 +56,6 @@ export const useEnrollStudent = (batchId: string) => {
     mutationFn: (dto: EnrollStudentDto) => batchApi.enrollStudent(batchId, dto),
     onSuccess: (data) => {
       Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH_STUDENTS, batchId] }),
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCHES] }),
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.BATCH, batchId] }),
         queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.UNENROLLED_STUDENTS] }),

@@ -2,10 +2,11 @@
 
 import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { useSemesters } from '@/hooks/useSemester'
 import { useSubjects } from '@/hooks/useSubject'
-import { Button } from '@/components/ui/button'
+
+import { PageHeader } from '@/components/ui/page-header'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { formatSemesterNumber } from '@/lib/formatters'
 
@@ -25,16 +26,11 @@ export default function StudentCoursesPage() {
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={() => router.push('/student/dashboard')}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Dashboard
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">My Courses</h1>
-            <p className="text-gray-600">Current semester subjects and schedule</p>
-          </div>
-        </div>
+        <PageHeader
+          backButton={{ href: '/student/dashboard', label: 'Dashboard' }}
+          title="My Courses"
+          description="Current semester subjects and schedule"
+        />
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">

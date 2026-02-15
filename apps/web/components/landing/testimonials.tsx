@@ -1,5 +1,6 @@
 import { Quote } from 'lucide-react'
 import { AnimatedSection, MotionItem } from '@/components/landing/animated-section'
+import { UserAvatar } from '@/components/ui/user-avatar'
 
 const TESTIMONIALS = [
   {
@@ -7,21 +8,18 @@ const TESTIMONIALS = [
       'The platform has transformed how we manage our academic operations. What used to take hours now takes minutes.',
     name: 'Dr. Ramesh Adhikari',
     role: 'Head of Department, CSIT',
-    initials: 'RA',
   },
   {
     quote:
       'As a student, having everything in one place — grades, schedules, resources — has made my academic life significantly smoother.',
     name: 'Priya Sharma',
     role: 'BSc. CSIT, 4th Semester',
-    initials: 'PS',
   },
   {
     quote:
       'The attendance tracking and grade management tools have given me more time to focus on what matters most: teaching.',
     name: 'Suman Karki',
     role: 'Associate Professor',
-    initials: 'SK',
   },
 ] as const
 
@@ -57,9 +55,7 @@ export function LandingTestimonials() {
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
                 <div className="mt-6 flex items-center gap-4">
-                  <div className="flex size-10 items-center justify-center rounded-full bg-brand text-xs font-bold text-brand-foreground">
-                    {t.initials}
-                  </div>
+                  <UserAvatar name={t.name} size="lg" />
                   <div>
                     <div className="text-sm font-semibold">{t.name}</div>
                     <div className="text-xs text-muted-foreground">{t.role}</div>

@@ -28,16 +28,38 @@ export function LandingFooter() {
               Platform
             </h4>
             <ul className="space-y-3">
-              {['Features', 'Student Portal', 'Teacher Portal', 'Admin Access'].map((item) => (
-                <li key={item}>
-                  <a
-                    href="#"
-                    className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
-                  >
-                    {item}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <Link
+                  href="#features"
+                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                >
+                  Features
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                >
+                  Student Portal
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/teacher/login"
+                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                >
+                  Teacher Portal
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/access"
+                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                >
+                  Admin Access
+                </Link>
+              </li>
             </ul>
           </div>
 
