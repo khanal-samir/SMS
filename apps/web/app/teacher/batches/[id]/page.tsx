@@ -1,37 +1,31 @@
 'use client'
 
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { useBatch } from '@/hooks/useBatch'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { BatchInfoCards } from '@/components/batch/batch-info-cards'
 import { BatchStudentsTable } from '@/components/batch/batch-students-table'
 import { PageHeader } from '@/components/ui/page-header'
-import { Loader2 } from 'lucide-react'
+import { LoadingState } from '@/components/ui/loading-state'
+import { NotFoundState } from '@/components/ui/not-found-state'
 
 export default function TeacherBatchDetailPage() {
   const params = useParams()
-  const router = useRouter()
   const batchId = params.id as string
 
   const { data: batch, isLoading: isLoadingBatch } = useBatch(batchId)
 
   if (isLoadingBatch) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-      </div>
-    )
+    return <LoadingState />
   }
 
   if (!batch) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Batch not found.</p>
-        <Button variant="outline" className="mt-4" onClick={() => router.push('/teacher/batches')}>
-          Back to Batches
-        </Button>
-      </div>
+      <NotFoundState
+        title="Batch Not Found"
+        message="The batch you're looking for could not be found."
+        backButton={{ href: '/teacher/batches', label: 'Back to Batches' }}
+      />
     )
   }
 

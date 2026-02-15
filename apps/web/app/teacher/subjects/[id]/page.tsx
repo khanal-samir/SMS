@@ -1,10 +1,11 @@
 'use client'
 
-import { useRouter, useParams } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { useSubject, useSubjectTeachers } from '@/hooks/useSubject'
-import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
+import { LoadingState } from '@/components/ui/loading-state'
+import { NotFoundState } from '@/components/ui/not-found-state'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -16,7 +17,6 @@ import {
 } from '@/components/ui/table'
 
 export default function TeacherSubjectDetailPage() {
-  const router = useRouter()
   const params = useParams()
   const subjectId = params.id as string
 
@@ -24,21 +24,16 @@ export default function TeacherSubjectDetailPage() {
   const { data: teachers, isLoading: isLoadingTeachers } = useSubjectTeachers(subjectId)
 
   if (isLoadingSubject) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-      </div>
-    )
+    return <LoadingState />
   }
 
   if (!subject) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Subject not found.</p>
-        <Button variant="outline" className="mt-4" onClick={() => router.push('/teacher/subjects')}>
-          Back to Subjects
-        </Button>
-      </div>
+      <NotFoundState
+        title="Subject Not Found"
+        message="The subject you're looking for could not be found."
+        backButton={{ href: '/teacher/subjects', label: 'Back to Subjects' }}
+      />
     )
   }
 

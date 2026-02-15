@@ -1,10 +1,11 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
 import { useSemester } from '@/hooks/useSemester'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
+import { LoadingState } from '@/components/ui/loading-state'
+import { NotFoundState } from '@/components/ui/not-found-state'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -25,21 +26,16 @@ export default function AdminSemesterDetailPage() {
   const { data: semester, isLoading } = useSemester(semesterId)
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-      </div>
-    )
+    return <LoadingState />
   }
 
   if (!semester) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-        <p className="text-gray-500">Semester not found.</p>
-        <Button variant="outline" className="mt-4" onClick={() => router.push('/admin/semesters')}>
-          Back to Semesters
-        </Button>
-      </div>
+      <NotFoundState
+        title="Semester Not Found"
+        message="The semester you're looking for could not be found."
+        backButton={{ href: '/admin/semesters', label: 'Back to Semesters' }}
+      />
     )
   }
 
