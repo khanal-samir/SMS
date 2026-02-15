@@ -6,7 +6,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
 import { StatCards } from '@/components/ui/stat-cards'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { FeatureCards } from '@/components/ui/feature-cards'
 
 export default function StudentCourseDetailPage() {
   const params = useParams()
@@ -44,27 +44,10 @@ export default function StudentCourseDetailPage() {
           ]}
         />
 
-        {/* TODO: Replace placeholders with assignments/resources once backend is ready. */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Assignments</CardTitle>
-              <CardDescription>Assignments for this subject.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">Coming soon.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Resources</CardTitle>
-              <CardDescription>Learning resources for this subject.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">Coming soon.</p>
-            </CardContent>
-          </Card>
-        </div>
+        <FeatureCards
+          assignmentsHref={`/student/courses/${subject.id}/assignments`}
+          resourcesHref={`/student/courses/${subject.id}/resources`}
+        />
       </div>
     </div>
   )

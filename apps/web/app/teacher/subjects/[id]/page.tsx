@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
 import { StatCards } from '@/components/ui/stat-cards'
+import { FeatureCards } from '@/components/ui/feature-cards'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -93,26 +94,11 @@ export default function TeacherSubjectDetailPage() {
           </CardContent>
         </Card>
 
-        {/* TODO: Replace placeholders with assignments/resources once backend is ready. */}
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Assignments</CardTitle>
-              <CardDescription>Assignments for this subject.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">Coming soon.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Resources</CardTitle>
-              <CardDescription>Learning resources for this subject.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">Coming soon.</p>
-            </CardContent>
-          </Card>
+        <div className="mt-8">
+          <FeatureCards
+            assignmentsHref={`/teacher/subjects/${subject.id}/assignments`}
+            resourcesHref={`/teacher/subjects/${subject.id}/resources`}
+          />
         </div>
       </div>
     </div>
