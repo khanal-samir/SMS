@@ -29,4 +29,9 @@ export const userApi = {
     )
     return data
   },
+
+  getAllUsers: async (): Promise<ApiResponse<User[]>> => {
+    const { data } = await apiClient.get<ApiResponse<User[]>>('/user/all')
+    return data
+  },
 }

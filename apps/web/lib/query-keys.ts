@@ -11,4 +11,5 @@ export const QUERY_KEYS = {
   SEMESTER_SUBJECTS: 'semester-subjects',
   SUBJECT: 'subject',
   SUBJECT_TEACHERS: 'subject-teachers',
+  ALL_USERS: 'all-users',
 } as const
