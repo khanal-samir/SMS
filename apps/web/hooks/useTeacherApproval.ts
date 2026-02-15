@@ -27,3 +27,12 @@ export const useApproveTeacher = () => {
     },
   })
 }
+export const useApprovedTeachers = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.APPROVED_TEACHERS],
+    queryFn: async () => {
+      const response = await userApi.getApprovedTeachers()
+      return response.data
+    },
+  })
+}

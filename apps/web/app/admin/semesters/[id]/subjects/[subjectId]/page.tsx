@@ -8,7 +8,7 @@ import {
   useAssignTeacher,
   useUnassignTeacher,
 } from '@/hooks/useSubject'
-import { useApprovedTeachers } from '@/hooks/useTeacher'
+import { useApprovedTeachers } from '@/hooks/useTeacherApproval'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
