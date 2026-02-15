@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ChevronsUpDown, LogOut } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
 import { useLogout } from '@/hooks/useAuth'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { UserAvatar } from '@/components/ui/user-avatar'
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -41,23 +41,12 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
   const { user } = useAuthStore()
   const { mutate: logout, isPending: isLoggingOut } = useLogout()
 
-  const userInitials = user?.name
-    ? user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-    : '?'
-
   const roleBadgeLabel =
     user?.role === RoleEnum.enum.ADMIN
       ? 'Admin'
       : user?.role === RoleEnum.enum.TEACHER
         ? 'Teacher'
         : 'Student'
-
-  const avatarSrc = user?.image ?? undefined
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -119,14 +108,7 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
                   size="lg"
                   className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                  <Avatar className="size-8 rounded-lg">
-                    {avatarSrc ? (
-                      <AvatarImage src={avatarSrc} alt={user?.name ?? 'User avatar'} />
-                    ) : null}
-                    <AvatarFallback className="rounded-lg bg-brand-accent text-brand-accent-foreground text-xs font-medium">
-                      {userInitials}
-                    </AvatarFallback>
-                  </Avatar>
+                  <UserAvatar name={user?.name} image={user?.image} />
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-semibold">{user?.name}</span>
                     <span className="text-muted-foreground truncate text-xs">{user?.email}</span>
@@ -142,14 +124,7 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
               >
                 <DropdownMenuLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="size-8 rounded-lg">
-                      {avatarSrc ? (
-                        <AvatarImage src={avatarSrc} alt={user?.name ?? 'User avatar'} />
-                      ) : null}
-                      <AvatarFallback className="rounded-lg bg-brand-accent text-brand-accent-foreground text-xs font-medium">
-                        {userInitials}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar name={user?.name} image={user?.image} />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">{user?.name}</span>
                       <span className="text-muted-foreground truncate text-xs">{user?.email}</span>
