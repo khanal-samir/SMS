@@ -37,3 +37,8 @@ export const ResetPasswordSchema = z
     path: ['confirmPassword'],
   })
 export type ResetPasswordDto = z.infer<typeof ResetPasswordSchema>
+
+export const allUsersResponseSchema = UserSchema.extend({
+  isTeacherApproved: z.boolean().optional(),
+})
+export type AllUsersResponse = z.infer<typeof allUsersResponseSchema>

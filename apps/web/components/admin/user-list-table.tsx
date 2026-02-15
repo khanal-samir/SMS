@@ -9,10 +9,10 @@ import {
 import { UserAvatar } from '@/components/ui/user-avatar'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import type { User } from '@repo/schemas'
+import { AllUsersResponse, RoleEnum, type User } from '@repo/schemas'
 
 interface UserListTableProps {
-  users: User[] | null | undefined
+  users: AllUsersResponse[] | null | undefined
   isLoading: boolean
   emptyMessage?: string
 }
@@ -33,6 +33,9 @@ function UserListTable({ users, isLoading, emptyMessage = 'No users found.' }: U
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
+            {users.some((user) => user.role === RoleEnum.enum.TEACHER) && (
+              <TableHead>Approval Status</TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -45,6 +48,19 @@ function UserListTable({ users, isLoading, emptyMessage = 'No users found.' }: U
                 </div>
               </TableCell>
               <TableCell className="text-sm text-gray-600">{user.email}</TableCell>
+              {user.role === RoleEnum.enum.TEACHER && (
+                <TableCell>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
+                      user.isTeacherApproved
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}
+                  >
+                    {user.isTeacherApproved ? 'Approved' : 'Pending Approval'}
+                  </span>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

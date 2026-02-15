@@ -1,5 +1,5 @@
 import apiClient from '@/lib/api'
-import type { ApiResponse, AssignTeacherSubjectDto, User } from '@repo/schemas'
+import type { AllUsersResponse, ApiResponse, AssignTeacherSubjectDto, User } from '@repo/schemas'
 
 export const userApi = {
   getPendingTeachers: async (): Promise<ApiResponse<User[]>> => {
@@ -30,8 +30,8 @@ export const userApi = {
     return data
   },
 
-  getAllUsers: async (): Promise<ApiResponse<User[]>> => {
-    const { data } = await apiClient.get<ApiResponse<User[]>>('/user/all')
+  getAllUsers: async (): Promise<ApiResponse<AllUsersResponse[]>> => {
+    const { data } = await apiClient.get<ApiResponse<AllUsersResponse[]>>('/user/all')
     return data
   },
 }

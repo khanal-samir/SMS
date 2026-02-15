@@ -93,6 +93,7 @@ export class AdminService {
         name: true,
         image: true,
         role: true,
+        isTeacherApproved: true,
       },
       orderBy: {
         name: 'asc',
