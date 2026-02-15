@@ -106,7 +106,7 @@ export class AdminService {
     const [teacher, subject] = await Promise.all([
       this.prisma.user.findUnique({
         where: { id: teacherId },
-        select: { id: true, role: true },
+        select: { id: true, role: true, isTeacherApproved: true },
       }),
       this.prisma.subject.findUnique({
         where: { id: subjectId },
@@ -120,6 +120,10 @@ export class AdminService {
 
     if (teacher.role !== Role.TEACHER) {
       throw new BadRequestException(`User ${teacherId} is not a teacher`)
+    }
+
+    if (!teacher.isTeacherApproved) {
+      throw new BadRequestException(`Teacher ${teacherId} is not approved`)
     }
 
     if (!subject) {

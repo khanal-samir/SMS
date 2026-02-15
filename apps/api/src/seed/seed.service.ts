@@ -25,6 +25,7 @@ export class SeedService implements OnModuleInit {
         await this.seedSemesters(prisma)
         await this.seedSubjects(prisma)
         await this.seedUsersAndBatches(prisma)
+        await this.seedSubjectTeachers(prisma)
       },
       { timeout: 360000 },
     )
@@ -62,41 +63,181 @@ export class SeedService implements OnModuleInit {
       orderBy: { semesterNumber: 'asc' },
     })
 
-    const semesterIndexMap: Record<SemesterNumber, number> = {
-      [SemesterNumber.FIRST]: 1,
-      [SemesterNumber.SECOND]: 2,
-      [SemesterNumber.THIRD]: 3,
-      [SemesterNumber.FOURTH]: 4,
-      [SemesterNumber.FIFTH]: 5,
-      [SemesterNumber.SIXTH]: 6,
-      [SemesterNumber.SEVENTH]: 7,
-      [SemesterNumber.EIGHTH]: 8,
+    const subjectsData: Array<{
+      subjectCode: string
+      subjectName: string
+      semesterNumber: SemesterNumber
+    }> = [
+      // Semester I
+      {
+        subjectCode: 'CSC109',
+        subjectName: 'Introduction to Information Technology',
+        semesterNumber: SemesterNumber.FIRST,
+      },
+      { subjectCode: 'CSC110', subjectName: 'C Programming', semesterNumber: SemesterNumber.FIRST },
+      { subjectCode: 'CSC111', subjectName: 'Digital Logic', semesterNumber: SemesterNumber.FIRST },
+      { subjectCode: 'MTH112', subjectName: 'Mathematics I', semesterNumber: SemesterNumber.FIRST },
+      { subjectCode: 'PHY113', subjectName: 'Physics', semesterNumber: SemesterNumber.FIRST },
+      // Semester II
+      {
+        subjectCode: 'CSC160',
+        subjectName: 'Discrete Structure',
+        semesterNumber: SemesterNumber.SECOND,
+      },
+      {
+        subjectCode: 'CSC161',
+        subjectName: 'Object-Oriented Programming',
+        semesterNumber: SemesterNumber.SECOND,
+      },
+      {
+        subjectCode: 'CSC162',
+        subjectName: 'Microprocessor',
+        semesterNumber: SemesterNumber.SECOND,
+      },
+      {
+        subjectCode: 'MTH163',
+        subjectName: 'Mathematics II',
+        semesterNumber: SemesterNumber.SECOND,
+      },
+      { subjectCode: 'STA164', subjectName: 'Statistics I', semesterNumber: SemesterNumber.SECOND },
+      // Semester III
+      {
+        subjectCode: 'CSC206',
+        subjectName: 'Data Structure and Algorithm',
+        semesterNumber: SemesterNumber.THIRD,
+      },
+      {
+        subjectCode: 'CSC207',
+        subjectName: 'Numerical Method',
+        semesterNumber: SemesterNumber.THIRD,
+      },
+      {
+        subjectCode: 'CSC208',
+        subjectName: 'Computer Architecture',
+        semesterNumber: SemesterNumber.THIRD,
+      },
+      {
+        subjectCode: 'CSC209',
+        subjectName: 'Computer Graphics',
+        semesterNumber: SemesterNumber.THIRD,
+      },
+      { subjectCode: 'STA210', subjectName: 'Statistics II', semesterNumber: SemesterNumber.THIRD },
+      // Semester IV
+      {
+        subjectCode: 'CSC257',
+        subjectName: 'Theory of Computation',
+        semesterNumber: SemesterNumber.FOURTH,
+      },
+      {
+        subjectCode: 'CSC258',
+        subjectName: 'Computer Networks',
+        semesterNumber: SemesterNumber.FOURTH,
+      },
+      {
+        subjectCode: 'CSC259',
+        subjectName: 'Operating Systems',
+        semesterNumber: SemesterNumber.FOURTH,
+      },
+      {
+        subjectCode: 'CSC260',
+        subjectName: 'Database Management System',
+        semesterNumber: SemesterNumber.FOURTH,
+      },
+      {
+        subjectCode: 'CSC261',
+        subjectName: 'Artificial Intelligence',
+        semesterNumber: SemesterNumber.FOURTH,
+      },
+      // Semester V
+      {
+        subjectCode: 'CSC314',
+        subjectName: 'Design and Analysis of Algorithms',
+        semesterNumber: SemesterNumber.FIFTH,
+      },
+      {
+        subjectCode: 'CSC315',
+        subjectName: 'System Analysis and Design',
+        semesterNumber: SemesterNumber.FIFTH,
+      },
+      { subjectCode: 'CSC316', subjectName: 'Cryptography', semesterNumber: SemesterNumber.FIFTH },
+      {
+        subjectCode: 'CSC317',
+        subjectName: 'Simulation and Modeling',
+        semesterNumber: SemesterNumber.FIFTH,
+      },
+      {
+        subjectCode: 'CSC318',
+        subjectName: 'Web Technology',
+        semesterNumber: SemesterNumber.FIFTH,
+      },
+      // Semester VI
+      {
+        subjectCode: 'CSC364',
+        subjectName: 'Software Engineering',
+        semesterNumber: SemesterNumber.SIXTH,
+      },
+      {
+        subjectCode: 'CSC365',
+        subjectName: 'Compiler Design and Construction',
+        semesterNumber: SemesterNumber.SIXTH,
+      },
+      { subjectCode: 'CSC366', subjectName: 'E-Governance', semesterNumber: SemesterNumber.SIXTH },
+      {
+        subjectCode: 'CSC367',
+        subjectName: 'NET Centric Computing',
+        semesterNumber: SemesterNumber.SIXTH,
+      },
+      {
+        subjectCode: 'CSC368',
+        subjectName: 'Technical Writing',
+        semesterNumber: SemesterNumber.SIXTH,
+      },
+      // Semester VII
+      {
+        subjectCode: 'CSC409',
+        subjectName: 'Advanced Java Programming',
+        semesterNumber: SemesterNumber.SEVENTH,
+      },
+      {
+        subjectCode: 'CSC410',
+        subjectName: 'Data Warehousing and Data Mining',
+        semesterNumber: SemesterNumber.SEVENTH,
+      },
+      {
+        subjectCode: 'CSC411',
+        subjectName: 'Principles of Management',
+        semesterNumber: SemesterNumber.SEVENTH,
+      },
+      {
+        subjectCode: 'CSC412',
+        subjectName: 'Project Work',
+        semesterNumber: SemesterNumber.SEVENTH,
+      },
+      // Semester VIII
+      {
+        subjectCode: 'CSC461',
+        subjectName: 'Advanced Database',
+        semesterNumber: SemesterNumber.EIGHTH,
+      },
+      { subjectCode: 'CSC462', subjectName: 'Internship', semesterNumber: SemesterNumber.EIGHTH },
+    ]
+
+    for (const subject of subjectsData) {
+      const semester = semesters.find((s) => s.semesterNumber === subject.semesterNumber)
+      if (!semester) continue
+
+      await prisma.subject.upsert({
+        where: { subjectCode: subject.subjectCode },
+        update: {},
+        create: {
+          subjectCode: subject.subjectCode,
+          subjectName: subject.subjectName,
+          semesterId: semester.id,
+        },
+      })
     }
 
-    let totalSubjects = 0
-
-    for (const semester of semesters) {
-      const semesterIndex = semesterIndexMap[semester.semesterNumber]
-
-      // Create 2 filler subjects per semester
-      for (let subjectIndex = 1; subjectIndex <= 2; subjectIndex++) {
-        const subjectCode = `SUB-${semesterIndex}-${subjectIndex}`
-        const subjectName = `Subject ${semesterIndex}-${subjectIndex}`
-
-        await prisma.subject.upsert({
-          where: { subjectCode },
-          update: {},
-          create: {
-            subjectCode,
-            subjectName,
-            semesterId: semester.id,
-          },
-        })
-        totalSubjects++
-      }
-    }
-
-    this.logger.log(`Seeded ${totalSubjects} subjects successfully`)
+    this.logger.log(`Seeded ${subjectsData.length} subjects successfully`)
   }
 
   private async seedUsersAndBatches(prisma: Prisma.TransactionClient) {
@@ -107,23 +248,47 @@ export class SeedService implements OnModuleInit {
       select: { id: true },
     })
 
-    if (!firstSemester) {
-      this.logger.warn('Skipping user/batch seeding: FIRST semester not found')
+    const eighthSemester = await prisma.semester.findUnique({
+      where: { semesterNumber: SemesterNumber.EIGHTH },
+      select: { id: true },
+    })
+
+    if (!firstSemester || !eighthSemester) {
+      this.logger.warn('Skipping user/batch seeding: required semesters not found')
       return
     }
 
     const defaultPassword = await hash('12345678')
 
+    // 4 batches: 2023 (inactive), 2024-2026 (active)
     const batches = [
+      {
+        batchYear: 2023,
+        startDate: new Date('2023-01-15T00:00:00.000Z'),
+        endDate: new Date('2026-12-31T00:00:00.000Z'),
+        isActive: false,
+        semesterId: eighthSemester.id,
+      },
       {
         batchYear: 2024,
         startDate: new Date('2024-01-15T00:00:00.000Z'),
         endDate: new Date('2027-12-31T00:00:00.000Z'),
+        isActive: true,
+        semesterId: firstSemester.id,
       },
       {
         batchYear: 2025,
         startDate: new Date('2025-01-15T00:00:00.000Z'),
         endDate: new Date('2028-12-31T00:00:00.000Z'),
+        isActive: true,
+        semesterId: firstSemester.id,
+      },
+      {
+        batchYear: 2026,
+        startDate: new Date('2026-01-15T00:00:00.000Z'),
+        endDate: new Date('2029-12-31T00:00:00.000Z'),
+        isActive: true,
+        semesterId: firstSemester.id,
       },
     ]
 
@@ -134,162 +299,251 @@ export class SeedService implements OnModuleInit {
           update: {
             startDate: batch.startDate,
             endDate: batch.endDate,
-            currentSemesterId: firstSemester.id,
-            isActive: true,
+            currentSemesterId: batch.semesterId,
+            isActive: batch.isActive,
           },
           create: {
             batchYear: batch.batchYear,
             startDate: batch.startDate,
             endDate: batch.endDate,
             totalStudents: 0,
-            currentSemesterId: firstSemester.id,
-            isActive: true,
+            currentSemesterId: batch.semesterId,
+            isActive: batch.isActive,
           },
         }),
       ),
     )
 
-    const batchByYear = new Map(batchRecords.map((batch) => [batch.batchYear, batch.id]))
+    const batchByYear = new Map(batchRecords.map((batch) => [batch.batchYear, batch]))
 
-    const users = [
+    // 1 Admin
+    const adminUser = {
+      name: 'Admin',
+      email: 'admin@sms.com',
+      role: Role.ADMIN,
+      isEmailVerified: true,
+      isTeacherApproved: true,
+    }
+
+    const teachers = [
       {
-        name: 'Samir Admin',
-        email: 'samir@gmail.com',
-        role: Role.ADMIN,
+        name: 'Teacher One',
+        email: 'teacher1@sms.com',
         isEmailVerified: true,
         isTeacherApproved: true,
       },
       {
-        name: 'Aarav Teacher',
-        email: 'teacher1@gmail.com',
-        role: Role.TEACHER,
+        name: 'Teacher Two',
+        email: 'teacher2@sms.com',
+        isEmailVerified: true,
+        isTeacherApproved: true,
+      },
+      // Approved, assigned to subjects
+      {
+        name: 'Teacher Three',
+        email: 'teacher3@sms.com',
         isEmailVerified: true,
         isTeacherApproved: true,
       },
       {
-        name: 'Mina Teacher',
-        email: 'teacher2@gmail.com',
-        role: Role.TEACHER,
+        name: 'Teacher Four',
+        email: 'teacher4@sms.com',
+        isEmailVerified: true,
+        isTeacherApproved: true,
+      },
+      {
+        name: 'Teacher Five',
+        email: 'teacher5@sms.com',
+        isEmailVerified: true,
+        isTeacherApproved: true,
+      },
+      {
+        name: 'Teacher Six',
+        email: 'teacher6@sms.com',
+        isEmailVerified: true,
+        isTeacherApproved: true,
+      },
+      {
+        name: 'Teacher Seven',
+        email: 'teacher7@sms.com',
         isEmailVerified: true,
         isTeacherApproved: false,
       },
       {
-        name: 'Ishaan Teacher',
-        email: 'teacher3@gmail.com',
-        role: Role.TEACHER,
+        name: 'Teacher Eight',
+        email: 'teacher8@sms.com',
         isEmailVerified: true,
         isTeacherApproved: false,
       },
       {
-        name: 'Student One',
-        email: 'student1@gmail.com',
-        role: Role.STUDENT,
+        name: 'Teacher Nine',
+        email: 'teacher9@sms.com',
         isEmailVerified: true,
         isTeacherApproved: false,
-        batchYear: 2024,
       },
       {
-        name: 'Student Two',
-        email: 'student2@gmail.com',
-        role: Role.STUDENT,
+        name: 'Teacher Ten',
+        email: 'teacher10@sms.com',
         isEmailVerified: true,
         isTeacherApproved: false,
-        batchYear: 2024,
       },
       {
-        name: 'Student Three',
-        email: 'student3@gmail.com',
-        role: Role.STUDENT,
+        name: 'Teacher Eleven',
+        email: 'teacher11@sms.com',
         isEmailVerified: true,
         isTeacherApproved: false,
-        batchYear: 2024,
       },
       {
-        name: 'Student Four',
-        email: 'student4@gmail.com',
-        role: Role.STUDENT,
+        name: 'Teacher Twelve',
+        email: 'teacher12@sms.com',
         isEmailVerified: true,
         isTeacherApproved: false,
-        batchYear: 2025,
-      },
-      {
-        name: 'Student Five',
-        email: 'student5@gmail.com',
-        role: Role.STUDENT,
-        isEmailVerified: true,
-        isTeacherApproved: false,
-        batchYear: 2025,
-      },
-      {
-        name: 'Student Six',
-        email: 'student6@gmail.com',
-        role: Role.STUDENT,
-        isEmailVerified: true,
-        isTeacherApproved: false,
-        batchYear: 2025,
       },
     ]
 
-    await Promise.all(
-      users.map((user) =>
-        prisma.user.upsert({
-          where: { email: user.email },
-          update: {
-            name: user.name,
-            role: user.role,
-            isEmailVerified: user.isEmailVerified,
-            isTeacherApproved: user.isTeacherApproved,
-            password: defaultPassword,
-            provider: 'LOCAL',
-            batchId: user.batchYear ? batchByYear.get(user.batchYear) : null,
-          },
-          create: {
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            isEmailVerified: user.isEmailVerified,
-            isTeacherApproved: user.isTeacherApproved,
-            password: defaultPassword,
-            provider: 'LOCAL',
-            batchId: user.batchYear ? batchByYear.get(user.batchYear) : null,
-          },
-          select: { id: true },
-        }),
-      ),
-    )
+    // 40 Students: 10 per batch
+    const studentNames = [
+      'Aarav',
+      'Aanya',
+      'Arjun',
+      'Ananya',
+      'Aditya',
+      'Aadhira',
+      'Arnav',
+      'Avni',
+      'Ayush',
+      'Aria',
+    ]
 
-    //only the one we created
-    const students = await prisma.user.findMany({
+    const students: Array<{ name: string; email: string; batchYear: number }> = []
+    for (let i = 0; i < 10; i++) {
+      for (const year of [2023, 2024, 2025, 2026]) {
+        students.push({
+          name: `${studentNames[i % studentNames.length]} ${year}`,
+          email: `student${i + 1}_${year}@sms.com`,
+          batchYear: year,
+        })
+      }
+    }
+
+    const allUsers: Array<{
+      name: string
+      email: string
+      role: Role
+      isEmailVerified: boolean
+      isTeacherApproved: boolean
+      batchYear?: number
+    }> = [
+      adminUser,
+      ...teachers.map((t) => ({ ...t, role: Role.TEACHER })),
+      ...students.map((s) => ({
+        ...s,
+        role: Role.STUDENT,
+        isEmailVerified: true,
+        isTeacherApproved: false,
+      })),
+    ]
+
+    for (const user of allUsers) {
+      const userBatchYear = 'batchYear' in user ? user.batchYear : undefined
+      await prisma.user.upsert({
+        where: { email: user.email },
+        update: {
+          name: user.name,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
+          isTeacherApproved: user.isTeacherApproved,
+          password: defaultPassword,
+          provider: 'LOCAL',
+          batchId: userBatchYear ? (batchByYear.get(userBatchYear)?.id ?? null) : null,
+        },
+        create: {
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          isEmailVerified: user.isEmailVerified,
+          isTeacherApproved: user.isTeacherApproved,
+          password: defaultPassword,
+          provider: 'LOCAL',
+          batchId: userBatchYear ? (batchByYear.get(userBatchYear)?.id ?? null) : null,
+        },
+        select: { id: true },
+      })
+    }
+
+    // Create student semesters for active batches
+    const studentRecords = await prisma.user.findMany({
       where: {
-        email: { in: users.filter((user) => user.role === Role.STUDENT).map((u) => u.email) },
+        email: { in: students.map((s) => s.email) },
       },
       select: { id: true, batchId: true },
     })
 
-    if (students.length > 0) {
-      await prisma.studentSemester.createMany({
-        data: students
-          .filter((student) => student.batchId)
-          .map((student) => ({
+    for (const batch of batchRecords) {
+      const batchStudents = studentRecords.filter((s) => s.batchId === batch.id)
+
+      if (batch.isActive && batch.currentSemesterId) {
+        await prisma.studentSemester.createMany({
+          data: batchStudents.map((student) => ({
             studentId: student.id,
-            semesterId: firstSemester.id,
-            status: 'ACTIVE',
+            semesterId: batch.currentSemesterId!,
+            status: 'ACTIVE' as const,
           })),
-        skipDuplicates: true,
+          skipDuplicates: true,
+        })
+      }
+
+      await prisma.batch.update({
+        where: { id: batch.id },
+        data: { totalStudents: batchStudents.length },
       })
     }
 
-    await Promise.all(
-      batchRecords.map((batch) =>
-        prisma.batch.update({
-          where: { id: batch.id },
-          data: {
-            totalStudents: students.filter((student) => student.batchId === batch.id).length,
-          },
-        }),
-      ),
-    )
-
     this.logger.log('Seeded batches and users successfully')
+  }
+
+  private async seedSubjectTeachers(prisma: Prisma.TransactionClient) {
+    this.logger.log('Seeding subject teachers...')
+
+    // Only approved teachers can be assigned to subjects
+    const approvedTeacherEmails = [
+      'teacher1@sms.com',
+      'teacher2@sms.com',
+      'teacher3@sms.com',
+      'teacher4@sms.com',
+    ]
+
+    const teachers = await prisma.user.findMany({
+      where: { email: { in: approvedTeacherEmails } },
+      select: { id: true, email: true },
+    })
+
+    const subjects = await prisma.subject.findMany({
+      select: { id: true, subjectCode: true },
+    })
+
+    // Assign 1-2 teachers to each subject (distribute teachers evenly)
+    const subjectTeacherData: Array<{ subjectId: string; teacherId: string }> = []
+
+    for (let i = 0; i < subjects.length; i++) {
+      const subject = subjects[i]
+      // Assign 1-2 teachers based on subject index
+      const teacherCount = i % 3 === 0 ? 2 : 1 // Every 3rd subject gets 2 teachers
+
+      for (let j = 0; j < teacherCount; j++) {
+        const teacherIndex = (i + j) % teachers.length
+        subjectTeacherData.push({
+          subjectId: subject.id,
+          teacherId: teachers[teacherIndex].id,
+        })
+      }
+    }
+
+    await prisma.subjectTeacher.createMany({
+      data: subjectTeacherData,
+      skipDuplicates: true,
+    })
+
+    this.logger.log(`Seeded ${subjectTeacherData.length} subject-teacher assignments`)
   }
 }
