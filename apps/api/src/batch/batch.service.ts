@@ -75,6 +75,11 @@ export class BatchService {
             image: true,
           },
         },
+        currentSemester: {
+          select: {
+            semesterNumber: true,
+          },
+        },
       },
     })
 

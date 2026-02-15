@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card'
-import { formatShortDate } from '@/lib/formatters'
+import { formatSemesterNumber } from '@/lib/formatters'
 import type { BatchDetailResponse } from '@repo/schemas'
 
 interface BatchInfoCardsProps {
@@ -19,10 +19,14 @@ function BatchInfoCards({ batch }: BatchInfoCardsProps) {
       </Card>
       <Card>
         <CardHeader className="pb-2">
-          <CardDescription>Start Date</CardDescription>
+          <CardDescription>Current Semester</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">{formatShortDate(batch.startDate)}</p>
+          <p className="text-2xl font-bold">
+            {batch.currentSemester
+              ? `${formatSemesterNumber(batch.currentSemester.semesterNumber)} Semester `
+              : 'No Semester for this batch'}{' '}
+          </p>
         </CardContent>
       </Card>
       <Card>

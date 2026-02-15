@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { UserSchema } from './user.schema'
+import { SemesterNumberEnum } from './semester.schema'
 
 //create batch and findall batch array response
 export const BatchResponseSchema = z.object({
@@ -18,6 +19,11 @@ export type BatchResponse = z.infer<typeof BatchResponseSchema>
 // find one batch response
 export const BatchDetailResponseSchema = BatchResponseSchema.extend({
   users: z.array(UserSchema),
+  currentSemester: z
+    .object({
+      semesterNumber: SemesterNumberEnum,
+    })
+    .nullable(),
 })
 export type BatchDetailResponse = z.infer<typeof BatchDetailResponseSchema>
 

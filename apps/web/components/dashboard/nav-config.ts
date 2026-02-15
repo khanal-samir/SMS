@@ -35,10 +35,6 @@ export const adminNavGroups: NavGroup[] = [
       { title: 'Semesters', url: '/admin/semesters', icon: BookOpen },
     ],
   },
-  {
-    label: 'System',
-    items: [{ title: 'Settings', url: '/admin/settings', icon: Settings }],
-  },
 ]
 
 export const teacherNavGroups: NavGroup[] = [
@@ -74,9 +70,5 @@ export const studentNavGroups: NavGroup[] = [
       { title: 'Courses', url: '/student/courses', icon: BookOpen },
       { title: 'Assignments', url: '/student/assignments', icon: ClipboardList },
     ],
-  },
-  {
-    label: 'Account',
-    items: [{ title: 'Settings', url: '/student/settings', icon: Settings }],
   },
 ]
