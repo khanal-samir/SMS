@@ -4,7 +4,6 @@ import {
   GraduationCap,
   BookOpen,
   BarChart3,
-  Settings,
   ClipboardList,
   Calendar,
   FolderOpen,

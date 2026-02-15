@@ -9,7 +9,7 @@ import {
 import { UserAvatar } from '@/components/ui/user-avatar'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import { AllUsersResponse, RoleEnum, type User } from '@repo/schemas'
+import { AllUsersResponse, RoleEnum } from '@repo/schemas'
 
 interface UserListTableProps {
   users: AllUsersResponse[] | null | undefined
