@@ -4,7 +4,6 @@ export const QUERY_KEYS = {
   APPROVED_TEACHERS: 'approved-teachers',
   BATCHES: 'batches',
   BATCH: 'batch',
-  BATCH_STUDENTS: 'batch-students',
   UNENROLLED_STUDENTS: 'unenrolled-students',
   SEMESTERS: 'semesters',
   SEMESTER: 'semester',
