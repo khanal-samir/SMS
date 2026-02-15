@@ -5,6 +5,7 @@ import { useSubject } from '@/hooks/useSubject'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
+import { StatCards } from '@/components/ui/stat-cards'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function StudentCourseDetailPage() {
@@ -36,32 +37,12 @@ export default function StudentCourseDetailPage() {
           description={subject.subjectCode}
         />
 
-        <div className="mb-8 grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Subject Code</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">{subject.subjectCode}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Semester ID</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm font-semibold text-gray-900 break-all">{subject.semesterId}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Status</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">Active</p>
-            </CardContent>
-          </Card>
-        </div>
+        <StatCards
+          stats={[
+            { label: 'Subject Code', value: subject.subjectCode },
+            { label: 'Status', value: 'Active' },
+          ]}
+        />
 
         {/* TODO: Replace placeholders with assignments/resources once backend is ready. */}
         <div className="grid gap-4 md:grid-cols-2">

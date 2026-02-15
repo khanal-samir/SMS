@@ -12,6 +12,7 @@ import { useApprovedTeachers } from '@/hooks/useTeacher'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
+import { StatCards } from '@/components/ui/stat-cards'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { AssignedTeachersCard } from '@/components/subject/assigned-teachers-card'
 import { AssignTeacherCard } from '@/components/subject/assign-teacher-card'
@@ -71,32 +72,12 @@ export default function AdminSubjectDetailPage() {
           description={subject.subjectCode}
         />
 
-        <div className="mb-8 grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Subject Code</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">{subject.subjectCode}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Semester ID</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm font-semibold text-gray-900 break-all">{subject.semesterId}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Assigned Teachers</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">{subjectTeachers?.length ?? 0}</p>
-            </CardContent>
-          </Card>
-        </div>
+        <StatCards
+          stats={[
+            { label: 'Subject Code', value: subject.subjectCode },
+            { label: 'Assigned Teachers', value: subjectTeachers?.length ?? 0 },
+          ]}
+        />
 
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <AssignedTeachersCard

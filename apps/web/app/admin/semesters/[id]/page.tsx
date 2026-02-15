@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
+import { StatCards } from '@/components/ui/stat-cards'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -40,6 +41,11 @@ export default function AdminSemesterDetailPage() {
   }
 
   const semesterLabel = `${formatSemesterNumber(semester.semesterNumber)} Semester`
+  const assignedTeachersCount = semester.subjects.reduce(
+    (total: number, subject: SemesterDetailResponse['subjects'][number]) =>
+      total + subject.subjectTeachers.length,
+    0,
+  )
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -50,38 +56,14 @@ export default function AdminSemesterDetailPage() {
           description="Manage subjects and assignments for this semester"
         />
 
-        <div className="mb-8 grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Semester</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">{semesterLabel}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Subjects</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">{semester.subjects.length}</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Assigned Teachers</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-gray-900">
-                {semester.subjects.reduce(
-                  (total: number, subject: SemesterDetailResponse['subjects'][number]) =>
-                    total + subject.subjectTeachers.length,
-                  0,
-                )}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+        <StatCards
+          stats={[
+            { label: 'Semester', value: semesterLabel },
+            { label: 'Subjects', value: semester.subjects.length },
+            { label: 'Assigned Teachers', value: assignedTeachersCount },
+          ]}
+          columns={3}
+        />
 
         <Card>
           <CardHeader>
