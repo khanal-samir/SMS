@@ -1,4 +1,4 @@
-import { Controller, Param, Put, Get, Post, Body, ForbiddenException } from '@nestjs/common'
+import { Controller, Param, Put, Get, Post, Body } from '@nestjs/common'
 import { AdminService } from './admin.service'
 import { UserService } from './user.service'
 import { Roles } from '@src/auth/decorators/roles.decorator'
@@ -6,7 +6,6 @@ import { CurrentUser } from '@src/auth/decorators/current-user.decorator'
 import { Role } from '@prisma/client'
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger'
 import { AssignTeacherSubjectDto } from './dto/assign-teacher-subject.dto'
-import type { AuthUser } from '@repo/schemas'
 
 @ApiTags('User Management')
 @Controller('user')
