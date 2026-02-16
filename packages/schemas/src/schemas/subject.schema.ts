@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { UserSchema } from './user.schema'
+import { RoleEnum } from './enums'
+import type { User } from './user.schema'
 
 export const SubjectResponseSchema = z.object({
   id: z.cuid(),
@@ -17,13 +18,16 @@ export const SubjectTeacherResponseSchema = z.object({
   teacherId: z.string(),
   assignedAt: z.string(),
   isActive: z.boolean(),
-  teacher: UserSchema.refine(
-    (data) => {
-      return data.role === 'TEACHER'
-    },
-    {
-      message: 'User must have the role of TEACHER',
-    },
+  teacher: z.lazy(() =>
+    // work at runtime, avoid circular dependency
+    z.custom<User>().refine(
+      (data) => {
+        return data.role === RoleEnum.enum.TEACHER
+      },
+      {
+        message: 'User must have the role of TEACHER',
+      },
+    ),
   ),
 })
 export type SubjectTeacherResponse = z.infer<typeof SubjectTeacherResponseSchema>

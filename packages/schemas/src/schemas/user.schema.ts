@@ -1,12 +1,5 @@
 import { z } from 'zod'
-import { BatchResponseSchema } from './batch.schema'
-import { SemesterNumberEnum, StudentSemesterStatusEnum } from './semester.schema'
-
-export const RoleEnum = z.enum(['ADMIN', 'TEACHER', 'STUDENT'])
-export type Role = z.infer<typeof RoleEnum>
-
-export const ProviderEnum = z.enum(['LOCAL', 'GOOGLE'])
-export type Provider = z.infer<typeof ProviderEnum>
+import { RoleEnum, SemesterNumberEnum, StudentSemesterStatusEnum } from './enums'
 
 //public user schema - simplified response
 export const UserSchema = z.object({

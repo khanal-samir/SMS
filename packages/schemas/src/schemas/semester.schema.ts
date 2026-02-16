@@ -1,20 +1,6 @@
 import { z } from 'zod'
+import { SemesterNumberEnum, StudentSemesterStatusEnum } from './enums'
 import { SubjectResponseSchema, SubjectTeacherResponseSchema } from './subject.schema'
-
-export const SemesterNumberEnum = z.enum([
-  'FIRST',
-  'SECOND',
-  'THIRD',
-  'FOURTH',
-  'FIFTH',
-  'SIXTH',
-  'SEVENTH',
-  'EIGHTH',
-])
-export type SemesterNumber = z.infer<typeof SemesterNumberEnum>
-
-export const StudentSemesterStatusEnum = z.enum(['ACTIVE', 'COMPLETED', 'FAILED'])
-export type StudentSemesterStatus = z.infer<typeof StudentSemesterStatusEnum>
 
 export const SemesterResponseSchema = z.object({
   id: z.cuid(),
