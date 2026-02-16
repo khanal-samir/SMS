@@ -1,4 +1,5 @@
 import { Loader2 } from 'lucide-react'
+import Link from 'next/link'
 import {
   Table,
   TableBody,
@@ -13,9 +14,10 @@ import type { User } from '@repo/schemas'
 interface BatchStudentsTableProps {
   students: User[] | null | undefined
   isLoading: boolean
+  studentLinkBasePath?: string
 }
 
-function BatchStudentsTable({ students, isLoading }: BatchStudentsTableProps) {
+function BatchStudentsTable({ students, isLoading, studentLinkBasePath }: BatchStudentsTableProps) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -47,7 +49,16 @@ function BatchStudentsTable({ students, isLoading }: BatchStudentsTableProps) {
               <TableCell>
                 <div className="flex items-center gap-3">
                   <UserAvatar name={student.name} image={student.image} />
-                  <span className="text-sm font-medium text-gray-900">{student.name}</span>
+                  {studentLinkBasePath ? (
+                    <Link
+                      href={`${studentLinkBasePath}/${student.id}`}
+                      className="text-sm font-medium text-brand-accent hover:underline"
+                    >
+                      {student.name}
+                    </Link>
+                  ) : (
+                    <span className="text-sm font-medium text-gray-900">{student.name}</span>
+                  )}
                 </div>
               </TableCell>
               <TableCell className="text-sm text-gray-600">{student.email}</TableCell>

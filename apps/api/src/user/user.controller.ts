@@ -1,6 +1,8 @@
 import { Controller, Param, Put, Get, Post, Body } from '@nestjs/common'
 import { AdminService } from './admin.service'
+import { UserService } from './user.service'
 import { Roles } from '@src/auth/decorators/roles.decorator'
+import { CurrentUser } from '@src/auth/decorators/current-user.decorator'
 import { Role } from '@prisma/client'
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger'
 import { AssignTeacherSubjectDto } from './dto/assign-teacher-subject.dto'
@@ -8,7 +10,10 @@ import { AssignTeacherSubjectDto } from './dto/assign-teacher-subject.dto'
 @ApiTags('User Management')
 @Controller('user')
 export class UserController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly userService: UserService,
+  ) {}
 
   @Roles(Role.ADMIN)
   @Get('/pending-teachers')
@@ -43,6 +48,30 @@ export class UserController {
     return {
       message: 'All users retrieved successfully',
       data: users,
+    }
+  }
+
+  @Roles(Role.STUDENT)
+  @Get('/student/me')
+  @ApiOperation({ summary: 'Get current student details with semester history' })
+  @ApiResponse({ status: 200, description: 'Student details retrieved successfully' })
+  async getMyStudentDetail(@CurrentUser('id') userId: string) {
+    const student = await this.userService.getStudentDetail(userId)
+    return {
+      message: 'Student details retrieved successfully',
+      data: student,
+    }
+  }
+
+  @Roles(Role.ADMIN, Role.TEACHER)
+  @Get('/student/:id')
+  @ApiOperation({ summary: 'Get student details by ID with semester history' })
+  @ApiResponse({ status: 200, description: 'Student details retrieved successfully' })
+  async getStudentDetail(@Param('id') studentId: string) {
+    const student = await this.userService.getStudentDetail(studentId)
+    return {
+      message: 'Student details retrieved successfully',
+      data: student,
     }
   }
 

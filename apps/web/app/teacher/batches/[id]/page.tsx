@@ -46,7 +46,11 @@ export default function TeacherBatchDetailPage() {
             <CardDescription>Students currently enrolled in this batch</CardDescription>
           </CardHeader>
           <CardContent>
-            <BatchStudentsTable students={batch.users} isLoading={false} />
+            <BatchStudentsTable
+              students={batch.users}
+              isLoading={false}
+              studentLinkBasePath={`/teacher/batches/${batchId}/students`}
+            />
           </CardContent>
         </Card>
       </div>

@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
   Table,
   TableBody,
@@ -44,7 +45,16 @@ function UserListTable({ users, isLoading, emptyMessage = 'No users found.' }: U
               <TableCell>
                 <div className="flex items-center gap-3">
                   <UserAvatar name={user.name} image={user.image} size="default" />
-                  <span className="text-sm font-semibold text-gray-900">{user.name ?? '-'}</span>
+                  {user.role === RoleEnum.enum.STUDENT ? (
+                    <Link
+                      href={`/admin/users/students/${user.id}`}
+                      className="text-sm font-semibold text-brand-accent hover:underline"
+                    >
+                      {user.name ?? '-'}
+                    </Link>
+                  ) : (
+                    <span className="text-sm font-semibold text-gray-900">{user.name ?? '-'}</span>
+                  )}
                 </div>
               </TableCell>
               <TableCell className="text-sm text-gray-600">{user.email}</TableCell>

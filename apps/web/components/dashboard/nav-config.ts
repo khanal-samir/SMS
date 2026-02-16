@@ -7,6 +7,7 @@ import {
   ClipboardList,
   Calendar,
   FolderOpen,
+  UserCircle,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -61,7 +62,10 @@ export const teacherNavGroups: NavGroup[] = [
 export const studentNavGroups: NavGroup[] = [
   {
     label: 'Overview',
-    items: [{ title: 'Dashboard', url: '/student/dashboard', icon: LayoutDashboard }],
+    items: [
+      { title: 'Dashboard', url: '/student/dashboard', icon: LayoutDashboard },
+      { title: 'My Details', url: '/student/my-details', icon: UserCircle },
+    ],
   },
   {
     label: 'Academics',

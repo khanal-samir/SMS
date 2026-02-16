@@ -1,7 +1,8 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common'
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { hash, verify } from 'argon2'
+import { Role } from '@prisma/client'
 
 @Injectable()
 export class UserService {
@@ -180,5 +181,69 @@ export class UserService {
         isEmailVerified: true,
       },
     })
+  }
+
+  async getStudentDetail(studentId: string) {
+    this.logger.log(`Getting student detail for student id: ${studentId}`)
+
+    const student = await this.prisma.user.findUnique({
+      where: { id: studentId, role: Role.STUDENT },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        image: true,
+        role: true,
+        batch: {
+          select: {
+            id: true,
+            batchYear: true,
+            isActive: true,
+            currentSemester: {
+              select: {
+                id: true,
+                semesterNumber: true,
+              },
+            },
+          },
+        },
+        studentSemesters: {
+          select: {
+            id: true,
+            semesterId: true,
+            enrolledAt: true,
+            status: true,
+            semester: {
+              select: {
+                semesterNumber: true,
+              },
+            },
+          },
+          orderBy: {
+            enrolledAt: 'asc',
+          },
+        },
+      },
+    })
+
+    if (!student) {
+      throw new NotFoundException('Student not found')
+    }
+
+    return {
+      id: student.id,
+      email: student.email,
+      name: student.name,
+      image: student.image,
+      role: student.role,
+      batch: student.batch,
+      semesters: student.studentSemesters.map((ss) => ({
+        id: ss.id,
+        semesterId: ss.semesterId,
+        semesterNumber: ss.semester.semesterNumber,
+        enrolledAt: ss.enrolledAt.toISOString(),
+        status: ss.status,
+      })),
+    }
   }
 }

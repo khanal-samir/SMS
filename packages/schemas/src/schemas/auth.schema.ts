@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { RoleEnum, UserSchema } from './user.schema'
+import { UserSchema } from './user.schema'
+import { RoleEnum } from './enums'
 
 //strategy
 export const JwtPayloadSchema = z.object({
