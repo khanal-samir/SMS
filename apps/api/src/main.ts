@@ -1,3 +1,4 @@
+import helmet from 'helmet'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app/app.module'
 import { ConfigService } from '@nestjs/config'
@@ -11,6 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get<ConfigService>(ConfigService)
 
+  app.use(helmet()) // add security headers to responses
   app.use(cookieParser())
 
   app.enableCors({
