@@ -15,7 +15,7 @@ const TABS: { key: TabType; label: string }[] = [
 ]
 
 export default function AdminUsersPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('teachers')
+  const [activeTab, setActiveTab] = useState<TabType>('students')
   const { teachers, students, admins, isLoading } = useUsersByRole()
 
   const usersByTab = {
