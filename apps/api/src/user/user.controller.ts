@@ -68,10 +68,7 @@ export class UserController {
   @Get('/student/:id')
   @ApiOperation({ summary: 'Get student details by ID with semester history' })
   @ApiResponse({ status: 200, description: 'Student details retrieved successfully' })
-  async getStudentDetail(@Param('id') studentId: string, @CurrentUser() currentUser: AuthUser) {
-    if (currentUser.role === 'STUDENT' && currentUser.id !== studentId) {
-      throw new ForbiddenException('You can only view your own details')
-    }
+  async getStudentDetail(@Param('id') studentId: string) {
     const student = await this.userService.getStudentDetail(studentId)
     return {
       message: 'Student details retrieved successfully',
