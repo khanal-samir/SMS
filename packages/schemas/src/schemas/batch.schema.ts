@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { UserSchema } from './user.schema'
-import { SemesterNumberEnum } from './semester.schema'
+import { SemesterNumberEnum } from './enums'
 
 //create batch and findall batch array response
 export const BatchResponseSchema = z.object({
