@@ -202,7 +202,7 @@ export class AdminService {
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, role: true, name: true, email: true, image: true },
+      select: { role: true },
     })
 
     if (!user) {
@@ -215,13 +215,6 @@ export class AdminService {
 
     return this.prisma.user.delete({
       where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        image: true,
-      },
     })
   }
 }
