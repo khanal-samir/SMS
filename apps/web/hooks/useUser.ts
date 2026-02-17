@@ -57,7 +57,12 @@ export const useDeleteUser = () => {
   return useMutation({
     mutationFn: (userId: string) => userApi.deleteUser(userId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_USERS] })
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_USERS] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.STUDENT_DETAIL] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHERS] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTER] }),
+      ])
       toast.success('User deleted successfully')
     },
   })
