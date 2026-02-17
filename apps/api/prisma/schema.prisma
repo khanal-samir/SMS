@@ -27,7 +27,7 @@ model User {
   updatedAt              DateTime  @updatedAt
 
   // Relations
-  batch            Batch?            @relation(fields: [batchId], references: [id])
+  batch            Batch?            @relation(fields: [batchId], references: [id], onDelete: SetNull)
   studentSemesters StudentSemester[]
   subjectTeachers  SubjectTeacher[]
 
@@ -74,8 +74,8 @@ model StudentSemester {
   status     StudentSemesterStatus @default(ACTIVE)
 
   // Relations
-  student  User     @relation(fields: [studentId], references: [id])
-  semester Semester @relation(fields: [semesterId], references: [id])
+  student  User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  semester Semester @relation(fields: [semesterId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, semesterId])
 }
@@ -89,7 +89,7 @@ model Subject {
   updatedAt   DateTime @updatedAt
 
   // Relations
-  semester        Semester         @relation(fields: [semesterId], references: [id])
+  semester        Semester         @relation(fields: [semesterId], references: [id], onDelete: Cascade)
   subjectTeachers SubjectTeacher[]
 }
 
@@ -101,8 +101,8 @@ model SubjectTeacher {
   isActive   Boolean  @default(true)
 
   // Relations
-  subject Subject @relation(fields: [subjectId], references: [id])
-  teacher User    @relation(fields: [teacherId], references: [id])
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacher User    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   // resources   Resource[]
   // assignments Assignment[]

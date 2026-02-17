@@ -41,5 +41,12 @@ export type ResetPasswordDto = z.infer<typeof ResetPasswordSchema>
 
 export const allUsersResponseSchema = UserSchema.extend({
   isTeacherApproved: z.boolean().optional(),
+  batch: z
+    .object({
+      id: z.cuid(),
+      batchYear: z.number().int(),
+      isActive: z.boolean(),
+    })
+    .nullable(),
 })
 export type AllUsersResponse = z.infer<typeof allUsersResponseSchema>

@@ -1,4 +1,4 @@
-import { Controller, Param, Put, Get, Post, Body } from '@nestjs/common'
+import { Controller, Param, Put, Get, Post, Body, Delete } from '@nestjs/common'
 import { AdminService } from './admin.service'
 import { UserService } from './user.service'
 import { Roles } from '@src/auth/decorators/roles.decorator'
@@ -113,6 +113,20 @@ export class UserController {
     return {
       message: 'Teacher unassigned from subject successfully',
       data: assignment,
+    }
+  }
+
+  @Roles(Role.ADMIN)
+  @Delete('/:id')
+  @ApiOperation({ summary: 'Delete a user (students and teachers only)' })
+  @ApiResponse({ status: 200, description: 'User deleted successfully' })
+  @ApiResponse({ status: 400, description: 'Cannot delete admin users' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async deleteUser(@Param('id') id: string) {
+    await this.adminService.deleteUser(id)
+    return {
+      message: 'User deleted successfully',
+      data: null,
     }
   }
 }

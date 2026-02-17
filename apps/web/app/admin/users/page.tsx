@@ -5,17 +5,16 @@ import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { UserListTable } from '@/components/admin/user-list-table'
 import { useUsersByRole } from '@/hooks/useUser'
+import type { UserTabType } from '@/types/user-tabs'
 
-type TabType = 'teachers' | 'students' | 'admins'
-
-const TABS: { key: TabType; label: string }[] = [
+const TABS: { key: UserTabType; label: string }[] = [
   { key: 'students', label: 'Students' },
   { key: 'teachers', label: 'Teachers' },
   { key: 'admins', label: 'Admins' },
 ]
 
 export default function AdminUsersPage() {
-  const [activeTab, setActiveTab] = useState<TabType>('students')
+  const [activeTab, setActiveTab] = useState<UserTabType>('students')
   const { teachers, students, admins, isLoading } = useUsersByRole()
 
   const usersByTab = {
@@ -49,6 +48,7 @@ export default function AdminUsersPage() {
           users={usersByTab[activeTab]}
           isLoading={isLoading}
           emptyMessage={`No ${activeTab} found.`}
+          activeTab={activeTab}
         />
       </div>
     </div>

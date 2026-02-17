@@ -94,6 +94,13 @@ export class AdminService {
         image: true,
         role: true,
         isTeacherApproved: true,
+        batch: {
+          select: {
+            id: true,
+            batchYear: true,
+            isActive: true,
+          },
+        },
       },
       orderBy: {
         name: 'asc',
@@ -187,6 +194,27 @@ export class AdminService {
     return await this.prisma.subjectTeacher.update({
       where: { id: assignment.id },
       data: { isActive: false },
+    })
+  }
+
+  async deleteUser(userId: string) {
+    this.logger.log(`Deleting user with id: ${userId}`)
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { role: true },
+    })
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${userId} not found`)
+    }
+
+    if (user.role === Role.ADMIN) {
+      throw new BadRequestException('Cannot delete admin users')
+    }
+
+    return this.prisma.user.delete({
+      where: { id: userId },
     })
   }
 }

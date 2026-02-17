@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { userApi } from '@/apis/user.api'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import { RoleEnum } from '@repo/schemas'
+import { toast } from 'sonner'
 
 export const useAllUsers = () => {
   return useQuery({
@@ -46,6 +47,18 @@ export const useMyStudentDetail = () => {
     queryFn: async () => {
       const response = await userApi.getMyStudentDetail()
       return response.data
+    },
+  })
+}
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (userId: string) => userApi.deleteUser(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_USERS] })
+      toast.success('User deleted successfully')
     },
   })
 }
