@@ -50,4 +50,9 @@ export const userApi = {
     const { data } = await apiClient.get<ApiResponse<StudentDetailResponse>>('/user/student/me')
     return data
   },
+
+  deleteUser: async (userId: string): Promise<ApiResponse<null>> => {
+    const { data } = await apiClient.delete<ApiResponse<null>>(`/user/${userId}`)
+    return data
+  },
 }
