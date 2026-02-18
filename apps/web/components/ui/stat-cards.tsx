@@ -18,8 +18,8 @@ const gridCols = {
 export function StatCards({ stats, columns = 2 }: StatCardsProps) {
   return (
     <div className={`mb-8 grid gap-4  ${gridCols[columns]}`}>
-      {stats.map((stat, index) => (
-        <Card key={index}>
+      {stats.map((stat) => (
+        <Card key={stat.label}>
           <CardHeader className="pb-2">
             <CardDescription>{stat.label}</CardDescription>
           </CardHeader>

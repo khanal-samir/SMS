@@ -70,12 +70,12 @@ export function LandingFooter() {
             <ul className="space-y-3">
               {['About PNC', 'Contact Us', 'Faculty', 'Campus Life'].map((item) => (
                 <li key={item}>
-                  <a
-                    href="#"
+                  <Link
+                    href="/"
                     className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
                   >
                     {item}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -89,12 +89,12 @@ export function LandingFooter() {
               {['Privacy Policy', 'Terms of Service', 'Accessibility', 'Data Protection'].map(
                 (item) => (
                   <li key={item}>
-                    <a
-                      href="#"
+                    <Link
+                      href="/"
                       className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
                     >
                       {item}
-                    </a>
+                    </Link>
                   </li>
                 ),
               )}
@@ -107,13 +107,19 @@ export function LandingFooter() {
             &copy; {new Date().getFullYear()} SMS College. All rights reserved.
           </p>
           <div className="flex gap-6">
-            {['Twitter', 'Facebook', 'LinkedIn'].map((social) => (
+            {[
+              { label: 'Twitter', href: 'https://twitter.com' },
+              { label: 'Facebook', href: 'https://facebook.com' },
+              { label: 'LinkedIn', href: 'https://linkedin.com' },
+            ].map((social) => (
               <a
-                key={social}
-                href="#"
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-xs text-brand-foreground/40 transition-colors hover:text-brand-accent"
               >
-                {social}
+                {social.label}
               </a>
             ))}
           </div>
