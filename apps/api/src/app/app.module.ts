@@ -13,6 +13,7 @@ import { SeedModule } from 'src/seed/seed.module'
 import { SemesterModule } from 'src/semester/semester.module'
 import { SubjectModule } from 'src/subject/subject.module'
 import { BatchModule } from 'src/batch/batch.module'
+import { AssignmentModule } from 'src/assignment/assignment.module'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BatchModule } from 'src/batch/batch.module'
     SemesterModule,
     SubjectModule,
     BatchModule,
+    AssignmentModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {

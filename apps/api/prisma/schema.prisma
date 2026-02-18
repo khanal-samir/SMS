@@ -51,7 +51,8 @@ model Batch {
 
   // Relations
   users           User[]
-  currentSemester Semester? @relation(fields: [currentSemesterId], references: [id])
+  currentSemester Semester?    @relation(fields: [currentSemesterId], references: [id])
+  assignments     Assignment[]
 }
 
 model Semester {
@@ -104,8 +105,7 @@ model SubjectTeacher {
   subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   teacher User    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
-  // resources   Resource[]
-  // assignments Assignment[]
+  assignments Assignment[]
 
   @@unique([subjectId, teacherId])
 }
@@ -124,26 +124,30 @@ model SubjectTeacher {
 //   subjectTeacherId String
 
 //   // Relations
-//   subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id])
+//   subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id], onDelete: Cascade)
+//   assignments    Assignment[]
 
 //   @@index([id])
 // }
 
-// model Assignment {
-//   id               String   @id @default(cuid())
-//   title            String
-//   description      String?
-//   dueDate          DateTime
-//   createdAt        DateTime @default(now())
-//   updatedAt        DateTime @updatedAt
-//   isPublished      Boolean  @default(false)
-//   subjectTeacherId String
+model Assignment {
+  id               String           @id @default(cuid())
+  title            String
+  description      String?
+  dueDate          DateTime
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  status           AssignmentStatus @default(DRAFT)
+  subjectTeacherId String
+  batchId          String
 
-//   // Relations
-//   subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id])
+  // Relations
+  subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id])
+  batch          Batch          @relation(fields: [batchId], references: [id], onDelete: Cascade)
 
-//   @@index([id])
-// }
+  @@index([id])
+  @@index([id, batchId])
+}
 
 // model Announcement {
 //   id          String   @id @default(cuid())
@@ -215,10 +219,13 @@ enum SemesterNumber {
 }
 
 // enum ResourceType {
-//   PDF
-//   VIDEO
 //   DOCUMENT
 //   LINK
-//   ASSIGNMENT
 //   NOTES
 // }
+
+enum AssignmentStatus {
+  DRAFT
+  PUBLISHED
+  PAST_DUE
+}
