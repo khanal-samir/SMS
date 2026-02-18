@@ -66,12 +66,9 @@ export const useCreateAssignment = () => {
   return useMutation({
     mutationFn: (dto: CreateAssignmentDto) => assignmentApi.createAssignment(dto),
     onSuccess: (data) => {
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] }),
-      ]).then(() => {
-        toast.success(data.message)
-      })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
+      toast.success(data.message)
     },
   })
 }
@@ -82,14 +79,11 @@ export const useUpdateAssignment = () => {
   return useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateAssignmentDto }) =>
       assignmentApi.updateAssignment(id, dto),
-    onSuccess: (data) => {
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENT, data.data?.id] }),
-      ]).then(() => {
-        toast.success(data.message)
-      })
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENT, variables.id] })
+      toast.success(data.message)
     },
   })
 }
@@ -100,14 +94,11 @@ export const useUpdateAssignmentStatus = () => {
   return useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: UpdateAssignmentStatusDto }) =>
       assignmentApi.updateAssignmentStatus(id, dto),
-    onSuccess: (data) => {
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENT, data.data?.id] }),
-      ]).then(() => {
-        toast.success(data.message)
-      })
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENT, variables.id] })
+      toast.success(data.message)
     },
   })
 }
@@ -118,12 +109,9 @@ export const useDeleteAssignment = () => {
   return useMutation({
     mutationFn: (id: string) => assignmentApi.deleteAssignment(id),
     onSuccess: (data) => {
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] }),
-      ]).then(() => {
-        toast.success(data.message)
-      })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
+      toast.success(data.message)
     },
   })
 }
