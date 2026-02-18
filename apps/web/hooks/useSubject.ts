@@ -54,11 +54,9 @@ export const useAssignTeacher = (subjectId: string) => {
   return useMutation({
     mutationFn: (dto: AssignTeacherSubjectDto) => userApi.assignTeacherSubject(dto),
     onSuccess: (data) => {
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHERS, subjectId] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTER] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTERS] }),
-      ])
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHERS, subjectId] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTER] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTERS] })
       toast.success(data.message)
     },
   })
@@ -70,11 +68,9 @@ export const useUnassignTeacher = (subjectId: string) => {
   return useMutation({
     mutationFn: (dto: AssignTeacherSubjectDto) => userApi.unassignTeacherSubject(dto),
     onSuccess: (data) => {
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHERS, subjectId] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTER] }),
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTERS] }),
-      ])
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHERS, subjectId] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTER] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SEMESTERS] })
       toast.success(data.message)
     },
   })
