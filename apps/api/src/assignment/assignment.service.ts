@@ -154,27 +154,6 @@ export class AssignmentService {
     })
   }
 
-  async findBySubjectTeacher(subjectTeacherId: string, user: AuthUser) {
-    this.logger.log(
-      `Finding assignments for subject-teacher: ${subjectTeacherId} by user: ${user.id}`,
-    )
-
-    if (!this.isAdmin(user)) {
-      const subjectTeacher = await this.prisma.subjectTeacher.findUnique({
-        where: { id: subjectTeacherId, teacherId: user.id },
-      })
-      if (!subjectTeacher) {
-        throw new ForbiddenException('You are not assigned to this subject')
-      }
-    }
-
-    return this.prisma.assignment.findMany({
-      where: { subjectTeacherId },
-      include: this.ASSIGNMENT_INCLUDE,
-      orderBy: { createdAt: 'desc' },
-    })
-  }
-
   async findOne(id: string, user: AuthUser) {
     this.logger.log(`Finding assignment: ${id} for user: ${user.id}`)
     return this.findOneWithAccess(this.prisma, id, user)

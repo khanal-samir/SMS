@@ -35,15 +35,6 @@ export const assignmentApi = {
     return data
   },
 
-  getAssignmentsBySubjectTeacher: async (
-    subjectTeacherId: string,
-  ): Promise<ApiResponse<AssignmentResponse[]>> => {
-    const { data } = await apiClient.get<ApiResponse<AssignmentResponse[]>>(
-      `/assignments/by-subject-teacher/${subjectTeacherId}`,
-    )
-    return data
-  },
-
   getAssignment: async (id: string): Promise<ApiResponse<AssignmentResponse>> => {
     const { data } = await apiClient.get<ApiResponse<AssignmentResponse>>(`/assignments/${id}`)
     return data

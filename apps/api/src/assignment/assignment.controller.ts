@@ -61,23 +61,6 @@ export class AssignmentController {
     }
   }
 
-  @Get('by-subject-teacher/:subjectTeacherId')
-  @Roles(Role.TEACHER, Role.ADMIN)
-  @ApiOperation({ summary: 'Get assignments for a specific subject-teacher' })
-  @ApiParam({ name: 'subjectTeacherId', description: 'SubjectTeacher ID' })
-  @ApiResponse({ status: 200, description: 'List of assignments for the subject' })
-  @ApiResponse({ status: 403, description: 'Teacher not assigned to this subject' })
-  async findBySubjectTeacher(
-    @Param('subjectTeacherId') subjectTeacherId: string,
-    @CurrentUser() user: AuthUser,
-  ) {
-    const assignments = await this.assignmentService.findBySubjectTeacher(subjectTeacherId, user)
-    return {
-      message: 'Assignments retrieved successfully',
-      data: assignments,
-    }
-  }
-
   @Get(':id')
   @ApiOperation({ summary: 'Get a single assignment by ID' })
   @ApiParam({ name: 'id', description: 'Assignment ID' })

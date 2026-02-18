@@ -18,17 +18,6 @@ export const useAssignments = () => {
   })
 }
 
-export const useAssignmentsBySubjectTeacher = (subjectTeacherId: string) => {
-  return useQuery({
-    queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS, subjectTeacherId],
-    queryFn: async () => {
-      const response = await assignmentApi.getAssignmentsBySubjectTeacher(subjectTeacherId)
-      return response.data
-    },
-    enabled: !!subjectTeacherId,
-  })
-}
-
 export const useAssignment = (id: string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.ASSIGNMENT, id],
@@ -67,7 +56,6 @@ export const useCreateAssignment = () => {
     mutationFn: (dto: CreateAssignmentDto) => assignmentApi.createAssignment(dto),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
       toast.success(data.message)
     },
   })
@@ -81,7 +69,6 @@ export const useUpdateAssignment = () => {
       assignmentApi.updateAssignment(id, dto),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENT, variables.id] })
       toast.success(data.message)
     },
@@ -96,7 +83,6 @@ export const useUpdateAssignmentStatus = () => {
       assignmentApi.updateAssignmentStatus(id, dto),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENT, variables.id] })
       toast.success(data.message)
     },
@@ -110,7 +96,6 @@ export const useDeleteAssignment = () => {
     mutationFn: (id: string) => assignmentApi.deleteAssignment(id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ASSIGNMENTS] })
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.SUBJECT_TEACHER_ASSIGNMENTS] })
       toast.success(data.message)
     },
   })

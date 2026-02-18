@@ -15,7 +15,6 @@ export const QUERY_KEYS = {
   STUDENT_DETAIL: 'student-detail',
   ASSIGNMENTS: 'assignments',
   ASSIGNMENT: 'assignment',
-  SUBJECT_TEACHER_ASSIGNMENTS: 'subject-teacher-assignments',
   TEACHER_SUBJECTS: 'teacher-subjects',
   ALL_SUBJECT_TEACHERS: 'all-subject-teachers',
 } as const
