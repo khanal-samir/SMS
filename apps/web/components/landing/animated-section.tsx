@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useInView } from 'motion/react'
+import { LazyMotion, domAnimation, m, useInView } from 'motion/react'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -27,18 +27,20 @@ function AnimatedSection({
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <div ref={ref} className={className}>
-      <motion.div
-        initial="hidden"
-        animate={inView ? 'visible' : 'hidden'}
-        variants={{
-          hidden: {},
-          visible: { transition: { staggerChildren: 0.08 } },
-        }}
-      >
-        {children}
-      </motion.div>
-    </div>
+    <LazyMotion features={domAnimation}>
+      <div ref={ref} className={className}>
+        <m.div
+          initial="hidden"
+          animate={inView ? 'visible' : 'hidden'}
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
+        >
+          {children}
+        </m.div>
+      </div>
+    </LazyMotion>
   )
 }
 
@@ -52,9 +54,11 @@ function MotionItem({
   className?: string
 }) {
   return (
-    <motion.div variants={fadeUp} custom={index} className={className}>
-      {children}
-    </motion.div>
+    <LazyMotion features={domAnimation}>
+      <m.div variants={fadeUp} custom={index} className={className}>
+        {children}
+      </m.div>
+    </LazyMotion>
   )
 }
 

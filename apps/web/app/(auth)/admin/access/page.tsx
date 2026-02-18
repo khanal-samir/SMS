@@ -35,7 +35,6 @@ export default function AdminLoginPage() {
                 name="secret"
                 type="password"
                 placeholder="Enter access key"
-                autoFocus
                 required
               />
               {state.error && <p className="text-sm text-destructive">{state.error}</p>}

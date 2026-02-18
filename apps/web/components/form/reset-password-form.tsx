@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -18,7 +19,7 @@ import { ResetPasswordSchema, type ResetPasswordDto } from '@repo/schemas'
 import { useResetPassword } from '@/hooks/useAuth'
 import { useSearchParams } from 'next/navigation'
 
-export function ResetPasswordForm({ className, ...props }: React.ComponentProps<'div'>) {
+function ResetPasswordFormInner({ className, ...props }: React.ComponentProps<'div'>) {
   const searchParams = useSearchParams()
   const emailParam = searchParams.get('email') || ''
   const otpParam = searchParams.get('otp') || searchParams.get('token') || ''
@@ -93,5 +94,13 @@ export function ResetPasswordForm({ className, ...props }: React.ComponentProps<
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export function ResetPasswordForm(props: React.ComponentProps<'div'>) {
+  return (
+    <Suspense fallback={<div className="text-sm text-muted-foreground">Loading...</div>}>
+      <ResetPasswordFormInner {...props} />
+    </Suspense>
   )
 }
