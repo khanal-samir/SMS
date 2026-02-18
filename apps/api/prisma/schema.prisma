@@ -142,7 +142,7 @@ model Assignment {
   batchId          String
 
   // Relations
-  subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id])
+  subjectTeacher SubjectTeacher @relation(fields: [subjectTeacherId], references: [id], onDelete: Cascade)
   batch          Batch          @relation(fields: [batchId], references: [id], onDelete: Cascade)
 
   @@index([id])
