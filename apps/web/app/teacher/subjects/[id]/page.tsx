@@ -96,8 +96,8 @@ export default function TeacherSubjectDetailPage() {
 
         <div className="mt-8">
           <FeatureCards
-            assignmentsHref={`/teacher/subjects/${subject.id}/assignments`}
-            resourcesHref={`/teacher/subjects/${subject.id}/resources`}
+            assignmentsHref={`/teacher/assignments`}
+            resourcesHref={`/teacher/assignments`}
           />
         </div>
       </div>
