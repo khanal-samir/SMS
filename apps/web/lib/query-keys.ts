@@ -17,4 +17,6 @@ export const QUERY_KEYS = {
   ASSIGNMENT: 'assignment',
   TEACHER_SUBJECTS: 'teacher-subjects',
   ALL_SUBJECT_TEACHERS: 'all-subject-teachers',
+  ANNOUNCEMENTS: 'announcements',
+  ANNOUNCEMENT: 'announcement',
 } as const

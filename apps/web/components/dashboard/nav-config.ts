@@ -8,6 +8,7 @@ import {
   Calendar,
   FolderOpen,
   UserCircle,
+  Megaphone,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -34,6 +35,7 @@ export const adminNavGroups: NavGroup[] = [
       { title: 'Batches', url: '/admin/batches', icon: GraduationCap },
       { title: 'Semesters', url: '/admin/semesters', icon: BookOpen },
       { title: 'Assignments', url: '/admin/assignments', icon: ClipboardList },
+      { title: 'Announcements', url: '/admin/announcements', icon: Megaphone },
     ],
   },
 ]
@@ -49,6 +51,7 @@ export const teacherNavGroups: NavGroup[] = [
       { title: 'Subjects', url: '/teacher/subjects', icon: BarChart3 },
       { title: 'Batches', url: '/teacher/batches', icon: GraduationCap },
       { title: 'Assignments', url: '/teacher/assignments', icon: ClipboardList },
+      { title: 'Announcements', url: '/teacher/announcements', icon: Megaphone },
     ],
   },
   {
@@ -73,6 +76,7 @@ export const studentNavGroups: NavGroup[] = [
     items: [
       { title: 'Courses', url: '/student/courses', icon: BookOpen },
       { title: 'Assignments', url: '/student/assignments', icon: ClipboardList },
+      { title: 'Announcements', url: '/student/announcements', icon: Megaphone },
     ],
   },
 ]
