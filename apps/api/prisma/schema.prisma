@@ -27,11 +27,12 @@ model User {
   updatedAt              DateTime  @updatedAt
 
   // Relations
-  batch            Batch?            @relation(fields: [batchId], references: [id], onDelete: SetNull)
-  studentSemesters StudentSemester[]
-  subjectTeachers  SubjectTeacher[]
+  batch             Batch?             @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  studentSemesters  StudentSemester[]
+  subjectTeachers   SubjectTeacher[]
+  announcements     Announcement[]
+  announcementReads AnnouncementRead[]
 
-  // announcements    Announcement[]
   // chatGroupMembers ChatGroupMember[]
 
   @@index([id])
@@ -51,8 +52,9 @@ model Batch {
 
   // Relations
   users           User[]
-  currentSemester Semester?    @relation(fields: [currentSemesterId], references: [id])
+  currentSemester Semester?      @relation(fields: [currentSemesterId], references: [id])
   assignments     Assignment[]
+  announcements   Announcement[]
 }
 
 model Semester {
@@ -149,19 +151,40 @@ model Assignment {
   @@index([id, batchId])
 }
 
-// model Announcement {
-//   id          String   @id @default(cuid())
-//   title       String
-//   message     String
-//   createdById String
-//   createdAt   DateTime @default(now())
-//   isPublished Boolean  @default(false)
+model Announcement {
+  id          String    @id @default(cuid())
+  title       String
+  message     String
+  createdById String
+  isPublished Boolean   @default(false)
+  scheduledAt DateTime?
+  publishedAt DateTime?
+  batchId     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-//   // Relations
-//   createdBy User @relation(fields: [createdById], references: [id])
+  // Relations
+  createdBy         User               @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  batch             Batch?             @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  announcementReads AnnouncementRead[]
 
-//   @@index([id])
-// }
+  @@index([id])
+  @@index([isPublished, scheduledAt])
+}
+
+model AnnouncementRead {
+  id             String   @id @default(cuid())
+  announcementId String
+  userId         String
+  readAt         DateTime @default(now())
+
+  // Relations
+  announcement Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, userId])
+  @@index([userId])
+}
 
 // model ChatGroup {
 //   id        String   @id @default(cuid())
