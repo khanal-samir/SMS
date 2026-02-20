@@ -1,6 +1,7 @@
 import { BadRequestException, Module } from '@nestjs/common'
 import { AppController } from './app.controller'
 import { ConfigModule } from '@nestjs/config'
+import { ScheduleModule } from '@nestjs/schedule'
 import { AuthModule } from 'src/auth/auth.module'
 import { UserModule } from 'src/user/user.module'
 import { PrismaModule } from 'src/prisma/prisma.module'
@@ -14,9 +15,11 @@ import { SemesterModule } from 'src/semester/semester.module'
 import { SubjectModule } from 'src/subject/subject.module'
 import { BatchModule } from 'src/batch/batch.module'
 import { AssignmentModule } from 'src/assignment/assignment.module'
+import { AnnouncementModule } from 'src/announcement/announcement.module'
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
@@ -26,6 +29,7 @@ import { AssignmentModule } from 'src/assignment/assignment.module'
     SubjectModule,
     BatchModule,
     AssignmentModule,
+    AnnouncementModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {
