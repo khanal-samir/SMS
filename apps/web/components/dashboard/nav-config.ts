@@ -9,6 +9,7 @@ import {
   FolderOpen,
   UserCircle,
   Megaphone,
+  MessageCircle,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -36,6 +37,7 @@ export const adminNavGroups: NavGroup[] = [
       { title: 'Semesters', url: '/admin/semesters', icon: BookOpen },
       { title: 'Assignments', url: '/admin/assignments', icon: ClipboardList },
       { title: 'Announcements', url: '/admin/announcements', icon: Megaphone },
+      { title: 'Chat', url: '/admin/chat', icon: MessageCircle },
     ],
   },
 ]
@@ -77,6 +79,7 @@ export const studentNavGroups: NavGroup[] = [
       { title: 'Courses', url: '/student/courses', icon: BookOpen },
       { title: 'Assignments', url: '/student/assignments', icon: ClipboardList },
       { title: 'Announcements', url: '/student/announcements', icon: Megaphone },
+      { title: 'Chat', url: '/student/chat', icon: MessageCircle },
     ],
   },
 ]

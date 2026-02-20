@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
 import { authApi } from '@/apis/auth.api'
 import { useAuthStore } from '@/store/auth.store'
+import { useChatStore } from '@/store/chat.store'
+import { disconnectChatSocket } from '@/lib/socket'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import type { CreateUserDto, LoginDto, ResetPasswordDto } from '@repo/schemas'
 import { toast } from 'sonner'
@@ -50,6 +52,7 @@ export const useLogin = () => {
 
 export const useLogout = () => {
   const { clearUser, setLoading } = useAuthStore()
+  const { clearMessages } = useChatStore()
   const router = useRouter()
   const queryClient = useQueryClient()
 
@@ -59,6 +62,8 @@ export const useLogout = () => {
       setLoading(true)
     },
     onSuccess: (data) => {
+      disconnectChatSocket()
+      clearMessages()
       clearUser()
       queryClient.clear()
       toast.success(data.message)
