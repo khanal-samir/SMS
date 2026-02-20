@@ -16,6 +16,7 @@ import { SubjectModule } from 'src/subject/subject.module'
 import { BatchModule } from 'src/batch/batch.module'
 import { AssignmentModule } from 'src/assignment/assignment.module'
 import { AnnouncementModule } from 'src/announcement/announcement.module'
+import { ChatModule } from '@src/chat/chat.module'
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AnnouncementModule } from 'src/announcement/announcement.module'
     BatchModule,
     AssignmentModule,
     AnnouncementModule,
+    ChatModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {
