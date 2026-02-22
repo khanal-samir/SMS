@@ -17,11 +17,13 @@ import { BatchModule } from 'src/batch/batch.module'
 import { AssignmentModule } from 'src/assignment/assignment.module'
 import { AnnouncementModule } from 'src/announcement/announcement.module'
 import { ChatModule } from '@src/chat/chat.module'
+import { QueueModule } from 'src/common/queue/queue.module'
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
+    QueueModule,
     AuthModule,
     UserModule,
     PrismaModule,
