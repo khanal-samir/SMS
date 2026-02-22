@@ -50,6 +50,9 @@
     "db:studio": {
       "cache": false
     },
-    "db:reset": { "cache": false }
+    "db:reset": { "cache": false },
+    "compose:up": { "cache": false },
+    "compose:down": { "cache": false },
+    "compose:logs": { "cache": false, "persistent": true }
   }
 }
