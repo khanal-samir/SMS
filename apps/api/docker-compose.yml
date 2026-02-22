@@ -12,5 +12,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  redis:
+    container_name: redis-dev
+    image: bitnami/redis:latest
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PORT}:6379'
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASS}
+    volumes:
+      - redis_data:/bitnami/redis/data
+
 volumes:
   postgres_data:
+  redis_data:
