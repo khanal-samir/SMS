@@ -11,18 +11,18 @@ import { Logger, UnauthorizedException, UsePipes } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Server, Socket } from 'socket.io'
 import { ChatService } from './chat.service'
-import type { JwtPayload } from '@repo/schemas'
+import type { AuthUser, JwtPayload } from '@repo/schemas'
 import { ZodValidationPipe } from 'nestjs-zod'
 import { SendMessageDto } from './dto'
-import type { ChatSocketUser } from './chat.types'
 
 type AuthedSocket = Socket & {
   data: {
-    user?: ChatSocketUser
+    user?: AuthUser
   }
 }
 
 @WebSocketGateway({
+  // same as @controller but for websockets
   namespace: '/chat',
   cors: {
     origin: process.env.PUBLIC_WEB_URL,
@@ -33,13 +33,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(ChatGateway.name)
 
   @WebSocketServer()
-  private readonly server!: Server
-
+  private readonly server: Server
   constructor(
     private readonly chatService: ChatService,
     private readonly jwtService: JwtService,
   ) {}
 
+  // OnGatewayConnection
   async handleConnection(client: AuthedSocket) {
     try {
       const user = await this.authenticate(client)
@@ -52,13 +52,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
+  // from OnGatewayDisconnect
   handleDisconnect(client: AuthedSocket) {
     const userId = client.data.user?.id
     this.logger.log(`Socket disconnected: ${client.id} (user ${userId ?? 'unknown'})`)
   }
 
+  // gateway ley hamro default pipe ra authentication follow gardena so need seperately use it for this handler
   @UsePipes(new ZodValidationPipe())
-  @SubscribeMessage('sendMessage')
+  @SubscribeMessage('sendMessage') // same as @Post('sendMessage') but for websockets
   async handleSendMessage(
     @MessageBody() payload: SendMessageDto,
     @ConnectedSocket() client: AuthedSocket,
@@ -114,7 +116,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return cookies.accessToken ?? null
   }
 
-  private async joinRooms(client: AuthedSocket, user: ChatSocketUser) {
+  private async joinRooms(client: AuthedSocket, user: AuthUser) {
     const groups = await this.chatService.getGroupsForUser(user)
     const rooms = groups.map((group) => this.roomForChatGroup(group.id))
     if (rooms.length > 0) {

@@ -7,37 +7,13 @@ import {
 } from '@nestjs/common'
 import { PrismaService } from '@src/prisma/prisma.service'
 import { Role } from '@prisma/client'
-import type { ChatSocketUser } from './chat.types'
-import { CHAT_DEFAULT_MESSAGE_LIMIT, CHAT_MAX_MESSAGE_LIMIT } from './chat.constants'
-
-const CHAT_GROUP_SELECT = {
-  id: true,
-  name: true,
-  createdAt: true,
-  updatedAt: true,
-  batch: {
-    select: {
-      id: true,
-      batchYear: true,
-    },
-  },
-} as const
-
-const CHAT_MESSAGE_SELECT = {
-  id: true,
-  content: true,
-  chatGroupId: true,
-  createdAt: true,
-  sender: {
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      role: true,
-    },
-  },
-} as const
-
+import {
+  CHAT_DEFAULT_MESSAGE_LIMIT,
+  CHAT_MAX_MESSAGE_LIMIT,
+  CHAT_GROUP_SELECT,
+  CHAT_MESSAGE_SELECT,
+} from './chat.constants'
+import type { AuthUser } from '@repo/schemas'
 @Injectable()
 export class ChatService {
   private readonly logger = new Logger(ChatService.name)
@@ -69,7 +45,7 @@ export class ChatService {
     })
   }
 
-  async getGroupsForUser(user: ChatSocketUser) {
+  async getGroupsForUser(user: AuthUser) {
     if (user.role === Role.TEACHER) {
       throw new ForbiddenException('Teachers do not have access to chat groups')
     }
@@ -97,7 +73,7 @@ export class ChatService {
     return [group]
   }
 
-  async resolveChatUser(userId: string): Promise<ChatSocketUser> {
+  async resolveChatUser(userId: string): Promise<AuthUser> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, role: true },
@@ -114,7 +90,7 @@ export class ChatService {
     return user
   }
 
-  private async assertAccess(chatGroupId: string, user: ChatSocketUser) {
+  private async assertAccess(chatGroupId: string, user: AuthUser) {
     if (user.role === Role.TEACHER) {
       throw new ForbiddenException('Teachers do not have access to chat groups')
     }
@@ -142,7 +118,7 @@ export class ChatService {
 
   async getMessages(
     chatGroupId: string,
-    user: ChatSocketUser,
+    user: AuthUser,
     cursor?: string,
     limit = CHAT_DEFAULT_MESSAGE_LIMIT,
   ) {
@@ -175,7 +151,7 @@ export class ChatService {
     }
   }
 
-  async sendMessage(chatGroupId: string, user: ChatSocketUser, content: string) {
+  async sendMessage(chatGroupId: string, user: AuthUser, content: string) {
     await this.assertAccess(chatGroupId, user)
 
     const trimmed = content.trim()
