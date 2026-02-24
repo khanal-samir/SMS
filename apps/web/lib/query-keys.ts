@@ -19,4 +19,6 @@ export const QUERY_KEYS = {
   ALL_SUBJECT_TEACHERS: 'all-subject-teachers',
   ANNOUNCEMENTS: 'announcements',
   ANNOUNCEMENT: 'announcement',
+  CHAT_GROUPS: 'chat-groups',
+  CHAT_MESSAGES: 'chat-messages',
 } as const

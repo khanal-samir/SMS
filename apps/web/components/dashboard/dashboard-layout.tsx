@@ -7,6 +7,7 @@ import {
   teacherNavGroups,
 } from '@/components/dashboard/nav-config'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { ChatWidget } from '@/components/chat/chat-widget'
 
 const NAV_GROUPS = {
   admin: adminNavGroups,
@@ -22,10 +23,13 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ role, children }: DashboardLayoutProps) {
+  const showChat = role === 'admin' || role === 'student'
+
   return (
     <SidebarProvider>
       <AppSidebar navGroups={NAV_GROUPS[role]} />
       <SidebarInset>{children}</SidebarInset>
+      {showChat && <ChatWidget multiGroup={role === 'admin'} />}
     </SidebarProvider>
   )
 }

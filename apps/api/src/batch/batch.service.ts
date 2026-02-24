@@ -9,7 +9,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { SemesterService } from 'src/semester/semester.service'
 import { CreateBatchDto, EnrollStudentDto } from './dto'
-import { StudentEnrolledEvent, STUDENT_ENROLLED_EVENT } from './events'
+import {
+  BatchCreatedEvent,
+  BATCH_CREATED_EVENT,
+  StudentEnrolledEvent,
+  STUDENT_ENROLLED_EVENT,
+} from './events'
 import { Role, StudentSemesterStatus } from '@prisma/client'
 
 @Injectable()
@@ -47,6 +52,8 @@ export class BatchService {
         isActive: true,
       },
     })
+
+    this.eventEmitter.emit(BATCH_CREATED_EVENT, new BatchCreatedEvent(batch.id, batch.batchYear))
 
     this.logger.log(
       `Created batch: ${batch.id} with initial semester: ${firstSemester.semesterNumber}`,

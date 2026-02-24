@@ -314,6 +314,16 @@ export class SeedService implements OnModuleInit {
       ),
     )
 
+    await Promise.all(
+      batchRecords.map((batch) =>
+        prisma.chatGroup.upsert({
+          where: { batchId: batch.id },
+          update: { name: `Batch ${batch.batchYear} Chat` },
+          create: { batchId: batch.id, name: `Batch ${batch.batchYear} Chat` },
+        }),
+      ),
+    )
+
     const batchByYear = new Map(batchRecords.map((batch) => [batch.batchYear, batch]))
 
     // 1 Admin

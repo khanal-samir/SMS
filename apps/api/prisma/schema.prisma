@@ -32,8 +32,7 @@ model User {
   subjectTeachers   SubjectTeacher[]
   announcements     Announcement[]
   announcementReads AnnouncementRead[]
-
-  // chatGroupMembers ChatGroupMember[]
+  chatMessages      ChatMessage[]
 
   @@index([id])
   @@index([id, role])
@@ -55,6 +54,7 @@ model Batch {
   currentSemester Semester?      @relation(fields: [currentSemesterId], references: [id])
   assignments     Assignment[]
   announcements   Announcement[]
+  chatGroup       ChatGroup?
 }
 
 model Semester {
@@ -186,32 +186,34 @@ model AnnouncementRead {
   @@index([userId])
 }
 
-// model ChatGroup {
-//   id        String   @id @default(cuid())
-//   batchId   String
-//   name      String
-//   createdAt DateTime @default(now())
+model ChatGroup {
+  id        String   @id @default(cuid())
+  batchId   String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-//   // Relations
-//   batch   Batch             @relation(fields: [batchId], references: [id])
-//   members ChatGroupMember[]
+  // Relations
+  batch    Batch         @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
 
-//   @@index([id])
-// }
+  @@index([id])
+}
 
-// model ChatGroupMember {
-//   id          String   @id @default(cuid())
-//   chatGroupId String
-//   userId      String
-//   joinedAt    DateTime @default(now())
+model ChatMessage {
+  id          String   @id @default(cuid())
+  content     String
+  chatGroupId String
+  senderId    String
+  createdAt   DateTime @default(now())
 
-//   // Relations
-//   chatGroup ChatGroup @relation(fields: [chatGroupId], references: [id])
-//   user      User      @relation(fields: [userId], references: [id])
+  // Relations
+  chatGroup ChatGroup @relation(fields: [chatGroupId], references: [id], onDelete: Cascade)
+  sender    User      @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
-//   @@unique([chatGroupId, userId])
-//   @@index([id])
-// }
+  @@index([chatGroupId, createdAt])
+  @@index([senderId])
+}
 
 enum Provider {
   LOCAL
