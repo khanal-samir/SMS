@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { useChatMessages, useChatSocket } from '@/hooks/useChat'
 import { useChatStore } from '@/store/chat.store'
 import { MessageList } from './message-list'
@@ -8,7 +9,6 @@ import { ChatInput } from './chat-input'
 interface ChatPanelProps {
   groupId: string
   groupName?: string
-  /** Height class for the panel. Default: "h-[600px]" */
   className?: string
 }
 
@@ -23,16 +23,27 @@ export function ChatPanel({ groupId, groupName, className = 'h-[600px]' }: ChatP
     fetchNextPage,
   } = useChatMessages(groupId)
 
-  // Merge fetched + real-time store messages (deduplicated)
-  const realtimeMessages = storeMessages[groupId] ?? []
-  const mergedMessages = [...fetchedMessages]
-  for (const msg of realtimeMessages) {
-    if (!mergedMessages.some((m) => m.id === msg.id)) {
-      mergedMessages.push(msg)
+  const mergedMessages = useMemo(() => {
+    const realtimeMessages = storeMessages[groupId] ?? []
+    const seen = new Set<string>()
+    const merged = []
+
+    // fetchedMessages are already globally chronological from useChatMessages.
+    for (const message of fetchedMessages) {
+      if (seen.has(message.id)) continue
+      seen.add(message.id)
+      merged.push(message)
     }
-  }
-  // Sort chronologically
-  mergedMessages.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+
+    // Real-time messages are append-only in store and are newer than history.
+    for (const message of realtimeMessages) {
+      if (seen.has(message.id)) continue
+      seen.add(message.id)
+      merged.push(message)
+    }
+
+    return merged
+  }, [fetchedMessages, storeMessages, groupId])
 
   const handleSend = (content: string) => {
     sendMessage(groupId, content)

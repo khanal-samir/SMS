@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useEffect, useCallback, useMemo, useRef } from 'react'
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query'
 import { chatApi } from '@/apis/chat.api'
 import { useChatStore } from '@/store/chat.store'
@@ -41,8 +41,14 @@ export const useChatMessages = (groupId: string) => {
     staleTime: 30 * 1000,
   })
 
-  // Flatten pages into a single message array (oldest first)
-  const messages: ChatMessage[] = query.data?.pages.flatMap((page) => page.messages) ?? []
+  const messages = useMemo<ChatMessage[]>(() => {
+    if (!query.data?.pages) return []
+
+    // API returns each page in chronological order (oldest -> newest),
+    // but useInfiniteQuery stores pages as [newestChunk, olderChunk, ...].
+    // Reverse page order first to build a globally chronological timeline.
+    return [...query.data.pages].reverse().flatMap((page) => page.messages)
+  }, [query.data?.pages])
 
   return {
     messages,
