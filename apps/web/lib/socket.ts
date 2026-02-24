@@ -11,7 +11,6 @@ export function getChatSocket(): Socket {
   if (socket) return socket
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? ''
-  // Strip any path prefix (e.g. "/v1") — Socket.IO connects to the server root
   const origin = baseUrl.replace(/\/v1\/?$/, '')
 
   socket = io(`${origin}/chat`, {

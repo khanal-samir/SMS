@@ -6,6 +6,7 @@ import { getChatSocket, disconnectChatSocket } from '@/lib/socket'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import type { ChatMessage, ChatGroup } from '@repo/schemas'
 
+//http calls
 export const useChatGroups = () => {
   const query = useQuery({
     queryKey: [QUERY_KEYS.CHAT_GROUPS],
@@ -62,7 +63,7 @@ export const useChatMessages = (groupId: string) => {
 
 // ---------------------------------------------------------------------------
 // Socket hook — manages connection lifecycle and real-time messages
-// ---------------------------------------------------------------------------
+// -------------------------------------------------------------------------
 
 export const useChatSocket = () => {
   const { setConnected, addMessage } = useChatStore()
@@ -95,7 +96,7 @@ export const useChatSocket = () => {
     socket.on('disconnect', onDisconnect)
     socket.on('newMessage', onNewMessage)
 
-    if (!socket.connected) {
+  if (!socket.connected) {
       socket.connect()
     } else {
       onConnect()
