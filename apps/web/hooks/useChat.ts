@@ -6,10 +6,6 @@ import { getChatSocket, disconnectChatSocket } from '@/lib/socket'
 import { QUERY_KEYS } from '@/lib/query-keys'
 import type { ChatMessage, ChatGroup } from '@repo/schemas'
 
-// ---------------------------------------------------------------------------
-// REST hooks
-// ---------------------------------------------------------------------------
-
 export const useChatGroups = () => {
   const query = useQuery({
     queryKey: [QUERY_KEYS.CHAT_GROUPS],
@@ -17,7 +13,7 @@ export const useChatGroups = () => {
       const response = await chatApi.getGroups()
       return response.data ?? []
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   })
 
   return {
@@ -28,12 +24,15 @@ export const useChatGroups = () => {
   }
 }
 
-export const useChatMessages = (groupId: string | null) => {
+export const useChatMessages = (groupId: string) => {
   const query = useInfiniteQuery({
     queryKey: [QUERY_KEYS.CHAT_MESSAGES, groupId],
     queryFn: async ({ pageParam }: { pageParam: string | undefined }) => {
-      if (!groupId) throw new Error('No group selected')
-      const response = await chatApi.getMessages(groupId, pageParam, 50)
+      const response = await chatApi.getMessages({
+        groupId,
+        cursor: pageParam,
+        limit: 50,
+      })
       return response.data!
     },
     initialPageParam: undefined as string | undefined,

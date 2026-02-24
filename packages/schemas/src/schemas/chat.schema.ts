@@ -38,6 +38,12 @@ export const SendChatMessageSchema = z.object({
 })
 export type SendChatMessageDto = z.infer<typeof SendChatMessageSchema>
 
+export const GetChatMessagesQuerySchema = z.object({
+  cursor: z.cuid().optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+})
+export type GetChatMessagesQueryDto = z.infer<typeof GetChatMessagesQuerySchema>
+
 export const ChatMessagePageSchema = z.object({
   messages: z.array(ChatMessageSchema),
   nextCursor: z.string().nullable().optional(),

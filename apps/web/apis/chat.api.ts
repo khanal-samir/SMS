@@ -1,5 +1,10 @@
 import apiClient from '@/lib/api'
-import type { ApiResponse, ChatGroup, ChatMessagePage } from '@repo/schemas'
+import type {
+  ApiResponse,
+  ChatGroup,
+  ChatMessagePage,
+  GetChatMessagesQueryDto,
+} from '@repo/schemas'
 
 export const chatApi = {
   getGroups: async (): Promise<ApiResponse<ChatGroup[]>> => {
@@ -8,16 +13,12 @@ export const chatApi = {
   },
 
   getMessages: async (
-    groupId: string,
-    cursor?: string,
-    limit?: number,
+    query: GetChatMessagesQueryDto & { groupId: string },
   ): Promise<ApiResponse<ChatMessagePage>> => {
     const params = new URLSearchParams()
-    if (cursor) params.set('cursor', cursor)
-    if (limit) params.set('limit', String(limit))
-
-    const query = params.toString()
-    const url = `/chat/groups/${groupId}/messages${query ? `?${query}` : ''}`
+    if (query.cursor) params.set('cursor', query.cursor)
+    if (query.limit) params.set('limit', String(query.limit))
+    const url = `/chat/groups/${query.groupId}/messages${params.toString() ? `?${params.toString()}` : ''}`
 
     const { data } = await apiClient.get<ApiResponse<ChatMessagePage>>(url)
     return data
