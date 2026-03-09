@@ -2,43 +2,25 @@
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
   "tasks": {
-    "db:generate": {
-      "cache": false
+    "transit": {
+      "dependsOn": ["^transit"]
     },
     "build": {
-      "dependsOn": ["^build", "db:generate"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
-      "env": [
-        "DATABASE_URL",
-        "BE_PORT",
-        "NODE_ENV",
-        "JWT_SECRET",
-        "JWT_EXPIRES_IN",
-        "REFRESH_TOKEN_SECRET",
-        "REFRESH_TOKEN_EXPIRES_IN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "GOOGLE_REDIRECT_URI",
-        "NEXT_PUBLIC_API_URL",
-        "PUBLIC_WEB_URL",
-        "SMTP_HOST",
-        "SMTP_USER",
-        "SMTP_PASSWORD",
-        "SMTP_FROM",
-        "ADMIN_EMAILS",
-        "ADMIN_SECRET_KEY"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["transit"]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": ["^build"]
     },
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "db:generate": {
+      "cache": false
     },
     "db:migrate": {
       "cache": false,
@@ -50,9 +32,18 @@
     "db:studio": {
       "cache": false
     },
-    "db:reset": { "cache": false },
-    "compose:up": { "cache": false },
-    "compose:down": { "cache": false },
-    "compose:logs": { "cache": false, "persistent": true }
+    "db:reset": {
+      "cache": false
+    },
+    "compose:up": {
+      "cache": false
+    },
+    "compose:down": {
+      "cache": false
+    },
+    "compose:logs": {
+      "cache": false,
+      "persistent": true
+    }
   }
 }

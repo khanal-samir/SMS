@@ -33,7 +33,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private readonly logger = new Logger(ChatGateway.name)
 
   @WebSocketServer()
-  private readonly server: Server
+  private readonly server!: Server
   constructor(
     private readonly chatService: ChatService,
     private readonly jwtService: JwtService,

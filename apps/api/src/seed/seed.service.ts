@@ -537,14 +537,18 @@ export class SeedService implements OnModuleInit {
 
     for (let i = 0; i < subjects.length; i++) {
       const subject = subjects[i]
+      if (!subject) continue
       // Assign 1-2 teachers based on subject index
       const teacherCount = i % 3 === 0 ? 2 : 1 // Every 3rd subject gets 2 teachers
 
       for (let j = 0; j < teacherCount; j++) {
         const teacherIndex = (i + j) % teachers.length
+        const teacher = teachers[teacherIndex]
+        if (!teacher) continue
+
         subjectTeacherData.push({
           subjectId: subject.id,
-          teacherId: teachers[teacherIndex].id,
+          teacherId: teacher.id,
         })
       }
     }
