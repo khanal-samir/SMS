@@ -46,10 +46,7 @@ export function ChatInput({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={submitMessage}
-        className="flex items-end gap-2 border-t border-gray-200 bg-white px-4 py-3"
-      >
+      <form onSubmit={submitMessage} className="flex items-end gap-2 border-t bg-card px-4 py-3">
         <FormField
           control={form.control}
           name="content"
@@ -62,7 +59,7 @@ export function ChatInput({
                   placeholder={placeholder}
                   disabled={disabled}
                   rows={1}
-                  className="max-h-32 min-h-[40px] resize-none rounded-xl border-gray-200 bg-gray-50 px-3.5 py-2.5"
+                  className="max-h-32 min-h-[40px] resize-none rounded-xl border-border bg-muted px-3.5 py-2.5"
                 />
               </FormControl>
               <FormMessage className="text-xs" />

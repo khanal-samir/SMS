@@ -15,7 +15,7 @@ export default function AdminChatPage() {
   const activeGroup = groups?.find((g) => g.id === activeGroupId)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/admin/dashboard', label: 'Dashboard' }}
@@ -25,14 +25,14 @@ export default function AdminChatPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : (
           <div className="flex gap-4">
             {/* Group sidebar */}
-            <div className="w-64 shrink-0 rounded-xl border border-gray-200 bg-white">
-              <div className="border-b border-gray-200 px-4 py-3">
-                <h3 className="text-sm font-semibold text-gray-900">Groups</h3>
+            <div className="w-64 shrink-0 rounded-xl border bg-card">
+              <div className="border-b px-4 py-3">
+                <h3 className="text-sm font-semibold text-foreground">Groups</h3>
               </div>
               <ChatGroupList
                 groups={groups ?? []}
@@ -50,8 +50,8 @@ export default function AdminChatPage() {
                   className="h-[calc(100vh-220px)]"
                 />
               ) : (
-                <div className="flex h-[calc(100vh-220px)] items-center justify-center rounded-xl border border-gray-200 bg-white">
-                  <p className="text-sm text-gray-400">Select a group to start chatting</p>
+                <div className="flex h-[calc(100vh-220px)] items-center justify-center rounded-xl border bg-card">
+                  <p className="text-sm text-muted-foreground">Select a group to start chatting</p>
                 </div>
               )}
             </div>

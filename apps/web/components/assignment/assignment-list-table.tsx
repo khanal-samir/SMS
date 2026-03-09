@@ -51,7 +51,7 @@ function AssignmentListTable({ assignments, isLoading }: AssignmentListTableProp
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -70,26 +70,28 @@ function AssignmentListTable({ assignments, isLoading }: AssignmentListTableProp
               return (
                 <TableRow key={assignment.id}>
                   <TableCell>
-                    <span className="text-sm font-semibold text-gray-900">{assignment.title}</span>
+                    <span className="text-sm font-semibold text-foreground">
+                      {assignment.title}
+                    </span>
                     {assignment.description && (
-                      <p className="mt-0.5 line-clamp-1 text-xs text-gray-500">
+                      <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                         {assignment.description}
                       </p>
                     )}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     {assignment.subjectTeacher.subject.subjectName}
-                    <span className="ml-1 text-xs text-gray-400">
+                    <span className="ml-1 text-xs text-muted-foreground">
                       ({assignment.subjectTeacher.subject.subjectCode})
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     {assignment.subjectTeacher.teacher.name}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     Batch {assignment.batch.batchYear}
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     {formatShortDate(assignment.dueDate)}
                   </TableCell>
                   <TableCell>

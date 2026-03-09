@@ -3,13 +3,13 @@ import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-heade
 
 export default function TeacherDashboard() {
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <DashboardPageHeader
           title="Teacher Dashboard"
           roleBadge={{
             text: 'Teacher',
-            className: 'bg-green-100 text-green-800',
+            variant: 'success',
           }}
         />
 

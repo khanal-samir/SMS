@@ -48,7 +48,7 @@ export default function AdminSemesterDetailPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/admin/semesters', label: 'All Semesters' }}
@@ -72,7 +72,7 @@ export default function AdminSemesterDetailPage() {
           </CardHeader>
           <CardContent>
             {semester.subjects.length > 0 ? (
-              <div className="overflow-hidden rounded-lg border border-gray-200">
+              <div className="overflow-hidden rounded-lg border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -92,13 +92,13 @@ export default function AdminSemesterDetailPage() {
                             router.push(`/admin/semesters/${semester.id}/subjects/${subject.id}`)
                           }
                         >
-                          <TableCell className="px-6 font-semibold text-gray-900">
+                          <TableCell className="px-6 font-semibold text-foreground">
                             {subject.subjectCode}
                           </TableCell>
-                          <TableCell className="px-6 text-sm text-gray-600">
+                          <TableCell className="px-6 text-sm text-muted-foreground">
                             {subject.subjectName}
                           </TableCell>
-                          <TableCell className="px-6 text-sm text-gray-600">
+                          <TableCell className="px-6 text-sm text-muted-foreground">
                             {subject.subjectTeachers.length > 0
                               ? subject.subjectTeachers
                                   .map((assignment) => assignment.teacher.name)
@@ -128,7 +128,7 @@ export default function AdminSemesterDetailPage() {
                 </Table>
               </div>
             ) : (
-              <div className="py-8 text-center text-gray-500">
+              <div className="py-8 text-center text-muted-foreground">
                 <p>No subjects available for this semester.</p>
               </div>
             )}

@@ -180,7 +180,7 @@ export function EditAssignmentDialog({
               )}
             />
 
-            <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>
                 Subject: {assignment.subjectTeacher.subject.subjectName} (
                 {assignment.subjectTeacher.subject.subjectCode})

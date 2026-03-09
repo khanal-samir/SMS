@@ -44,7 +44,9 @@ function BatchInfoCards({ batch }: BatchInfoCardsProps) {
         <CardContent>
           <span
             className={`inline-flex rounded-full px-2.5 py-0.5 text-sm font-semibold ${
-              batch.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+              batch.isActive
+                ? 'bg-success/15 text-success-foreground'
+                : 'bg-muted text-muted-foreground'
             }`}
           >
             {batch.isActive ? 'Active' : 'Inactive'}

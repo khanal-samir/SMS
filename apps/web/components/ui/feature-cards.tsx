@@ -10,24 +10,24 @@ export function FeatureCards({ assignmentsHref, resourcesHref }: FeatureCardsPro
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <Link href={assignmentsHref} className="block">
-        <Card className="h-full cursor-pointer transition-colors hover:border-gray-300">
+        <Card className="h-full cursor-pointer transition-all hover:border-primary/30 hover:shadow-md">
           <CardHeader>
             <CardTitle>Assignments</CardTitle>
             <CardDescription>View and manage assignments for this subject.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-500">Click to view assignments.</p>
+            <p className="text-sm text-muted-foreground">Click to view assignments.</p>
           </CardContent>
         </Card>
       </Link>
       <Link href={resourcesHref} className="block">
-        <Card className="h-full cursor-pointer transition-colors hover:border-gray-300">
+        <Card className="h-full cursor-pointer transition-all hover:border-primary/30 hover:shadow-md">
           <CardHeader>
             <CardTitle>Resources</CardTitle>
             <CardDescription>Access learning resources for this subject.</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-500">Click to view resources.</p>
+            <p className="text-sm text-muted-foreground">Click to view resources.</p>
           </CardContent>
         </Card>
       </Link>

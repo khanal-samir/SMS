@@ -24,21 +24,21 @@ import { groupAssignments } from '@/lib/formatters'
 const COLUMN_CONFIG = {
   DRAFT: {
     label: 'Draft',
-    color: 'text-gray-900',
-    bgColor: 'bg-gradient-to-b from-gray-50 to-gray-100',
-    borderColor: 'border-gray-400',
+    color: 'text-foreground',
+    bgColor: 'bg-gradient-to-b from-muted/50 to-muted',
+    borderColor: 'border-border',
   },
   PUBLISHED: {
     label: 'Published',
-    color: 'text-blue-900',
-    bgColor: 'bg-gradient-to-b from-blue-50 to-blue-100',
-    borderColor: 'border-blue-400',
+    color: 'text-info-foreground',
+    bgColor: 'bg-gradient-to-b from-info/5 to-info/15',
+    borderColor: 'border-info/40',
   },
   PAST_DUE: {
     label: 'Past Due',
-    color: 'text-red-900',
-    bgColor: 'bg-gradient-to-b from-red-50 to-red-100',
-    borderColor: 'border-red-400',
+    color: 'text-destructive',
+    bgColor: 'bg-gradient-to-b from-destructive/5 to-destructive/10',
+    borderColor: 'border-destructive/40',
   },
 } as const
 
@@ -149,7 +149,7 @@ export function AssignmentKanbanBoard({
                   {columnId === AssignmentStatusEnum.enum.DRAFT && onCreateClick && (
                     <button
                       onClick={onCreateClick}
-                      className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-white hover:text-gray-700 hover:shadow-sm"
+                      className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-card hover:text-foreground hover:shadow-sm"
                     >
                       <Plus className="h-5 w-5" />
                     </button>
@@ -177,8 +177,8 @@ export function AssignmentKanbanBoard({
                     ),
                   )}
                   {items.length === 0 && (
-                    <div className="flex h-[100px] items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white">
-                      <p className="text-sm text-gray-600 font-medium">
+                    <div className="flex h-[100px] items-center justify-center rounded-lg border-2 border-dashed border-border bg-card">
+                      <p className="text-sm text-muted-foreground font-medium">
                         {columnId === AssignmentStatusEnum.enum.DRAFT
                           ? 'No draft assignments'
                           : columnId === AssignmentStatusEnum.enum.PUBLISHED
@@ -199,7 +199,7 @@ export function AssignmentKanbanBoard({
               const allAssignments = Object.values(columns).flat()
               const assignment = allAssignments.find((a) => a.id === value)
 
-              if (!assignment) return <div className="rounded-lg bg-gray-100 p-4 shadow-lg" />
+              if (!assignment) return <div className="rounded-lg bg-muted p-4 shadow-lg" />
 
               return (
                 <div className="rotate-2 scale-105">

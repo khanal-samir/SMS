@@ -13,13 +13,13 @@ export default function AdminDashboard() {
   const [approvingId, setApprovingId] = useState<string | null>(null)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <DashboardPageHeader
           title="Admin Dashboard"
           roleBadge={{
             text: 'Admin',
-            className: 'bg-red-100 text-red-800',
+            variant: 'destructive',
           }}
         />
 
@@ -28,7 +28,7 @@ export default function AdminDashboard() {
             <CardTitle className="flex items-center gap-2">
               Pending Teacher Approvals
               {pendingTeachers && pendingTeachers.length > 0 && (
-                <span className="ml-2 rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-semibold text-red-800">
+                <span className="ml-2 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-semibold text-destructive">
                   {pendingTeachers.length}
                 </span>
               )}
@@ -40,21 +40,21 @@ export default function AdminDashboard() {
           <CardContent>
             {isLoadingTeachers ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
             ) : pendingTeachers && pendingTeachers.length > 0 ? (
               <div className="space-y-4">
                 {pendingTeachers.map((teacher) => (
                   <div
                     key={teacher.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+                    className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm"
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
                         <UserAvatar name={teacher.name} />
                         <div>
-                          <p className="font-semibold text-gray-900">{teacher.name}</p>
-                          <p className="text-sm text-gray-500">{teacher.email}</p>
+                          <p className="font-semibold text-foreground">{teacher.name}</p>
+                          <p className="text-sm text-muted-foreground">{teacher.email}</p>
                         </div>
                       </div>
                     </div>
@@ -81,7 +81,7 @@ export default function AdminDashboard() {
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-gray-500">
+              <div className="py-8 text-center text-muted-foreground">
                 <p>No pending teacher approvals at this time.</p>
               </div>
             )}

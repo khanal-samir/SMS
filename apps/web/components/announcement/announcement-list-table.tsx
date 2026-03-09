@@ -65,7 +65,7 @@ function AnnouncementListTable({
 
   return (
     <>
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
         <Table>
           <TableHeader>
             <TableRow>
@@ -86,44 +86,37 @@ function AnnouncementListTable({
               return (
                 <TableRow key={announcement.id}>
                   <TableCell>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-foreground">
                       {announcement.title}
                     </span>
-                    <p className="mt-0.5 line-clamp-1 text-xs text-gray-500">
+                    <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                       {announcement.message}
                     </p>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     {announcement.createdBy.name}
-                    <span className="ml-1 text-xs text-gray-400">
+                    <span className="ml-1 text-xs text-muted-foreground">
                       ({announcement.createdBy.role})
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     {announcement.batch ? `Batch ${announcement.batch.batchYear}` : 'Global'}
                   </TableCell>
                   <TableCell>
                     {announcement.isPublished ? (
-                      <Badge
-                        variant="default"
-                        className="bg-green-100 text-green-800 hover:bg-green-100"
-                      >
-                        Published
-                      </Badge>
+                      <Badge variant="success">Published</Badge>
                     ) : announcement.scheduledAt ? (
-                      <Badge variant="outline" className="border-blue-200 text-blue-700">
-                        Scheduled
-                      </Badge>
+                      <Badge variant="info">Scheduled</Badge>
                     ) : (
                       <Badge variant="secondary">Draft</Badge>
                     )}
                   </TableCell>
                   {showReadCount && (
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-muted-foreground">
                       {announcement.readCount ?? 0}
                     </TableCell>
                   )}
-                  <TableCell className="text-sm text-gray-600">
+                  <TableCell className="text-sm text-muted-foreground">
                     {formatShortDate(announcement.createdAt)}
                   </TableCell>
                   <TableCell className="text-right">

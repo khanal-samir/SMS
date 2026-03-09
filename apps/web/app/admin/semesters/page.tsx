@@ -20,7 +20,7 @@ export default function AdminSemestersPage() {
   const { data: semesters, isLoading } = useSemesters()
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/admin/dashboard', label: 'Dashboard' }}
@@ -30,10 +30,10 @@ export default function AdminSemestersPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : semesters && semesters.length > 0 ? (
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -49,10 +49,10 @@ export default function AdminSemestersPage() {
                     className="cursor-pointer"
                     onClick={() => router.push(`/admin/semesters/${semester.id}`)}
                   >
-                    <TableCell className="px-6 font-semibold text-gray-900">
+                    <TableCell className="px-6 font-semibold text-foreground">
                       {formatSemesterNumber(semester.semesterNumber)} Semester
                     </TableCell>
-                    <TableCell className="px-6 text-sm text-gray-600">
+                    <TableCell className="px-6 text-sm text-muted-foreground">
                       {formatShortDate(semester.createdAt)}
                     </TableCell>
                     <TableCell className="px-6 text-right">
@@ -73,8 +73,8 @@ export default function AdminSemestersPage() {
             </Table>
           </div>
         ) : (
-          <div className="rounded-lg border border-gray-200 bg-white py-16 text-center shadow-sm">
-            <p className="text-gray-500">No semesters available.</p>
+          <div className="rounded-lg border bg-card py-16 text-center shadow-sm">
+            <p className="text-muted-foreground">No semesters available.</p>
           </div>
         )}
       </div>

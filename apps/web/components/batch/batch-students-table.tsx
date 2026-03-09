@@ -21,21 +21,21 @@ function BatchStudentsTable({ students, isLoading, studentLinkBasePath }: BatchS
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   if (!students || students.length === 0) {
     return (
-      <div className="py-8 text-center text-gray-500">
+      <div className="py-8 text-center text-muted-foreground">
         <p>No students enrolled in this batch yet.</p>
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200">
+    <div className="overflow-hidden rounded-lg border">
       <Table>
         <TableHeader>
           <TableRow>
@@ -57,11 +57,11 @@ function BatchStudentsTable({ students, isLoading, studentLinkBasePath }: BatchS
                       {student.name}
                     </Link>
                   ) : (
-                    <span className="text-sm font-medium text-gray-900">{student.name}</span>
+                    <span className="text-sm font-medium text-foreground">{student.name}</span>
                   )}
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-gray-600">{student.email}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{student.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>

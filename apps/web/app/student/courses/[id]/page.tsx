@@ -29,7 +29,7 @@ export default function StudentCourseDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/student/courses', label: 'Courses' }}

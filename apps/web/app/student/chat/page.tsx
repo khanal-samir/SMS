@@ -22,7 +22,7 @@ export default function StudentChatPage() {
   const activeGroup = groups?.find((g) => g.id === activeGroupId)
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-4xl">
         <PageHeader
           backButton={{ href: '/student/dashboard', label: 'Dashboard' }}
@@ -32,7 +32,7 @@ export default function StudentChatPage() {
 
         {isLoading ? (
           <div className="flex items-center justify-center py-16">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : activeGroupId ? (
           <ChatPanel
@@ -41,8 +41,8 @@ export default function StudentChatPage() {
             className="h-[calc(100vh-220px)]"
           />
         ) : (
-          <div className="rounded-lg border border-gray-200 bg-white py-16 text-center shadow-sm">
-            <p className="text-gray-500">
+          <div className="rounded-lg border bg-card py-16 text-center shadow-sm">
+            <p className="text-muted-foreground">
               You are not enrolled in a batch yet. Chat will be available once you join a batch.
             </p>
           </div>

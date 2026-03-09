@@ -40,7 +40,7 @@ export default function TeacherSubjectDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/teacher/subjects', label: 'All Subjects' }}
@@ -63,10 +63,10 @@ export default function TeacherSubjectDetailPage() {
           <CardContent>
             {isLoadingTeachers ? (
               <div className="flex items-center justify-center py-6">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
               </div>
             ) : teachers && teachers.length > 0 ? (
-              <div className="overflow-hidden rounded-lg border border-gray-200">
+              <div className="overflow-hidden rounded-lg border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -77,10 +77,10 @@ export default function TeacherSubjectDetailPage() {
                   <TableBody>
                     {teachers.map((assignment) => (
                       <TableRow key={assignment.id}>
-                        <TableCell className="px-6 font-medium text-gray-900">
+                        <TableCell className="px-6 font-medium text-foreground">
                           {assignment.teacher.name}
                         </TableCell>
-                        <TableCell className="px-6 text-sm text-gray-600">
+                        <TableCell className="px-6 text-sm text-muted-foreground">
                           {assignment.teacher.email}
                         </TableCell>
                       </TableRow>
@@ -89,7 +89,9 @@ export default function TeacherSubjectDetailPage() {
                 </Table>
               </div>
             ) : (
-              <p className="py-6 text-center text-sm text-gray-500">No teachers assigned.</p>
+              <p className="py-6 text-center text-sm text-muted-foreground">
+                No teachers assigned.
+              </p>
             )}
           </CardContent>
         </Card>

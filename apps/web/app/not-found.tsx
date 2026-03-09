@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
       <div className="mx-auto max-w-md text-center">
         {/* 404 Display */}
         <div className="relative mb-8 inline-block">
@@ -16,10 +16,10 @@ export default function NotFound() {
 
         {/* Content */}
         <div className="space-y-4">
-          <h1 className="font-display text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
             Page Not Found
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Sorry, we couldn&apos;t find the page you&apos;re looking for. It might have been moved,
             deleted, or never existed.
           </p>
@@ -42,7 +42,7 @@ export default function NotFound() {
         </div>
 
         {/* Help text */}
-        <p className="mt-8 text-sm text-gray-500">
+        <p className="mt-8 text-sm text-muted-foreground">
           If you believe this is an error, please contact{' '}
           <a
             href="mailto:support@example.com"

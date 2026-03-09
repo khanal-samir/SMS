@@ -39,16 +39,16 @@ export function ChatWidget({ multiGroup = false }: ChatWidgetProps) {
 
       {/* Chat widget panel */}
       {isWidgetOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-[380px] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl">
+        <div className="fixed bottom-24 right-6 z-50 w-[380px] overflow-hidden rounded-2xl border bg-card shadow-2xl">
           {multiGroup && !activeGroupId ? (
             <div className="flex h-[500px] flex-col">
-              <div className="border-b border-gray-200 px-4 py-3">
-                <h3 className="text-sm font-semibold text-gray-900">Chat Groups</h3>
+              <div className="border-b px-4 py-3">
+                <h3 className="text-sm font-semibold text-foreground">Chat Groups</h3>
               </div>
               <div className="flex-1 overflow-y-auto">
                 {isLoading ? (
                   <div className="flex items-center justify-center py-8">
-                    <p className="text-sm text-gray-400">Loading groups...</p>
+                    <p className="text-sm text-muted-foreground">Loading groups...</p>
                   </div>
                 ) : (
                   <ChatGroupList
@@ -65,7 +65,7 @@ export function ChatWidget({ multiGroup = false }: ChatWidgetProps) {
                 <button
                   type="button"
                   onClick={() => setActiveGroupId(null)}
-                  className="border-b border-gray-200 px-4 py-2 text-left text-xs font-medium text-primary hover:bg-gray-50"
+                  className="border-b px-4 py-2 text-left text-xs font-medium text-primary hover:bg-muted"
                 >
                   &larr; Back to groups
                 </button>
@@ -74,7 +74,7 @@ export function ChatWidget({ multiGroup = false }: ChatWidgetProps) {
             </div>
           ) : (
             <div className="flex h-[500px] items-center justify-center">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-muted-foreground">
                 {isLoading ? 'Loading...' : 'No chat groups available.'}
               </p>
             </div>

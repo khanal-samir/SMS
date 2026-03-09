@@ -54,7 +54,7 @@ export function MessageList({
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -62,7 +62,7 @@ export function MessageList({
   if (messages.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <p className="text-sm text-gray-400">No messages yet. Start the conversation!</p>
+        <p className="text-sm text-muted-foreground">No messages yet. Start the conversation!</p>
       </div>
     )
   }
@@ -75,7 +75,7 @@ export function MessageList({
     >
       {isFetchingNextPage && (
         <div className="flex justify-center py-2">
-          <Loader2 className="h-4 w-4 animate-spin text-gray-400" />
+          <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         </div>
       )}
       {messages.map((msg) => (
