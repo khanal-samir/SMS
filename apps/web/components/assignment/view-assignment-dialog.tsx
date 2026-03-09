@@ -21,9 +21,7 @@ function StatusBadge({ assignment }: { assignment: AssignmentResponse }) {
   if (isPastDue) {
     return <Badge variant="destructive">Past Due</Badge>
   }
-  return (
-    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-200">Published</Badge>
-  )
+  return <Badge variant="info">Published</Badge>
 }
 
 export function ViewAssignmentDialog({
@@ -43,19 +41,21 @@ export function ViewAssignmentDialog({
 
         <div className="space-y-4">
           {assignment.description ? (
-            <p className="text-sm leading-relaxed text-gray-600">{assignment.description}</p>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {assignment.description}
+            </p>
           ) : (
-            <p className="text-sm italic text-gray-400">No description provided.</p>
+            <p className="text-sm italic text-muted-foreground">No description provided.</p>
           )}
 
-          <div className="space-y-3 rounded-lg border border-gray-100 bg-gray-50 p-4">
+          <div className="space-y-3 rounded-lg border bg-muted/50 p-4">
             <div className="flex items-start gap-3 text-sm">
-              <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-blue-600" />
+              <BookOpen className="mt-0.5 h-4 w-4 shrink-0 text-info-foreground" />
               <div>
-                <p className="text-xs text-gray-500">Subject</p>
-                <p className="font-medium text-gray-900">
+                <p className="text-xs text-muted-foreground">Subject</p>
+                <p className="font-medium text-foreground">
                   {assignment.subjectTeacher.subject.subjectName}{' '}
-                  <span className="font-normal text-gray-500">
+                  <span className="font-normal text-muted-foreground">
                     ({assignment.subjectTeacher.subject.subjectCode})
                   </span>
                 </p>
@@ -63,28 +63,28 @@ export function ViewAssignmentDialog({
             </div>
 
             <div className="flex items-start gap-3 text-sm">
-              <User className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
+              <User className="mt-0.5 h-4 w-4 shrink-0 text-success-foreground" />
               <div>
-                <p className="text-xs text-gray-500">Teacher</p>
-                <p className="font-medium text-gray-900">
+                <p className="text-xs text-muted-foreground">Teacher</p>
+                <p className="font-medium text-foreground">
                   {assignment.subjectTeacher.teacher.name}
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3 text-sm">
-              <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-purple-600" />
+              <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               <div>
-                <p className="text-xs text-gray-500">Batch</p>
-                <p className="font-medium text-gray-900">Batch {assignment.batch.batchYear}</p>
+                <p className="text-xs text-muted-foreground">Batch</p>
+                <p className="font-medium text-foreground">Batch {assignment.batch.batchYear}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3 text-sm">
-              <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-orange-600" />
+              <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-warning-foreground" />
               <div>
-                <p className="text-xs text-gray-500">Due Date</p>
-                <p className="font-medium text-gray-900">{formatShortDate(assignment.dueDate)}</p>
+                <p className="text-xs text-muted-foreground">Due Date</p>
+                <p className="font-medium text-foreground">{formatShortDate(assignment.dueDate)}</p>
               </div>
             </div>
           </div>

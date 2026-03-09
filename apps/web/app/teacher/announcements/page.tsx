@@ -18,7 +18,7 @@ export default function TeacherAnnouncementsPage() {
   const isOwner = (announcement: AnnouncementResponse) => announcement.createdById === user?.id
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/teacher/dashboard', label: 'Dashboard' }}

@@ -1,0 +1,32 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build", "db:generate"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": ["dist/**"],
+      "env": [
+        "DATABASE_URL",
+        "BE_PORT",
+        "NODE_ENV",
+        "JWT_SECRET",
+        "JWT_EXPIRES_IN",
+        "REFRESH_TOKEN_SECRET",
+        "REFRESH_TOKEN_EXPIRES_IN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REDIRECT_URI",
+        "PUBLIC_WEB_URL",
+        "SMTP_HOST",
+        "SMTP_USER",
+        "SMTP_PASSWORD",
+        "SMTP_FROM",
+        "ADMIN_EMAILS",
+        "ADMIN_SECRET_KEY"
+      ]
+    },
+    "check-types": {
+      "dependsOn": ["^build", "db:generate"]
+    }
+  }
+}

@@ -96,7 +96,7 @@ export const useChatSocket = () => {
     socket.on('disconnect', onDisconnect)
     socket.on('newMessage', onNewMessage)
 
-  if (!socket.connected) {
+    if (!socket.connected) {
       socket.connect()
     } else {
       onConnect()

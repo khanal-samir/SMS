@@ -47,7 +47,7 @@ function StudentAnnouncementList({ announcements, isLoading }: StudentAnnounceme
   return (
     <>
       {unreadCount > 0 && (
-        <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700">
+        <div className="mb-4 rounded-lg border border-info/30 bg-info/10 p-3 text-sm text-info-foreground">
           You have <span className="font-semibold">{unreadCount}</span> unread announcement
           {unreadCount > 1 ? 's' : ''}.
         </div>
@@ -58,7 +58,7 @@ function StudentAnnouncementList({ announcements, isLoading }: StudentAnnounceme
           <Card
             key={announcement.id}
             className={`transition-colors ${
-              announcement.isRead ? 'border-gray-200 bg-white' : 'border-blue-200 bg-blue-50/50'
+              announcement.isRead ? 'border bg-card' : 'border-info/30 bg-info/5'
             }`}
           >
             <CardHeader className="pb-2">
@@ -69,17 +69,10 @@ function StudentAnnouncementList({ announcements, isLoading }: StudentAnnounceme
                   ) : (
                     <Circle className="h-4 w-4 shrink-0 text-blue-500" />
                   )}
-                  <CardTitle className="text-base font-semibold text-gray-900">
+                  <CardTitle className="text-base font-semibold text-foreground">
                     {announcement.title}
                   </CardTitle>
-                  {!announcement.isRead && (
-                    <Badge
-                      variant="default"
-                      className="bg-blue-100 text-blue-700 hover:bg-blue-100"
-                    >
-                      New
-                    </Badge>
-                  )}
+                  {!announcement.isRead && <Badge variant="info">New</Badge>}
                 </div>
                 <Button variant="outline" size="sm" onClick={() => handleView(announcement)}>
                   <Eye className="mr-1 h-3.5 w-3.5" />
@@ -88,8 +81,8 @@ function StudentAnnouncementList({ announcements, isLoading }: StudentAnnounceme
               </div>
             </CardHeader>
             <CardContent>
-              <p className="line-clamp-2 text-sm text-gray-600">{announcement.message}</p>
-              <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
+              <p className="line-clamp-2 text-sm text-muted-foreground">{announcement.message}</p>
+              <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
                 <span>By {announcement.createdBy.name}</span>
                 <span>·</span>
                 <span>{formatShortDate(announcement.createdAt)}</span>

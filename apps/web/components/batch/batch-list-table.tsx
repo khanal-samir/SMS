@@ -36,22 +36,22 @@ function BatchListTable({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   if (!batches || batches.length === 0) {
     return (
-      <div className="rounded-lg border border-gray-200 bg-white py-16 text-center shadow-sm">
-        <p className="text-gray-500">{emptyMessage}</p>
-        {emptySubMessage && <p className="mt-1 text-sm text-gray-400">{emptySubMessage}</p>}
+      <div className="rounded-lg border bg-card py-16 text-center shadow-sm">
+        <p className="text-muted-foreground">{emptyMessage}</p>
+        {emptySubMessage && <p className="mt-1 text-sm text-muted-foreground">{emptySubMessage}</p>}
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>
@@ -71,19 +71,21 @@ function BatchListTable({
               onClick={() => router.push(`${basePath}/${batch.id}`)}
             >
               <TableCell>
-                <span className="text-sm font-semibold text-gray-900">{batch.batchYear}</span>
+                <span className="text-sm font-semibold text-foreground">{batch.batchYear}</span>
               </TableCell>
-              <TableCell className="text-sm text-gray-600">
+              <TableCell className="text-sm text-muted-foreground">
                 {formatShortDate(batch.startDate)}
               </TableCell>
-              <TableCell className="text-sm text-gray-600">
+              <TableCell className="text-sm text-muted-foreground">
                 {batch.endDate ? formatShortDate(batch.endDate) : '-'}
               </TableCell>
-              <TableCell className="text-sm text-gray-600">{batch.totalStudents}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{batch.totalStudents}</TableCell>
               <TableCell>
                 <span
                   className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                    batch.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                    batch.isActive
+                      ? 'bg-success/15 text-success-foreground'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   {batch.isActive ? 'Active' : 'Inactive'}

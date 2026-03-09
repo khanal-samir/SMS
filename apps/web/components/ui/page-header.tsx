@@ -27,8 +27,8 @@ export function PageHeader({ backButton, title, description, actions }: PageHead
           </Button>
         )}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-          {description && <p className="text-gray-600">{description}</p>}
+          <h1 className="text-3xl font-bold text-foreground">{title}</h1>
+          {description && <p className="text-muted-foreground">{description}</p>}
         </div>
       </div>
       {actions && <div className="flex items-center gap-3">{actions}</div>}

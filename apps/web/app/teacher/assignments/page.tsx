@@ -18,7 +18,7 @@ export default function TeacherAssignmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-7xl">
         <PageHeader
           backButton={{ href: '/teacher/dashboard', label: 'Dashboard' }}
@@ -32,7 +32,7 @@ export default function TeacherAssignmentsPage() {
           }
         />
 
-        <div className="rounded-xl bg-gray-50 p-6">
+        <div className="rounded-xl bg-muted/50 p-6">
           <AssignmentKanbanBoard
             assignments={assignments ?? []}
             onCreateClick={() => setIsCreateDialogOpen(true)}

@@ -50,12 +50,10 @@ export function ChatPanel({ groupId, groupName, className = 'h-[600px]' }: ChatP
   }
 
   return (
-    <div
-      className={`flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white ${className}`}
-    >
+    <div className={`flex flex-col overflow-hidden rounded-xl border bg-card ${className}`}>
       {groupName && (
-        <div className="flex items-center border-b border-gray-200 px-4 py-3">
-          <h3 className="text-sm font-semibold text-gray-900">{groupName}</h3>
+        <div className="flex items-center border-b px-4 py-3">
+          <h3 className="text-sm font-semibold text-foreground">{groupName}</h3>
         </div>
       )}
       <MessageList

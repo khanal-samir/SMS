@@ -19,9 +19,9 @@ interface StudentDetailViewProps {
 
 function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
-    ACTIVE: 'bg-blue-100 text-blue-800',
-    COMPLETED: 'bg-green-100 text-green-800',
-    FAILED: 'bg-red-100 text-red-800',
+    ACTIVE: 'bg-info/15 text-info-foreground',
+    COMPLETED: 'bg-success/15 text-success-foreground',
+    FAILED: 'bg-destructive/10 text-destructive',
   }
 
   const labels: Record<string, string> = {
@@ -32,7 +32,7 @@ function StatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${styles[status] ?? 'bg-gray-100 text-gray-800'}`}
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${styles[status] ?? 'bg-muted text-muted-foreground'}`}
     >
       {labels[status] ?? status}
     </span>
@@ -63,19 +63,19 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
               className="size-16 text-lg"
             />
             <div className="flex-1 space-y-1">
-              <h2 className="text-xl font-semibold text-gray-900">{student.name}</h2>
-              <p className="text-sm text-gray-600">{student.email}</p>
+              <h2 className="text-xl font-semibold text-foreground">{student.name}</h2>
+              <p className="text-sm text-muted-foreground">{student.email}</p>
               <div className="flex items-center gap-3 pt-2">
-                <span className="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-800">
+                <span className="inline-flex items-center rounded-full bg-primary/15 px-2.5 py-0.5 text-xs font-medium text-primary">
                   Student
                 </span>
                 {student.batch && (
-                  <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                  <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                     Batch {student.batch.batchYear}
                   </span>
                 )}
                 {student.batch?.currentSemester && (
-                  <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                  <span className="inline-flex items-center rounded-full bg-info/15 px-2.5 py-0.5 text-xs font-medium text-info-foreground">
                     {formatSemesterNumber(student.batch.currentSemester.semesterNumber)} Semester
                   </span>
                 )}
@@ -126,14 +126,14 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
               <span
                 className={`inline-flex rounded-full px-2.5 py-0.5 text-sm font-semibold ${
                   student.batch.isActive
-                    ? 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
+                    ? 'bg-success/15 text-success-foreground'
+                    : 'bg-muted text-muted-foreground'
                 }`}
               >
                 {student.batch.isActive ? 'Active' : 'Inactive'}
               </span>
             ) : (
-              <p className="text-2xl font-bold text-gray-400">N/A</p>
+              <p className="text-2xl font-bold text-muted-foreground">N/A</p>
             )}
           </CardContent>
         </Card>
@@ -151,11 +151,11 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
         </CardHeader>
         <CardContent>
           {student.semesters.length === 0 ? (
-            <div className="py-8 text-center text-gray-500">
+            <div className="py-8 text-center text-muted-foreground">
               <p>This student has no semester records yet.</p>
             </div>
           ) : (
-            <div className="overflow-hidden rounded-lg border border-gray-200">
+            <div className="overflow-hidden rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -170,7 +170,7 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
                       <TableCell className="font-medium">
                         {formatSemesterNumber(semester.semesterNumber)} Semester
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
+                      <TableCell className="text-sm text-muted-foreground">
                         {formatShortDate(semester.enrolledAt)}
                       </TableCell>
                       <TableCell>

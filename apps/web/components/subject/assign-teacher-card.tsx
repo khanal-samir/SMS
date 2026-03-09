@@ -56,19 +56,19 @@ function AssignTeacherCard({
         <div className="mt-4 max-h-80 space-y-3 overflow-auto rounded-lg">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           ) : filteredTeachers.length > 0 ? (
             filteredTeachers.map((teacher) => (
               <div
                 key={teacher.id}
-                className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4"
+                className="flex items-center justify-between rounded-lg border bg-card p-4"
               >
                 <div className="flex items-center gap-3">
                   <UserAvatar name={teacher.name} size="lg" />
                   <div>
-                    <p className="font-semibold text-gray-900">{teacher.name}</p>
-                    <p className="text-sm text-gray-500">{teacher.email}</p>
+                    <p className="font-semibold text-foreground">{teacher.name}</p>
+                    <p className="text-sm text-muted-foreground">{teacher.email}</p>
                   </div>
                 </div>
                 <Button size="sm" disabled={isAssigning} onClick={() => handleAssign(teacher)}>
@@ -78,11 +78,11 @@ function AssignTeacherCard({
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="mb-2 rounded-full bg-gray-100 p-3">
-                <Users className="h-6 w-6 text-gray-400" />
+              <div className="mb-2 rounded-full bg-muted p-3">
+                <Users className="h-6 w-6 text-muted-foreground" />
               </div>
-              <p className="text-sm font-medium text-gray-900">No teachers found</p>
-              <p className="text-xs text-gray-500">
+              <p className="text-sm font-medium text-foreground">No teachers found</p>
+              <p className="text-xs text-muted-foreground">
                 {debouncedSearch.trim()
                   ? 'Try adjusting your search'
                   : 'All approved teachers are already assigned'}

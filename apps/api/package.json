@@ -25,7 +25,8 @@
     "db:studio": "prisma studio",
     "compose:up": "docker compose up -d",
     "compose:down": "docker compose down",
-    "compose:logs": "docker compose logs -f"
+    "compose:logs": "docker compose logs -f",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.4",
@@ -60,8 +61,6 @@
     "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
@@ -75,9 +74,6 @@
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.2",
     "eslint": "^9.18.0",
-    "eslint-config-prettier": "^10.0.1",
-    "eslint-plugin-prettier": "^5.2.2",
-    "globals": "^16.0.0",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
     "prisma": "^6.16.1",
@@ -88,7 +84,8 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*"
   },
   "jest": {
     "moduleFileExtensions": [

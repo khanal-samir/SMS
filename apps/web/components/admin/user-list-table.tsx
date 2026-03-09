@@ -107,7 +107,7 @@ function StudentTable({
   const batchGroups = groupStudentsByBatch(students)
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>
@@ -130,8 +130,8 @@ function StudentTable({
                       <span
                         className={`ml-2 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                           group.isActive
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
+                            ? 'bg-success/15 text-success-foreground'
+                            : 'bg-muted text-muted-foreground'
                         }`}
                       >
                         {group.isActive ? 'Active' : 'Inactive'}
@@ -153,7 +153,7 @@ function StudentTable({
                       </Link>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-gray-600">{student.email}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">{student.email}</TableCell>
 
                   <TableCell>
                     <DeleteButton userId={student.id} onDelete={onDelete} />
@@ -176,7 +176,7 @@ function TeacherTable({
   onDelete: (id: string) => void
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>
@@ -192,16 +192,18 @@ function TeacherTable({
               <TableCell>
                 <div className="flex items-center gap-3">
                   <UserAvatar name={teacher.name} image={teacher.image} size="sm" />
-                  <span className="text-sm font-semibold text-gray-900">{teacher.name ?? '-'}</span>
+                  <span className="text-sm font-semibold text-foreground">
+                    {teacher.name ?? '-'}
+                  </span>
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-gray-600">{teacher.email}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{teacher.email}</TableCell>
               <TableCell>
                 <span
                   className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
                     teacher.isTeacherApproved
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
+                      ? 'bg-success/15 text-success-foreground'
+                      : 'bg-warning/15 text-warning-foreground'
                   }`}
                 >
                   {teacher.isTeacherApproved ? 'Approved' : 'Pending Approval'}
@@ -220,7 +222,7 @@ function TeacherTable({
 
 function AdminTable({ admins }: { admins: AllUsersResponse[] }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
       <Table>
         <TableHeader>
           <TableRow>
@@ -234,10 +236,10 @@ function AdminTable({ admins }: { admins: AllUsersResponse[] }) {
               <TableCell>
                 <div className="flex items-center gap-3">
                   <UserAvatar name={admin.name} image={admin.image} size="sm" />
-                  <span className="text-sm font-semibold text-gray-900">{admin.name ?? '-'}</span>
+                  <span className="text-sm font-semibold text-foreground">{admin.name ?? '-'}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-gray-600">{admin.email}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">{admin.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>

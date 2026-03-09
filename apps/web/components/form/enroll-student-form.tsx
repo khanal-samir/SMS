@@ -41,14 +41,14 @@ export function EnrollStudentForm({ batchId, onSuccess }: EnrollStudentFormProps
   if (isLoadingStudents) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   if (!students || students.length === 0) {
     return (
-      <div className="py-8 text-center text-gray-500">
+      <div className="py-8 text-center text-muted-foreground">
         <p>No unenrolled students available.</p>
       </div>
     )
@@ -80,15 +80,17 @@ export function EnrollStudentForm({ batchId, onSuccess }: EnrollStudentFormProps
               className={`w-full rounded-md border p-3 text-left transition-colors ${
                 selectedStudentId === student.id
                   ? 'border-primary bg-primary/5'
-                  : 'border-gray-200 hover:bg-gray-50'
+                  : 'border hover:bg-muted'
               }`}
             >
-              <p className="font-medium text-gray-900">{student.name}</p>
-              <p className="text-sm text-gray-500">{student.email}</p>
+              <p className="font-medium text-foreground">{student.name}</p>
+              <p className="text-sm text-muted-foreground">{student.email}</p>
             </button>
           ))
         ) : (
-          <p className="py-4 text-center text-sm text-gray-500">No students match your search.</p>
+          <p className="py-4 text-center text-sm text-muted-foreground">
+            No students match your search.
+          </p>
         )}
       </div>
 

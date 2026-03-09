@@ -29,18 +29,18 @@ export function getStatusDisplay(assignment: AssignmentResponse) {
   if (assignment.status === AssignmentStatusEnum.enum.DRAFT) {
     return {
       label: 'Draft',
-      className: 'bg-gray-100 text-gray-800',
+      className: 'bg-muted text-muted-foreground',
     }
   }
   if (isPastDue || assignment.status === AssignmentStatusEnum.enum.PAST_DUE) {
     return {
       label: 'Past Due',
-      className: 'bg-red-100 text-red-800',
+      className: 'bg-destructive/10 text-destructive',
     }
   }
   return {
     label: 'Published',
-    className: 'bg-green-100 text-green-800',
+    className: 'bg-success/15 text-success-foreground',
   }
 }
 export function formatDateForInput(dateStr: string) {
@@ -54,15 +54,15 @@ export function getDueDateInfo(dueDate: string) {
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24))
 
   if (diffDays < 0) {
-    return { label: `${Math.abs(diffDays)}d overdue`, urgent: true, color: 'text-red-600' }
+    return { label: `${Math.abs(diffDays)}d overdue`, urgent: true, color: 'text-destructive' }
   }
   if (diffDays === 0) {
-    return { label: 'Due today', urgent: true, color: 'text-orange-600' }
+    return { label: 'Due today', urgent: true, color: 'text-warning-foreground' }
   }
   if (diffDays <= 3) {
-    return { label: `${diffDays}d left`, urgent: true, color: 'text-orange-500' }
+    return { label: `${diffDays}d left`, urgent: true, color: 'text-warning-foreground' }
   }
-  return { label: `${diffDays}d left`, urgent: false, color: 'text-gray-500' }
+  return { label: `${diffDays}d left`, urgent: false, color: 'text-muted-foreground' }
 }
 export function groupAssignments(assignments: AssignmentResponse[]) {
   const now = new Date()
