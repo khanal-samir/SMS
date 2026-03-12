@@ -17,7 +17,7 @@ export const envSchema = z.object({
   REDIS_URL: z.url(),
   ADMIN_EMAILS: z.string().transform((val) => val.split(',').map((email) => email.trim())),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
-  BE_PORT: z.coerce.number().optional().default(7000),
+  BE_PORT: z.coerce.number().optional().default(8000),
 })
 
 export type Env = z.infer<typeof envSchema>

@@ -36,7 +36,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig)
   SwaggerModule.setup('docs', app, document)
 
-  const port = configService.get<number>('BE_PORT') ?? 7000
+  const port = configService.get<number>('BE_PORT') ?? 8000
   await app.listen(port)
 
   Logger.log(`Server is running on port ${port}`)
