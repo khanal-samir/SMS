@@ -8,7 +8,7 @@ import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
 import { StatCards } from '@/components/ui/stat-cards'
 import { FeatureCards } from '@/components/ui/feature-cards'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { SectionHeader } from '@/components/ui/section-header'
 import {
   Table,
   TableBody,
@@ -49,52 +49,52 @@ export default function TeacherSubjectDetailPage() {
         />
 
         <StatCards
+          variant="strip"
           stats={[
             { label: 'Subject Code', value: subject.subjectCode, icon: Code },
             { label: 'Co-Teachers', value: teachers?.length ?? 0, icon: Users },
           ]}
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Assigned Teachers</CardTitle>
-            <CardDescription>Other teachers working on this subject.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoadingTeachers ? (
-              <div className="flex items-center justify-center py-6">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-              </div>
-            ) : teachers && teachers.length > 0 ? (
-              <div className="overflow-hidden rounded-lg border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="px-6">Teacher</TableHead>
-                      <TableHead className="px-6">Email</TableHead>
+        <section className="mt-8">
+          <SectionHeader
+            icon={Users}
+            title="Assigned teachers"
+            description="Other teachers working on this subject."
+          />
+          {isLoadingTeachers ? (
+            <div className="flex items-center justify-center py-6">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : teachers && teachers.length > 0 ? (
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-6">Teacher</TableHead>
+                    <TableHead className="px-6">Email</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {teachers.map((assignment) => (
+                    <TableRow key={assignment.id}>
+                      <TableCell className="px-6 font-medium text-foreground">
+                        {assignment.teacher.name}
+                      </TableCell>
+                      <TableCell className="px-6 text-sm text-muted-foreground">
+                        {assignment.teacher.email}
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {teachers.map((assignment) => (
-                      <TableRow key={assignment.id}>
-                        <TableCell className="px-6 font-medium text-foreground">
-                          {assignment.teacher.name}
-                        </TableCell>
-                        <TableCell className="px-6 text-sm text-muted-foreground">
-                          {assignment.teacher.email}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <p className="py-6 text-center text-sm text-muted-foreground">
-                No teachers assigned.
-              </p>
-            )}
-          </CardContent>
-        </Card>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="rounded-lg border py-6 text-center">
+              <p className="text-sm text-muted-foreground">No teachers assigned.</p>
+            </div>
+          )}
+        </section>
 
         <div className="mt-8">
           <FeatureCards assignmentsHref="/teacher/assignments" resourcesHref="/teacher/resources" />

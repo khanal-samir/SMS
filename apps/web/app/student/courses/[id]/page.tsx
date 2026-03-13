@@ -39,6 +39,7 @@ export default function StudentCourseDetailPage() {
         />
 
         <StatCards
+          variant="strip"
           stats={[
             { label: 'Subject Code', value: subject.subjectCode, icon: Code },
             { label: 'Status', value: 'Active', icon: Activity },

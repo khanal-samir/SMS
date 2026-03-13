@@ -1,9 +1,10 @@
 'use client'
 
 import { useParams } from 'next/navigation'
+import { Users } from 'lucide-react'
 import { useBatch } from '@/hooks/useBatch'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { BatchInfoCards } from '@/components/batch/batch-info-cards'
+import { SectionHeader } from '@/components/ui/section-header'
 import { BatchStudentsTable } from '@/components/batch/batch-students-table'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
@@ -40,19 +41,18 @@ export default function TeacherBatchDetailPage() {
 
         <BatchInfoCards batch={batch} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Enrolled Students</CardTitle>
-            <CardDescription>Students currently enrolled in this batch</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BatchStudentsTable
-              students={batch.users}
-              isLoading={false}
-              studentLinkBasePath={`/teacher/batches/${batchId}/students`}
-            />
-          </CardContent>
-        </Card>
+        <section className="mt-8">
+          <SectionHeader
+            icon={Users}
+            title="Enrolled students"
+            description="Students currently enrolled in this batch"
+          />
+          <BatchStudentsTable
+            students={batch.users}
+            isLoading={false}
+            studentLinkBasePath={`/teacher/batches/${batchId}/students`}
+          />
+        </section>
       </div>
     </div>
   )

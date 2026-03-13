@@ -1,20 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import {
-  BookOpen,
-  ClipboardList,
-  Megaphone,
-  Users,
-  ArrowRight,
-  Calendar,
-  FolderOpen,
-} from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { BookOpen, ClipboardList, Megaphone, Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-header'
 import { StatCards } from '@/components/ui/stat-cards'
+import { SectionHeader } from '@/components/ui/section-header'
 import { LoadingState } from '@/components/ui/loading-state'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { useTeacherDashboard } from '@/hooks/useDashboard'
 import { formatShortDate, formatSemesterNumber, getDueDateInfo } from '@/lib/formatters'
 
@@ -23,6 +23,18 @@ export default function TeacherDashboard() {
 
   if (isLoading) {
     return <LoadingState message="Loading dashboard..." />
+  }
+
+  const statusMap: Record<
+    string,
+    {
+      label: string
+      variant: 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'info' | 'destructive'
+    }
+  > = {
+    DRAFT: { label: 'Draft', variant: 'secondary' },
+    PUBLISHED: { label: 'Published', variant: 'success' },
+    PAST_DUE: { label: 'Past due', variant: 'destructive' },
   }
 
   return (
@@ -60,226 +72,159 @@ export default function TeacherDashboard() {
           ]}
         />
 
-        {/* Bento grid */}
-        <div className="grid gap-6 lg:grid-cols-5">
-          {/* My subjects — 2 cols */}
-          <Card className="lg:col-span-2">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="size-4 text-muted-foreground" />
-                  My subjects
-                </CardTitle>
-                <CardDescription>Subjects you teach</CardDescription>
-              </div>
-              <Link
-                href="/teacher/subjects"
-                className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                View all <ArrowRight className="size-3" />
-              </Link>
-            </CardHeader>
-            <CardContent>
-              {data?.subjects && data.subjects.length > 0 ? (
-                <div className="space-y-3">
+        {/* My subjects — full-width table */}
+        <section>
+          <SectionHeader
+            icon={BookOpen}
+            title="My subjects"
+            description="Subjects you teach"
+            href="/teacher/subjects"
+          />
+          {data?.subjects && data.subjects.length > 0 ? (
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-4">Code</TableHead>
+                    <TableHead className="px-4">Subject name</TableHead>
+                    <TableHead className="px-4">Semester</TableHead>
+                    <TableHead className="px-4 text-right">Assignments</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {data.subjects.map((subject) => (
-                    <Link
+                    <TableRow
                       key={subject.id}
-                      href={`/teacher/subjects/${subject.id}`}
-                      className="block"
+                      className="cursor-pointer transition-colors hover:bg-muted/50"
                     >
-                      <div className="flex items-center justify-between rounded-lg border bg-card p-3 transition-colors hover:bg-muted/50">
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium text-foreground">
-                            {subject.subjectName}
-                          </p>
-                          <p className="text-sm text-muted-foreground">{subject.subjectCode}</p>
-                        </div>
-                        <div className="ml-3 flex flex-col items-end gap-1">
-                          <Badge variant="outline" className="text-xs">
-                            {formatSemesterNumber(subject.semester.semesterNumber)} Sem
-                          </Badge>
-                          <span className="text-xs text-muted-foreground tabular-nums">
-                            {subject.assignmentCount} assignment
-                            {subject.assignmentCount !== 1 ? 's' : ''}
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
+                      <TableCell className="px-4">
+                        <Link
+                          href={`/teacher/subjects/${subject.id}`}
+                          className="font-semibold text-foreground hover:underline"
+                        >
+                          {subject.subjectCode}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="px-4 text-muted-foreground">
+                        {subject.subjectName}
+                      </TableCell>
+                      <TableCell className="px-4">
+                        <Badge variant="outline" className="text-xs">
+                          {formatSemesterNumber(subject.semester.semesterNumber)} Sem
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-4 text-right tabular-nums text-muted-foreground">
+                        {subject.assignmentCount}
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </div>
-              ) : (
-                <p className="py-8 text-center text-sm text-muted-foreground">
-                  No subjects assigned yet
-                </p>
-              )}
-            </CardContent>
-          </Card>
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="rounded-lg border py-8 text-center">
+              <p className="text-sm text-muted-foreground">No subjects assigned yet</p>
+            </div>
+          )}
+        </section>
 
-          {/* Recent assignments — 3 cols */}
-          <Card className="lg:col-span-3">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <ClipboardList className="size-4 text-muted-foreground" />
-                  Recent assignments
-                </CardTitle>
-                <CardDescription>Your latest assignments</CardDescription>
-              </div>
-              <Link
-                href="/teacher/assignments"
-                className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                View all <ArrowRight className="size-3" />
-              </Link>
-            </CardHeader>
-            <CardContent>
-              {data?.recentAssignments && data.recentAssignments.length > 0 ? (
-                <div className="space-y-3">
+        {/* Recent assignments — full-width table */}
+        <section className="mt-8">
+          <SectionHeader
+            icon={ClipboardList}
+            title="Recent assignments"
+            description="Your latest assignments"
+            href="/teacher/assignments"
+          />
+          {data?.recentAssignments && data.recentAssignments.length > 0 ? (
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-4">Title</TableHead>
+                    <TableHead className="px-4">Subject</TableHead>
+                    <TableHead className="px-4">Batch</TableHead>
+                    <TableHead className="px-4">Status</TableHead>
+                    <TableHead className="px-4 text-right">Due</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {data.recentAssignments.map((assignment) => {
                     const dueDateInfo = getDueDateInfo(assignment.dueDate)
-                    const statusMap: Record<
-                      string,
-                      {
-                        label: string
-                        variant:
-                          | 'default'
-                          | 'secondary'
-                          | 'outline'
-                          | 'success'
-                          | 'warning'
-                          | 'info'
-                          | 'destructive'
-                      }
-                    > = {
-                      DRAFT: { label: 'Draft', variant: 'secondary' },
-                      PUBLISHED: { label: 'Published', variant: 'success' },
-                      PAST_DUE: { label: 'Past due', variant: 'destructive' },
-                    }
                     const status = statusMap[assignment.status] ?? {
                       label: assignment.status,
                       variant: 'outline' as const,
                     }
                     return (
-                      <div
-                        key={assignment.id}
-                        className="flex items-center justify-between rounded-lg border bg-card p-3"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium text-foreground">{assignment.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {assignment.subjectTeacher.subject.subjectName} &middot; Batch{' '}
-                            {assignment.batch.batchYear}
-                          </p>
-                        </div>
-                        <div className="ml-4 flex flex-col items-end gap-1">
+                      <TableRow key={assignment.id}>
+                        <TableCell className="px-4 font-medium text-foreground">
+                          {assignment.title}
+                        </TableCell>
+                        <TableCell className="px-4 text-muted-foreground">
+                          {assignment.subjectTeacher.subject.subjectName}
+                        </TableCell>
+                        <TableCell className="px-4 text-muted-foreground tabular-nums">
+                          {assignment.batch.batchYear}
+                        </TableCell>
+                        <TableCell className="px-4">
                           <Badge variant={status.variant} className="text-xs">
                             {status.label}
                           </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 text-right">
                           <span className={`text-xs font-medium tabular-nums ${dueDateInfo.color}`}>
                             {dueDateInfo.label}
                           </span>
-                        </div>
-                      </div>
+                        </TableCell>
+                      </TableRow>
                     )
                   })}
-                </div>
-              ) : (
-                <p className="py-8 text-center text-sm text-muted-foreground">No assignments yet</p>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Recent announcements (full width) */}
-        <Card className="mt-6">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <Megaphone className="size-4 text-muted-foreground" />
-                Recent announcements
-              </CardTitle>
-              <CardDescription>Latest updates from the system</CardDescription>
+                </TableBody>
+              </Table>
             </div>
-            <Link
-              href="/teacher/announcements"
-              className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              View all <ArrowRight className="size-3" />
-            </Link>
-          </CardHeader>
-          <CardContent>
-            {data?.recentAnnouncements && data.recentAnnouncements.length > 0 ? (
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {data.recentAnnouncements.map((announcement) => (
-                  <div key={announcement.id} className="rounded-lg border bg-card p-3">
-                    <div className="flex items-center gap-2">
-                      <p className="truncate font-medium text-foreground">{announcement.title}</p>
-                      {!announcement.isRead && (
-                        <Badge variant="info" className="text-[10px] px-1.5 py-0">
-                          New
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                      {announcement.message}
-                    </p>
-                    <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{announcement.createdBy.name}</span>
-                      <span className="tabular-nums">
-                        {formatShortDate(announcement.createdAt)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="py-8 text-center text-sm text-muted-foreground">No announcements yet</p>
-            )}
-          </CardContent>
-        </Card>
+          ) : (
+            <div className="rounded-lg border py-8 text-center">
+              <p className="text-sm text-muted-foreground">No assignments yet</p>
+            </div>
+          )}
+        </section>
 
-        {/* Quick links */}
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              label: 'Subjects',
-              href: '/teacher/subjects',
-              icon: BookOpen,
-              description: 'Manage your subjects',
-            },
-            {
-              label: 'Assignments',
-              href: '/teacher/assignments',
-              icon: ClipboardList,
-              description: 'Create & manage assignments',
-            },
-            {
-              label: 'Schedule',
-              href: '/teacher/schedule',
-              icon: Calendar,
-              description: 'View your schedule',
-            },
-            {
-              label: 'Resources',
-              href: '/teacher/resources',
-              icon: FolderOpen,
-              description: 'Teaching resources',
-            },
-          ].map((link) => (
-            <Link key={link.href} href={link.href}>
-              <Card className="h-full cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
-                <CardContent className="flex items-center gap-3 pt-6">
-                  <link.icon className="size-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">{link.label}</p>
-                    <p className="text-sm text-muted-foreground">{link.description}</p>
+        {/* Recent announcements — full width grid */}
+        <section className="mt-8">
+          <SectionHeader
+            icon={Megaphone}
+            title="Recent announcements"
+            description="Latest updates from the system"
+            href="/teacher/announcements"
+          />
+          {data?.recentAnnouncements && data.recentAnnouncements.length > 0 ? (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {data.recentAnnouncements.map((announcement) => (
+                <div key={announcement.id} className="rounded-lg border p-3">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-medium text-foreground">{announcement.title}</p>
+                    {!announcement.isRead && (
+                      <Badge variant="info" className="text-[10px] px-1.5 py-0">
+                        New
+                      </Badge>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                    {announcement.message}
+                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{announcement.createdBy.name}</span>
+                    <span className="tabular-nums">{formatShortDate(announcement.createdAt)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border py-8 text-center">
+              <p className="text-sm text-muted-foreground">No announcements yet</p>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   )

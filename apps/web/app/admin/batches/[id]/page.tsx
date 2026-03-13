@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { useBatch, useAdvanceSemester } from '@/hooks/useBatch'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -19,7 +18,8 @@ import { BatchStudentsTable } from '@/components/batch/batch-students-table'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import { Loader2, UserPlus, ChevronRight } from 'lucide-react'
+import { SectionHeader } from '@/components/ui/section-header'
+import { Loader2, UserPlus, ChevronRight, Users } from 'lucide-react'
 
 export default function AdminBatchDetailPage() {
   const params = useParams()
@@ -124,19 +124,18 @@ export default function AdminBatchDetailPage() {
 
         <BatchInfoCards batch={batch} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Enrolled Students</CardTitle>
-            <CardDescription>Students currently enrolled in this batch</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BatchStudentsTable
-              students={batch.users}
-              isLoading={false}
-              studentLinkBasePath={`/admin/batches/${batchId}/students`}
-            />
-          </CardContent>
-        </Card>
+        <section className="mt-8">
+          <SectionHeader
+            icon={Users}
+            title="Enrolled students"
+            description="Students currently enrolled in this batch"
+          />
+          <BatchStudentsTable
+            students={batch.users}
+            isLoading={false}
+            studentLinkBasePath={`/admin/batches/${batchId}/students`}
+          />
+        </section>
       </div>
     </div>
   )

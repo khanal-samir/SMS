@@ -229,7 +229,7 @@ export class DashboardService {
         publishedAssignments: publishedCount,
         totalBatches: batchIds.size,
       },
-      subjects,
+      subjects: subjects.slice(0, 5),
       recentAssignments: assignments.slice(0, 5).map((a) => ({
         id: a.id,
         title: a.title,

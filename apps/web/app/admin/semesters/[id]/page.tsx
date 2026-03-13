@@ -7,7 +7,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
 import { StatCards } from '@/components/ui/stat-cards'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { SectionHeader } from '@/components/ui/section-header'
 import {
   Table,
   TableBody,
@@ -58,6 +58,7 @@ export default function AdminSemesterDetailPage() {
         />
 
         <StatCards
+          variant="strip"
           stats={[
             { label: 'Semester', value: semesterLabel, icon: GraduationCap },
             { label: 'Subjects', value: semester.subjects.length, icon: BookOpen },
@@ -66,75 +67,70 @@ export default function AdminSemesterDetailPage() {
           columns={3}
         />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Subjects</CardTitle>
-            <CardDescription>Click a subject to manage teachers and details.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {semester.subjects.length > 0 ? (
-              <div className="overflow-hidden rounded-lg border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="px-6">Code</TableHead>
-                      <TableHead className="px-6">Subject</TableHead>
-                      <TableHead className="px-6">Teachers</TableHead>
-                      <TableHead className="px-6 text-right">Actions</TableHead>
+        <section className="mt-8">
+          <SectionHeader
+            icon={BookOpen}
+            title="Subjects"
+            description="Click a subject to manage teachers and details."
+          />
+          {semester.subjects.length > 0 ? (
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-6">Code</TableHead>
+                    <TableHead className="px-6">Subject</TableHead>
+                    <TableHead className="px-6">Teachers</TableHead>
+                    <TableHead className="px-6 text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {semester.subjects.map((subject: SemesterDetailResponse['subjects'][number]) => (
+                    <TableRow
+                      key={subject.id}
+                      className="cursor-pointer"
+                      onClick={() =>
+                        router.push(`/admin/semesters/${semester.id}/subjects/${subject.id}`)
+                      }
+                    >
+                      <TableCell className="px-6 font-semibold text-foreground">
+                        {subject.subjectCode}
+                      </TableCell>
+                      <TableCell className="px-6 text-sm text-muted-foreground">
+                        {subject.subjectName}
+                      </TableCell>
+                      <TableCell className="px-6 text-sm text-muted-foreground">
+                        {subject.subjectTeachers.length > 0
+                          ? subject.subjectTeachers
+                              .map((assignment) => assignment.teacher.name)
+                              .join(', ')
+                          : 'No teachers assigned'}
+                      </TableCell>
+                      <TableCell className="px-6 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              router.push(`/admin/semesters/${semester.id}/subjects/${subject.id}`)
+                            }}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {semester.subjects.map(
-                      (subject: SemesterDetailResponse['subjects'][number]) => (
-                        <TableRow
-                          key={subject.id}
-                          className="cursor-pointer"
-                          onClick={() =>
-                            router.push(`/admin/semesters/${semester.id}/subjects/${subject.id}`)
-                          }
-                        >
-                          <TableCell className="px-6 font-semibold text-foreground">
-                            {subject.subjectCode}
-                          </TableCell>
-                          <TableCell className="px-6 text-sm text-muted-foreground">
-                            {subject.subjectName}
-                          </TableCell>
-                          <TableCell className="px-6 text-sm text-muted-foreground">
-                            {subject.subjectTeachers.length > 0
-                              ? subject.subjectTeachers
-                                  .map((assignment) => assignment.teacher.name)
-                                  .join(', ')
-                              : 'No teachers assigned'}
-                          </TableCell>
-                          <TableCell className="px-6 text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                onClick={(event) => {
-                                  event.stopPropagation()
-                                  router.push(
-                                    `/admin/semesters/${semester.id}/subjects/${subject.id}`,
-                                  )
-                                }}
-                              >
-                                View Details
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ),
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            ) : (
-              <div className="py-8 text-center text-muted-foreground">
-                <p>No subjects available for this semester.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="rounded-lg border py-8 text-center text-muted-foreground">
+              <p>No subjects available for this semester.</p>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   )
