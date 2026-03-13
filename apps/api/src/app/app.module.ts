@@ -18,6 +18,7 @@ import { AssignmentModule } from 'src/assignment/assignment.module'
 import { AnnouncementModule } from 'src/announcement/announcement.module'
 import { ChatModule } from '@src/chat/chat.module'
 import { QueueModule } from 'src/common/queue/queue.module'
+import { DashboardModule } from 'src/dashboard/dashboard.module'
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { QueueModule } from 'src/common/queue/queue.module'
     AssignmentModule,
     AnnouncementModule,
     ChatModule,
+    DashboardModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {

@@ -73,6 +73,7 @@ export default function AdminSubjectDetailPage() {
         />
 
         <StatCards
+          variant="strip"
           stats={[
             { label: 'Subject Code', value: subject.subjectCode },
             { label: 'Assigned Teachers', value: subjectTeachers?.length ?? 0 },

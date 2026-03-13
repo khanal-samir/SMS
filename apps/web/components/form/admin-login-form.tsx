@@ -75,11 +75,7 @@ export function AdminLoginForm({ className, ...props }: React.ComponentProps<'di
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
-                disabled={isPending}
-              >
+              <Button type="submit" className="w-full h-10 font-semibold" disabled={isPending}>
                 {isPending ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>

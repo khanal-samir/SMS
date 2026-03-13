@@ -99,11 +99,7 @@ export function TeacherRegisterForm({ className, ...props }: React.ComponentProp
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
-                disabled={isPending}
-              >
+              <Button type="submit" className="w-full h-10 font-semibold" disabled={isPending}>
                 {isPending ? 'Creating account...' : 'Create Account'}
               </Button>
 
@@ -111,7 +107,7 @@ export function TeacherRegisterForm({ className, ...props }: React.ComponentProp
                 Already have an account?{' '}
                 <Link
                   href="/teacher/login"
-                  className="font-medium text-brand-accent underline-offset-4 hover:underline"
+                  className="font-medium text-foreground underline-offset-4 hover:underline"
                 >
                   Sign in
                 </Link>

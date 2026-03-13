@@ -48,17 +48,17 @@ function GeometricPattern() {
 
 function getPageContext(pathname: string) {
   if (pathname.includes('teacher')) {
-    return { portal: 'Teacher', accent: 'text-emerald-400' }
+    return { portal: 'Teacher' }
   }
   if (pathname.includes('admin')) {
-    return { portal: 'Admin', accent: 'text-brand-foreground/70' }
+    return { portal: 'Admin' }
   }
-  return { portal: 'Student', accent: 'text-brand-accent' }
+  return { portal: 'Student' }
 }
 
 export function AuthSidePanel() {
   const pathname = usePathname()
-  const { portal, accent } = getPageContext(pathname)
+  const { portal } = getPageContext(pathname)
 
   const quoteIndex =
     pathname.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % QUOTES.length
@@ -69,9 +69,9 @@ export function AuthSidePanel() {
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-brand p-10 text-brand-foreground lg:flex noise-overlay">
         <GeometricPattern />
 
-        <div className="absolute inset-0 grid-pattern" />
+        <div className="absolute inset-0 grid-pattern opacity-40" />
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-brand-accent/6 blur-[100px]" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-brand-accent/10 blur-[100px]" />
 
         <m.div
           initial={{ opacity: 0, x: -20 }}
@@ -80,11 +80,11 @@ export function AuthSidePanel() {
           className="relative z-10"
         >
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-brand-accent text-brand-accent-foreground transition-transform duration-300 group-hover:scale-105">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-white text-brand transition-transform duration-300 group-hover:scale-105">
               <GraduationCap className="size-5" />
             </div>
             <div className="flex flex-col">
-              <span className="font-display text-lg font-bold leading-tight">SMS</span>
+              <span className="text-lg font-bold leading-tight">SMS</span>
               <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-brand-foreground/40">
                 College
               </span>
@@ -106,11 +106,13 @@ export function AuthSidePanel() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.4 }}
             >
-              <p className="font-display text-2xl font-medium italic leading-relaxed text-brand-foreground/80">
+              <p className="text-2xl font-medium italic leading-relaxed text-brand-foreground/80">
                 &ldquo;{quote.text}&rdquo;
               </p>
               <footer className="mt-4">
-                <span className={`text-sm font-semibold ${accent}`}>&mdash; {quote.author}</span>
+                <span className="text-sm font-semibold text-brand-foreground/60">
+                  &mdash; {quote.author}
+                </span>
               </footer>
             </m.blockquote>
           </AnimatePresence>
@@ -122,15 +124,7 @@ export function AuthSidePanel() {
           transition={{ delay: 0.4, duration: 0.5 }}
           className="relative z-10 flex items-center gap-2"
         >
-          <div
-            className={`size-2 rounded-full ${
-              accent === 'text-brand-accent'
-                ? 'bg-brand-accent'
-                : accent === 'text-emerald-400'
-                  ? 'bg-emerald-400'
-                  : 'bg-brand-foreground/50'
-            }`}
-          />
+          <div className="size-2 rounded-full bg-brand-accent" />
           <span className="text-xs font-medium uppercase tracking-widest text-brand-foreground/40">
             {portal} Portal
           </span>

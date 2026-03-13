@@ -1,6 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
+import { Code, Activity } from 'lucide-react'
 import { useSubject } from '@/hooks/useSubject'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
@@ -38,9 +39,10 @@ export default function StudentCourseDetailPage() {
         />
 
         <StatCards
+          variant="strip"
           stats={[
-            { label: 'Subject Code', value: subject.subjectCode },
-            { label: 'Status', value: 'Active' },
+            { label: 'Subject Code', value: subject.subjectCode, icon: Code },
+            { label: 'Status', value: 'Active', icon: Activity },
           ]}
         />
 

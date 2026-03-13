@@ -3,35 +3,35 @@ import { GraduationCap } from 'lucide-react'
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-border/60 bg-brand noise-overlay">
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 lg:px-8">
+    <footer className="border-t border-border bg-muted/50">
+      <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
         <div className="grid gap-12 md:grid-cols-4">
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-brand-accent text-brand-accent-foreground">
+            <Link href="/" className="flex items-center gap-3 cursor-pointer">
+              <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                 <GraduationCap className="size-5" />
               </div>
               <div className="flex flex-col">
-                <span className="font-display text-lg font-bold text-brand-foreground">SMS</span>
-                <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-brand-foreground/40">
+                <span className="text-lg font-bold text-foreground">SMS</span>
+                <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
                   College
                 </span>
               </div>
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-brand-foreground/50">
-              Empowering education through intelligent management and modern technology.
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              A modern platform for managing students, teachers, courses, and academic operations.
             </p>
           </div>
 
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-brand-foreground/40">
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Platform
             </h4>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="#features"
-                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                  className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   Features
                 </Link>
@@ -39,40 +39,40 @@ export function LandingFooter() {
               <li>
                 <Link
                   href="/login"
-                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                  className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Student Portal
+                  Student portal
                 </Link>
               </li>
               <li>
                 <Link
                   href="/teacher/login"
-                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                  className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Teacher Portal
+                  Teacher portal
                 </Link>
               </li>
               <li>
                 <Link
                   href="/admin/access"
-                  className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                  className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  Admin Access
+                  Admin access
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-brand-foreground/40">
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Institution
             </h4>
             <ul className="space-y-3">
-              {['About PNC', 'Contact Us', 'Faculty', 'Campus Life'].map((item) => (
+              {['About PNC', 'Contact us', 'Faculty', 'Campus life'].map((item) => (
                 <li key={item}>
                   <Link
                     href="/"
-                    className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
+                    className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {item}
                   </Link>
@@ -82,47 +82,28 @@ export function LandingFooter() {
           </div>
 
           <div>
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-brand-foreground/40">
+            <h4 className="mb-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
               Legal
             </h4>
             <ul className="space-y-3">
-              {['Privacy Policy', 'Terms of Service', 'Accessibility', 'Data Protection'].map(
-                (item) => (
-                  <li key={item}>
-                    <Link
-                      href="/"
-                      className="text-sm text-brand-foreground/60 transition-colors hover:text-brand-accent"
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                ),
-              )}
+              {['Privacy policy', 'Terms of service', 'Accessibility'].map((item) => (
+                <li key={item}>
+                  <Link
+                    href="/"
+                    className="cursor-pointer text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {item}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-brand-foreground/10 pt-8 sm:flex-row">
-          <p className="text-xs text-brand-foreground/40">
+        <div className="border-t border-border/60 pt-8 mt-12">
+          <p className="text-xs text-muted-foreground">
             &copy; {new Date().getFullYear()} SMS College. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            {[
-              { label: 'Twitter', href: 'https://twitter.com' },
-              { label: 'Facebook', href: 'https://facebook.com' },
-              { label: 'LinkedIn', href: 'https://linkedin.com' },
-            ].map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-brand-foreground/40 transition-colors hover:text-brand-accent"
-              >
-                {social.label}
-              </a>
-            ))}
-          </div>
         </div>
       </div>
     </footer>

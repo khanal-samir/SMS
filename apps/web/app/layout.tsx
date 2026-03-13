@@ -1,18 +1,12 @@
 import type { Metadata } from 'next'
-import { Playfair_Display, DM_Sans } from 'next/font/google'
+import { Geist } from 'next/font/google'
 import { Providers } from './providers'
 import './globals.css'
 import Script from 'next/script'
 
-const playfair = Playfair_Display({
+const geist = Geist({
   subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap',
-})
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-dm-sans',
+  variable: '--font-geist',
   display: 'swap',
 })
 
@@ -34,7 +28,7 @@ export default function RootLayout({
           <Script src="//unpkg.com/react-scan/dist/auto.global.js" />
         )}
       </head>
-      <body className={`${playfair.variable} ${dmSans.variable}`}>
+      <body className={`${geist.variable}`}>
         <Providers>{children}</Providers>
       </body>
     </html>

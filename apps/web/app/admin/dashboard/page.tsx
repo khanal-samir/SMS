@@ -1,92 +1,257 @@
 'use client'
+
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Users,
+  BookOpen,
+  GraduationCap,
+  ClipboardList,
+  Megaphone,
+  ShieldAlert,
+  Loader2,
+  UserPlus,
+  BarChart3,
+} from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { usePendingTeachers, useApproveTeacher } from '@/hooks/useTeacherApproval'
 import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-header'
-import { Loader2 } from 'lucide-react'
+import { StatCards } from '@/components/ui/stat-cards'
+import { SectionHeader } from '@/components/ui/section-header'
+import { LoadingState } from '@/components/ui/loading-state'
 import { UserAvatar } from '@/components/ui/user-avatar'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { useAdminDashboard } from '@/hooks/useDashboard'
+import { useApproveTeacher } from '@/hooks/useTeacherApproval'
+import { formatShortDate, getDueDateInfo } from '@/lib/formatters'
 
 export default function AdminDashboard() {
-  const { data: pendingTeachers, isLoading: isLoadingTeachers } = usePendingTeachers()
+  const { data, isLoading } = useAdminDashboard()
   const { mutate: approveTeacher } = useApproveTeacher()
   const [approvingId, setApprovingId] = useState<string | null>(null)
+
+  if (isLoading) {
+    return <LoadingState message="Loading dashboard..." />
+  }
+
+  const statusMap: Record<
+    string,
+    {
+      label: string
+      variant: 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'info' | 'destructive'
+    }
+  > = {
+    DRAFT: { label: 'Draft', variant: 'secondary' },
+    PUBLISHED: { label: 'Published', variant: 'success' },
+    PAST_DUE: { label: 'Past due', variant: 'destructive' },
+  }
 
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <DashboardPageHeader
           title="Admin Dashboard"
-          roleBadge={{
-            text: 'Admin',
-            variant: 'destructive',
-          }}
+          roleBadge={{ text: 'Admin', variant: 'destructive' }}
         />
 
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              Pending Teacher Approvals
-              {pendingTeachers && pendingTeachers.length > 0 && (
-                <span className="ml-2 rounded-full bg-destructive/10 px-2.5 py-0.5 text-xs font-semibold text-destructive">
-                  {pendingTeachers.length}
-                </span>
-              )}
-            </CardTitle>
-            <CardDescription>
-              Review and approve teachers who have verified their email addresses
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoadingTeachers ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-              </div>
-            ) : pendingTeachers && pendingTeachers.length > 0 ? (
-              <div className="space-y-4">
-                {pendingTeachers.map((teacher) => (
-                  <div
-                    key={teacher.id}
-                    className="flex items-center justify-between rounded-lg border bg-card p-4 shadow-sm"
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3">
-                        <UserAvatar name={teacher.name} />
-                        <div>
-                          <p className="font-semibold text-foreground">{teacher.name}</p>
-                          <p className="text-sm text-muted-foreground">{teacher.email}</p>
+        {/* Stat cards row */}
+        <StatCards
+          columns={5}
+          stats={[
+            {
+              label: 'Students',
+              value: data?.stats.totalStudents ?? 0,
+              icon: Users,
+            },
+            {
+              label: 'Teachers',
+              value: data?.stats.totalTeachers ?? 0,
+              icon: GraduationCap,
+            },
+            {
+              label: 'Batches',
+              value: data?.stats.totalBatches ?? 0,
+              icon: BarChart3,
+            },
+            {
+              label: 'Subjects',
+              value: data?.stats.totalSubjects ?? 0,
+              icon: BookOpen,
+            },
+            {
+              label: 'Pending approvals',
+              value: data?.stats.pendingApprovals ?? 0,
+              icon: ShieldAlert,
+            },
+          ]}
+        />
+
+        {/* Pending teacher approvals — full-width table */}
+        <section>
+          <SectionHeader
+            icon={UserPlus}
+            title="Pending approvals"
+            description="Teachers awaiting approval"
+            badge={
+              data?.pendingTeachers && data.pendingTeachers.length > 0
+                ? { value: data.pendingTeachers.length, variant: 'destructive' }
+                : undefined
+            }
+          />
+          {data?.pendingTeachers && data.pendingTeachers.length > 0 ? (
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-4">Teacher</TableHead>
+                    <TableHead className="px-4">Email</TableHead>
+                    <TableHead className="px-4">Registered</TableHead>
+                    <TableHead className="px-4 text-right">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.pendingTeachers.map((teacher) => (
+                    <TableRow key={teacher.id}>
+                      <TableCell className="px-4">
+                        <div className="flex items-center gap-3">
+                          <UserAvatar name={teacher.name} />
+                          <span className="font-medium text-foreground">{teacher.name}</span>
                         </div>
-                      </div>
-                    </div>
-                    <Button
-                      onClick={() => {
-                        setApprovingId(teacher.id)
-                        approveTeacher(teacher.id, {
-                          onSettled: () => setApprovingId(null),
-                        })
-                      }}
-                      disabled={approvingId === teacher.id}
-                      className="ml-4"
-                    >
-                      {approvingId === teacher.id ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Approving...
-                        </>
-                      ) : (
-                        'Approve'
-                      )}
-                    </Button>
+                      </TableCell>
+                      <TableCell className="px-4 text-muted-foreground">{teacher.email}</TableCell>
+                      <TableCell className="px-4 text-muted-foreground tabular-nums">
+                        {formatShortDate(teacher.createdAt)}
+                      </TableCell>
+                      <TableCell className="px-4 text-right">
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setApprovingId(teacher.id)
+                            approveTeacher(teacher.id, {
+                              onSettled: () => setApprovingId(null),
+                            })
+                          }}
+                          disabled={approvingId === teacher.id}
+                        >
+                          {approvingId === teacher.id ? (
+                            <Loader2 className="size-4 animate-spin" />
+                          ) : (
+                            'Approve'
+                          )}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="rounded-lg border py-8 text-center">
+              <p className="text-sm text-muted-foreground">No pending approvals</p>
+            </div>
+          )}
+        </section>
+
+        {/* Recent assignments — full-width table */}
+        <section className="mt-8">
+          <SectionHeader
+            icon={ClipboardList}
+            title="Recent assignments"
+            description="Across all batches"
+            href="/admin/assignments"
+          />
+          {data?.recentAssignments && data.recentAssignments.length > 0 ? (
+            <div className="overflow-hidden rounded-lg border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="px-4">Title</TableHead>
+                    <TableHead className="px-4">Subject</TableHead>
+                    <TableHead className="px-4">Teacher</TableHead>
+                    <TableHead className="px-4">Batch</TableHead>
+                    <TableHead className="px-4">Status</TableHead>
+                    <TableHead className="px-4 text-right">Due</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.recentAssignments.map((assignment) => {
+                    const dueDateInfo = getDueDateInfo(assignment.dueDate)
+                    const status = statusMap[assignment.status] ?? {
+                      label: assignment.status,
+                      variant: 'outline' as const,
+                    }
+                    return (
+                      <TableRow key={assignment.id}>
+                        <TableCell className="px-4 font-medium text-foreground">
+                          {assignment.title}
+                        </TableCell>
+                        <TableCell className="px-4 text-muted-foreground">
+                          {assignment.subjectTeacher.subject.subjectName}
+                        </TableCell>
+                        <TableCell className="px-4 text-muted-foreground">
+                          {assignment.subjectTeacher.teacher.name}
+                        </TableCell>
+                        <TableCell className="px-4 text-muted-foreground tabular-nums">
+                          {assignment.batch.batchYear}
+                        </TableCell>
+                        <TableCell className="px-4">
+                          <Badge variant={status.variant} className="text-xs">
+                            {status.label}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="px-4 text-right">
+                          <span className={`text-xs font-medium tabular-nums ${dueDateInfo.color}`}>
+                            {dueDateInfo.label}
+                          </span>
+                        </TableCell>
+                      </TableRow>
+                    )
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="rounded-lg border py-8 text-center">
+              <p className="text-sm text-muted-foreground">No assignments yet</p>
+            </div>
+          )}
+        </section>
+
+        {/* Recent announcements — full width grid */}
+        <section className="mt-8">
+          <SectionHeader
+            icon={Megaphone}
+            title="Recent announcements"
+            description="System-wide announcements"
+            href="/admin/announcements"
+          />
+          {data?.recentAnnouncements && data.recentAnnouncements.length > 0 ? (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {data.recentAnnouncements.map((announcement) => (
+                <div key={announcement.id} className="rounded-lg border p-3">
+                  <p className="truncate font-medium text-foreground">{announcement.title}</p>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                    {announcement.message}
+                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{announcement.createdBy.name}</span>
+                    <span className="tabular-nums">{formatShortDate(announcement.createdAt)}</span>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="py-8 text-center text-muted-foreground">
-                <p>No pending teacher approvals at this time.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border py-8 text-center">
+              <p className="text-sm text-muted-foreground">No announcements yet</p>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   )

@@ -41,7 +41,7 @@ function UserAvatar({ name, image, size = 'default', className }: UserAvatarProp
   return (
     <div
       className={cn(
-        'relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-brand-accent text-brand-accent-foreground text-xs font-medium',
+        'relative inline-flex items-center justify-center overflow-hidden rounded-lg bg-muted text-muted-foreground text-xs font-medium',
         sizeConfig.className,
         className,
       )}

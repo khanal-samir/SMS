@@ -1,4 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card'
+import { Calendar, GraduationCap, Users, Activity } from 'lucide-react'
+import { StatCards } from '@/components/ui/stat-cards'
 import { formatSemesterNumber } from '@/lib/formatters'
 import type { BatchDetailResponse } from '@repo/schemas'
 
@@ -8,52 +9,36 @@ interface BatchInfoCardsProps {
 
 function BatchInfoCards({ batch }: BatchInfoCardsProps) {
   return (
-    <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Batch Year</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-2xl font-bold">{batch.batchYear}</p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Current Semester</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-2xl font-bold">
-            {batch.currentSemester
-              ? `${formatSemesterNumber(batch.currentSemester.semesterNumber)} Semester `
-              : 'No Semester for this batch'}{' '}
-          </p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Total Students</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-2xl font-bold">{batch.totalStudents}</p>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Status</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <span
-            className={`inline-flex rounded-full px-2.5 py-0.5 text-sm font-semibold ${
-              batch.isActive
-                ? 'bg-success/15 text-success-foreground'
-                : 'bg-muted text-muted-foreground'
-            }`}
-          >
-            {batch.isActive ? 'Active' : 'Inactive'}
-          </span>
-        </CardContent>
-      </Card>
-    </div>
+    <StatCards
+      variant="strip"
+      columns={4}
+      stats={[
+        { label: 'Batch Year', value: batch.batchYear, icon: Calendar },
+        {
+          label: 'Current Semester',
+          value: batch.currentSemester
+            ? `${formatSemesterNumber(batch.currentSemester.semesterNumber)} Semester`
+            : 'No semester',
+          icon: GraduationCap,
+        },
+        { label: 'Total Students', value: batch.totalStudents, icon: Users },
+        {
+          label: 'Status',
+          value: (
+            <span
+              className={`inline-flex rounded-full px-2.5 py-0.5 text-sm font-semibold ${
+                batch.isActive
+                  ? 'bg-success/15 text-success-foreground'
+                  : 'bg-muted text-muted-foreground'
+              }`}
+            >
+              {batch.isActive ? 'Active' : 'Inactive'}
+            </span>
+          ),
+          icon: Activity,
+        },
+      ]}
+    />
   )
 }
 
