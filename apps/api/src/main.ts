@@ -37,7 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document)
 
   const port = configService.get<number>('BE_PORT') ?? 8000
-  await app.listen(port)
+  await app.listen(port, '0.0.0.0')
 
   Logger.log(`Server is running on port ${port}`)
   Logger.log(`Swagger docs available at http://localhost:${port}/docs`)
