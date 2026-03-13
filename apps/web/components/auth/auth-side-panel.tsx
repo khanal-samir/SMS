@@ -66,12 +66,12 @@ export function AuthSidePanel() {
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-foreground p-10 text-background lg:flex noise-overlay">
+      <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-brand p-10 text-brand-foreground lg:flex noise-overlay">
         <GeometricPattern />
 
         <div className="absolute inset-0 grid-pattern opacity-40" />
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-background/4 blur-[100px]" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-[600px] rounded-full bg-brand-accent/10 blur-[100px]" />
 
         <m.div
           initial={{ opacity: 0, x: -20 }}
@@ -80,12 +80,12 @@ export function AuthSidePanel() {
           className="relative z-10"
         >
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-background text-foreground transition-transform duration-300 group-hover:scale-105">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-white text-brand transition-transform duration-300 group-hover:scale-105">
               <GraduationCap className="size-5" />
             </div>
             <div className="flex flex-col">
               <span className="text-lg font-bold leading-tight">SMS</span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-background/40">
+              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-brand-foreground/40">
                 College
               </span>
             </div>
@@ -106,11 +106,11 @@ export function AuthSidePanel() {
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.4 }}
             >
-              <p className="text-2xl font-medium italic leading-relaxed text-background/80">
+              <p className="text-2xl font-medium italic leading-relaxed text-brand-foreground/80">
                 &ldquo;{quote.text}&rdquo;
               </p>
               <footer className="mt-4">
-                <span className="text-sm font-semibold text-background/60">
+                <span className="text-sm font-semibold text-brand-foreground/60">
                   &mdash; {quote.author}
                 </span>
               </footer>
@@ -124,8 +124,8 @@ export function AuthSidePanel() {
           transition={{ delay: 0.4, duration: 0.5 }}
           className="relative z-10 flex items-center gap-2"
         >
-          <div className="size-2 rounded-full bg-background/50" />
-          <span className="text-xs font-medium uppercase tracking-widest text-background/40">
+          <div className="size-2 rounded-full bg-brand-accent" />
+          <span className="text-xs font-medium uppercase tracking-widest text-brand-foreground/40">
             {portal} Portal
           </span>
         </m.div>

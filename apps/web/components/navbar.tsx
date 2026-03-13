@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { LazyMotion, domAnimation, m, AnimatePresence } from 'motion/react'
 import { GraduationCap, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,8 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const closeMobile = useCallback(() => setMobileOpen(false), [])
+
   return (
     <LazyMotion features={domAnimation}>
       <m.header
@@ -34,27 +36,32 @@ export function Navbar() {
             : 'bg-transparent'
         }`}
       >
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform duration-300 group-hover:scale-105">
-              <GraduationCap className="size-5" />
+          <Link
+            href="/"
+            className="flex cursor-pointer items-center gap-3 group outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+          >
+            <div className="relative flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform duration-200 group-hover:scale-105">
+              <GraduationCap className="size-[18px]" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold leading-tight tracking-tight">SMS</span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              <span className="text-base font-semibold leading-none tracking-tight text-foreground">
+                SMS
+              </span>
+              <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
                 College
               </span>
             </div>
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop nav links */}
           <div className="hidden items-center gap-1 md:flex">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className="relative px-4 py-2 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                className="cursor-pointer rounded-md px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 {link.label}
               </a>
@@ -62,13 +69,13 @@ export function Navbar() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden items-center gap-3 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
             <ThemeToggle />
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/login">Student Login</Link>
+              <Link href="/login">Sign in</Link>
             </Button>
             <Button size="sm" asChild className="font-semibold">
-              <Link href="/teacher/login">Teacher Portal</Link>
+              <Link href="/register">Get Started</Link>
             </Button>
           </div>
 
@@ -76,11 +83,35 @@ export function Navbar() {
           <div className="flex items-center gap-2 md:hidden">
             <ThemeToggle />
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex items-center justify-center size-10 rounded-lg text-foreground"
-              aria-label="Toggle menu"
+              onClick={() => setMobileOpen((prev) => !prev)}
+              className="relative flex cursor-pointer items-center justify-center size-10 rounded-lg text-foreground transition-colors duration-200 hover:bg-muted outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
             >
-              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+              <AnimatePresence mode="wait" initial={false}>
+                {mobileOpen ? (
+                  <m.span
+                    key="close"
+                    initial={{ opacity: 0, rotate: -90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: 90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute"
+                  >
+                    <X className="size-5" />
+                  </m.span>
+                ) : (
+                  <m.span
+                    key="open"
+                    initial={{ opacity: 0, rotate: 90 }}
+                    animate={{ opacity: 1, rotate: 0 }}
+                    exit={{ opacity: 0, rotate: -90 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute"
+                  >
+                    <Menu className="size-5" />
+                  </m.span>
+                )}
+              </AnimatePresence>
             </button>
           </div>
         </nav>
@@ -100,18 +131,22 @@ export function Navbar() {
                   <a
                     key={link.href}
                     href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                    onClick={closeMobile}
+                    className="block cursor-pointer rounded-lg px-4 py-3 text-sm font-medium text-muted-foreground transition-colors duration-200 hover:bg-muted hover:text-primary outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     {link.label}
                   </a>
                 ))}
-                <div className="flex flex-col gap-2 pt-4">
-                  <Button variant="outline" asChild className="w-full">
-                    <Link href="/login">Student Login</Link>
+                <div className="flex flex-col gap-2 border-t border-border/50 pt-4 mt-3">
+                  <Button variant="ghost" asChild className="w-full justify-center">
+                    <Link href="/login" onClick={closeMobile}>
+                      Sign in
+                    </Link>
                   </Button>
-                  <Button asChild className="w-full">
-                    <Link href="/teacher/login">Teacher Portal</Link>
+                  <Button asChild className="w-full justify-center font-semibold">
+                    <Link href="/register" onClick={closeMobile}>
+                      Get Started
+                    </Link>
                   </Button>
                 </div>
               </div>

@@ -27,14 +27,14 @@ export function LandingTestimonials() {
     <section id="testimonials" className="relative py-24 sm:py-32 bg-muted/30">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <AnimatedSection className="mx-auto max-w-2xl text-center">
-          <MotionItem index={0} className="text-sm font-medium tracking-wide text-muted-foreground">
-            What people say
+          <MotionItem index={0} className="text-primary text-sm font-semibold tracking-wide">
+            Testimonials
           </MotionItem>
           <MotionItem
             index={1}
-            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl [text-wrap:balance]"
+            className="mt-3 text-3xl sm:text-4xl font-bold tracking-tight [text-wrap:balance]"
           >
-            Trusted by our academic community
+            Trusted by educators worldwide
           </MotionItem>
         </AnimatedSection>
 
@@ -44,9 +44,9 @@ export function LandingTestimonials() {
               <MotionItem
                 key={t.name}
                 index={i}
-                className="relative rounded-xl border border-border/60 bg-card p-8 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                className="rounded-xl border border-border/60 bg-card p-8 transition-all duration-300 hover:shadow-md hover:border-primary/20 hover:-translate-y-0.5 cursor-pointer"
               >
-                <div className="mb-4 text-4xl font-serif leading-none text-foreground/10 select-none">
+                <div className="mb-4 text-4xl font-serif leading-none text-primary/20 select-none">
                   &ldquo;
                 </div>
                 <blockquote className="text-sm leading-relaxed text-foreground/80">

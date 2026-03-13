@@ -23,6 +23,9 @@ export const useApproveTeacher = () => {
     mutationFn: (teacherId: string) => userApi.approveTeacher(teacherId),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.PENDING_TEACHERS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ADMIN_DASHBOARD] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.APPROVED_TEACHERS] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_USERS] })
       toast.success(data.message)
     },
   })
