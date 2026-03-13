@@ -19,7 +19,7 @@ async function bootstrap() {
     origin: configService.get('PUBLIC_WEB_URL'),
     credentials: true,
   })
-  console.log('CORS enabled for', configService.get('PUBLIC_WEB_URL'))
+  Logger.log('CORS enabled for', configService.get('PUBLIC_WEB_URL'))
 
   // puts errors inside cause of the exception
   app.useGlobalPipes(new ZodValidationPipe())
