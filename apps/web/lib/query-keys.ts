@@ -21,4 +21,7 @@ export const QUERY_KEYS = {
   ANNOUNCEMENT: 'announcement',
   CHAT_GROUPS: 'chat-groups',
   CHAT_MESSAGES: 'chat-messages',
+  STUDENT_DASHBOARD: 'student-dashboard',
+  TEACHER_DASHBOARD: 'teacher-dashboard',
+  ADMIN_DASHBOARD: 'admin-dashboard',
 } as const

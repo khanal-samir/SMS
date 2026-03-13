@@ -17,6 +17,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatSemesterNumber } from '@/lib/formatters'
+import { GraduationCap, BookOpen, Users } from 'lucide-react'
 import type { SemesterDetailResponse } from '@repo/schemas'
 
 export default function AdminSemesterDetailPage() {
@@ -58,9 +59,9 @@ export default function AdminSemesterDetailPage() {
 
         <StatCards
           stats={[
-            { label: 'Semester', value: semesterLabel },
-            { label: 'Subjects', value: semester.subjects.length },
-            { label: 'Assigned Teachers', value: assignedTeachersCount },
+            { label: 'Semester', value: semesterLabel, icon: GraduationCap },
+            { label: 'Subjects', value: semester.subjects.length, icon: BookOpen },
+            { label: 'Assigned Teachers', value: assignedTeachersCount, icon: Users },
           ]}
           columns={3}
         />

@@ -52,7 +52,7 @@ export default function AdminSemestersPage() {
                     <TableCell className="px-6 font-semibold text-foreground">
                       {formatSemesterNumber(semester.semesterNumber)} Semester
                     </TableCell>
-                    <TableCell className="px-6 text-sm text-muted-foreground">
+                    <TableCell className="px-6 text-sm tabular-nums text-muted-foreground">
                       {formatShortDate(semester.createdAt)}
                     </TableCell>
                     <TableCell className="px-6 text-right">

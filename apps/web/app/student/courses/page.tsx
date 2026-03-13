@@ -46,7 +46,10 @@ export default function StudentCoursesPage() {
                 <CardDescription>Your current semester</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Semester ID: {currentSemester.id}</p>
+                <p className="text-sm text-muted-foreground tabular-nums">
+                  {semesterSubjects.length} subject{semesterSubjects.length === 1 ? '' : 's'}{' '}
+                  enrolled
+                </p>
               </CardContent>
             </Card>
 
@@ -65,7 +68,7 @@ export default function StudentCoursesPage() {
                       <button
                         key={subject.id}
                         type="button"
-                        className="flex flex-col rounded-lg border bg-card p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
+                        className="flex flex-col rounded-lg border bg-card p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md cursor-pointer"
                         onClick={() => router.push(`/student/courses/${subject.id}`)}
                       >
                         <span className="text-sm font-semibold text-foreground">

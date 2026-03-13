@@ -57,7 +57,7 @@ export default function TeacherSubjectsPage() {
                         <button
                           key={subject.id}
                           type="button"
-                          className="flex flex-col rounded-lg border bg-card p-4 text-left transition hover:border-primary/30 hover:shadow-sm"
+                          className="flex flex-col rounded-lg border bg-card p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md cursor-pointer"
                           onClick={() => router.push(`/teacher/subjects/${subject.id}`)}
                         >
                           <span className="text-sm font-semibold text-foreground">

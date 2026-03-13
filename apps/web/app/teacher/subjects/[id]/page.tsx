@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Code, Users } from 'lucide-react'
 import { useSubject, useSubjectTeachers } from '@/hooks/useSubject'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
@@ -50,8 +50,8 @@ export default function TeacherSubjectDetailPage() {
 
         <StatCards
           stats={[
-            { label: 'Subject Code', value: subject.subjectCode },
-            { label: 'Co-Teachers', value: teachers?.length ?? 0 },
+            { label: 'Subject Code', value: subject.subjectCode, icon: Code },
+            { label: 'Co-Teachers', value: teachers?.length ?? 0, icon: Users },
           ]}
         />
 
@@ -97,10 +97,7 @@ export default function TeacherSubjectDetailPage() {
         </Card>
 
         <div className="mt-8">
-          <FeatureCards
-            assignmentsHref={`/teacher/assignments`}
-            resourcesHref={`/teacher/assignments`}
-          />
+          <FeatureCards assignmentsHref="/teacher/assignments" resourcesHref="/teacher/resources" />
         </div>
       </div>
     </div>

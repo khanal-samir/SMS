@@ -1,3 +1,4 @@
+import { Calendar, GraduationCap, Users, Activity } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader } from '@/components/ui/card'
 import { formatSemesterNumber } from '@/lib/formatters'
 import type { BatchDetailResponse } from '@repo/schemas'
@@ -9,37 +10,41 @@ interface BatchInfoCardsProps {
 function BatchInfoCards({ batch }: BatchInfoCardsProps) {
   return (
     <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="pb-2">
+      <Card className="bg-muted/50">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardDescription>Batch Year</CardDescription>
+          <Calendar className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">{batch.batchYear}</p>
+          <p className="text-2xl font-bold tabular-nums">{batch.batchYear}</p>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="pb-2">
+      <Card className="bg-muted/50">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardDescription>Current Semester</CardDescription>
+          <GraduationCap className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <p className="text-2xl font-bold">
             {batch.currentSemester
-              ? `${formatSemesterNumber(batch.currentSemester.semesterNumber)} Semester `
-              : 'No Semester for this batch'}{' '}
+              ? `${formatSemesterNumber(batch.currentSemester.semesterNumber)} Semester`
+              : 'No semester'}
           </p>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="pb-2">
+      <Card className="bg-muted/50">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardDescription>Total Students</CardDescription>
+          <Users className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold">{batch.totalStudents}</p>
+          <p className="text-2xl font-bold tabular-nums">{batch.totalStudents}</p>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="pb-2">
+      <Card className="bg-muted/50">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardDescription>Status</CardDescription>
+          <Activity className="size-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <span
