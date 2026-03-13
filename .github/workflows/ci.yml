@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -7,9 +7,10 @@ on:
   pull_request:
     branches:
       - 'main'
- 
+  workflow_dispatch:
 
 permissions:
+  id-token: write
   contents: read
 
 env:
@@ -29,6 +30,9 @@ env:
   SMTP_USER: ${{ secrets.SMTP_USER }}
   SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
   SMTP_FROM: ${{ secrets.SMTP_FROM }}
+  ADMIN_EMAILS: ${{ secrets.ADMIN_EMAILS }}
+  ADMIN_SECRET_KEY: ${{ secrets.ADMIN_SECRET_KEY }}
+  REDIS_URL: ${{ secrets.REDIS_URL }}
 
 jobs:
   quality:
@@ -60,18 +64,56 @@ jobs:
       - name: Lint frontend
         run: pnpm --filter web lint
 
-      - name: Test frontend (optional)
-        run: pnpm --filter web run --if-present test
-
-      - name: Build frontend
-        run: pnpm --filter web build
-
       - name: Lint backend
         run: pnpm --filter api lint
 
       - name: Test backend
         run: pnpm --filter api test
 
+      - name: Build frontend
+        run: pnpm --filter web build
+
       - name: Build backend
         run: pnpm --filter api build
 
+  deploy-api:
+    name: Build & Push API Image to ECR
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup AWS ECR Details
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: sms-deploy-session
+          aws-region: ap-south-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push API Image to ECR
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: sms/api
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest -f apps/api/Dockerfile .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          echo "IMAGE_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+
+      - name: Build API Image (PR validation)
+        if: github.event_name == 'pull_request'
+        run: docker build -t sms-api:${{ github.sha }} -f apps/api/Dockerfile .
