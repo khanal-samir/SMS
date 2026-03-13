@@ -147,7 +147,7 @@ function StudentTable({
                       <UserAvatar name={student.name} image={student.image} size="sm" />
                       <Link
                         href={`/admin/users/students/${student.id}`}
-                        className="text-sm font-semibold text-brand-accent hover:underline"
+                        className="text-sm font-semibold text-foreground hover:underline"
                       >
                         {student.name ?? '-'}
                       </Link>

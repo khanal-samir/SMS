@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { LazyMotion, domAnimation, m, AnimatePresence } from 'motion/react'
 import { GraduationCap, Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 const NAV_LINKS = [
   { href: '#features', label: 'Features' },
@@ -36,14 +37,11 @@ export function Navbar() {
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative flex size-10 items-center justify-center rounded-lg bg-brand-accent text-brand-accent-foreground transition-transform duration-300 group-hover:scale-105">
+            <div className="relative flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform duration-300 group-hover:scale-105">
               <GraduationCap className="size-5" />
-              <div className="absolute inset-0 rounded-lg gold-glow opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </div>
             <div className="flex flex-col">
-              <span className="font-display text-lg font-bold leading-tight tracking-tight">
-                SMS
-              </span>
+              <span className="text-lg font-bold leading-tight tracking-tight">SMS</span>
               <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
                 College
               </span>
@@ -65,26 +63,26 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden items-center gap-3 md:flex">
+            <ThemeToggle />
             <Button variant="ghost" size="sm" asChild>
               <Link href="/login">Student Login</Link>
             </Button>
-            <Button
-              size="sm"
-              asChild
-              className="bg-brand-accent text-brand-accent-foreground hover:bg-brand-accent/90 font-semibold"
-            >
+            <Button size="sm" asChild className="font-semibold">
               <Link href="/teacher/login">Teacher Portal</Link>
             </Button>
           </div>
 
           {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex items-center justify-center size-10 rounded-lg text-foreground md:hidden"
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex items-center justify-center size-10 rounded-lg text-foreground"
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+            </button>
+          </div>
         </nav>
 
         {/* Mobile menu */}
@@ -112,10 +110,7 @@ export function Navbar() {
                   <Button variant="outline" asChild className="w-full">
                     <Link href="/login">Student Login</Link>
                   </Button>
-                  <Button
-                    asChild
-                    className="w-full bg-brand-accent text-brand-accent-foreground hover:bg-brand-accent/90"
-                  >
+                  <Button asChild className="w-full">
                     <Link href="/teacher/login">Teacher Portal</Link>
                   </Button>
                 </div>

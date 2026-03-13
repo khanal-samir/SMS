@@ -52,7 +52,7 @@ function BatchStudentsTable({ students, isLoading, studentLinkBasePath }: BatchS
                   {studentLinkBasePath ? (
                     <Link
                       href={`${studentLinkBasePath}/${student.id}`}
-                      className="text-sm font-medium text-brand-accent hover:underline"
+                      className="text-sm font-medium text-foreground hover:underline"
                     >
                       {student.name}
                     </Link>

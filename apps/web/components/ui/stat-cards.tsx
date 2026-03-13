@@ -25,9 +25,11 @@ export function StatCards({ stats, columns = 2 }: StatCardsProps) {
           </CardHeader>
           <CardContent>
             {stat.size === 'small' ? (
-              <p className="text-sm font-semibold text-foreground break-all">{stat.value}</p>
+              <p className="text-sm font-semibold text-foreground tabular-nums break-all">
+                {stat.value}
+              </p>
             ) : (
-              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+              <p className="text-2xl font-bold text-foreground tabular-nums">{stat.value}</p>
             )}
           </CardContent>
         </Card>

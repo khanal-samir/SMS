@@ -1,4 +1,3 @@
-import { Quote } from 'lucide-react'
 import { AnimatedSection, MotionItem } from '@/components/landing/animated-section'
 import { UserAvatar } from '@/components/ui/user-avatar'
 
@@ -11,7 +10,7 @@ const TESTIMONIALS = [
   },
   {
     quote:
-      'As a student, having everything in one place — grades, schedules, resources — has made my academic life significantly smoother.',
+      'Having everything in one place — grades, schedules, resources — has made my academic life significantly smoother.',
     name: 'Priya Sharma',
     role: 'BSc. CSIT, 4th Semester',
   },
@@ -25,36 +24,35 @@ const TESTIMONIALS = [
 
 export function LandingTestimonials() {
   return (
-    <section id="testimonials" className="relative py-24 sm:py-32">
+    <section id="testimonials" className="relative py-24 sm:py-32 bg-muted/30">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <AnimatedSection className="mx-auto max-w-2xl text-center">
-          <MotionItem
-            index={0}
-            className="text-sm font-semibold tracking-widest text-brand-accent uppercase"
-          >
-            What People Say
+          <MotionItem index={0} className="text-sm font-medium tracking-wide text-muted-foreground">
+            What people say
           </MotionItem>
           <MotionItem
             index={1}
-            className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl"
+            className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl [text-wrap:balance]"
           >
-            Trusted by Our Academic Community
+            Trusted by our academic community
           </MotionItem>
         </AnimatedSection>
 
         <AnimatedSection className="mt-16">
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3">
             {TESTIMONIALS.map((t, i) => (
               <MotionItem
                 key={t.name}
                 index={i}
-                className="relative rounded-2xl border border-border/60 bg-card p-8"
+                className="relative rounded-xl border border-border/60 bg-card p-8 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
               >
-                <Quote className="mb-4 size-8 text-brand-accent/20" strokeWidth={1.5} />
-                <blockquote className="font-display text-base italic leading-relaxed text-foreground/80">
-                  &ldquo;{t.quote}&rdquo;
+                <div className="mb-4 text-4xl font-serif leading-none text-foreground/10 select-none">
+                  &ldquo;
+                </div>
+                <blockquote className="text-sm leading-relaxed text-foreground/80">
+                  {t.quote}
                 </blockquote>
-                <div className="mt-6 flex items-center gap-4">
+                <div className="mt-6 flex items-center gap-3 border-t border-border/40 pt-5">
                   <UserAvatar name={t.name} size="lg" />
                   <div>
                     <div className="text-sm font-semibold">{t.name}</div>

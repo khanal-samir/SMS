@@ -8,7 +8,7 @@ export default function NotFound() {
       <div className="mx-auto max-w-md text-center">
         {/* 404 Display */}
         <div className="relative mb-8 inline-block">
-          <div className="text-[8rem] font-bold leading-none tracking-tight text-brand/10 sm:text-[10rem]">
+          <div className="text-[8rem] font-bold leading-none tracking-tight text-foreground/10 sm:text-[10rem]">
             404
           </div>
           <div className="absolute inset-0 flex items-center justify-center"></div>
@@ -16,7 +16,7 @@ export default function NotFound() {
 
         {/* Content */}
         <div className="space-y-4">
-          <h1 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+          <h1 className="font-display text-3xl font-bold text-foreground text-wrap-balance sm:text-4xl">
             Page Not Found
           </h1>
           <p className="text-muted-foreground">
@@ -46,7 +46,7 @@ export default function NotFound() {
           If you believe this is an error, please contact{' '}
           <a
             href="mailto:support@example.com"
-            className="text-brand-accent hover:text-brand-accent/80 underline underline-offset-4 transition-colors"
+            className="text-foreground hover:text-foreground/80 underline underline-offset-4 transition-colors"
           >
             support
           </a>

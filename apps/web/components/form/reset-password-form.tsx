@@ -82,11 +82,7 @@ function ResetPasswordFormInner({ className, ...props }: React.ComponentProps<'d
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
-                disabled={isPending}
-              >
+              <Button type="submit" className="w-full h-10 font-semibold" disabled={isPending}>
                 {isPending ? 'Resetting...' : 'Reset Password'}
               </Button>
             </form>

@@ -17,7 +17,7 @@ export function DashboardPageHeader({ title, roleBadge }: DashboardPageHeaderPro
   return (
     <header className="mb-8 flex items-center justify-between">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">{title}</h1>
+        <h1 className="text-3xl font-bold text-foreground text-wrap-balance">{title}</h1>
         <p className="text-muted-foreground">Welcome back, {user?.name}!</p>
       </div>
       <div className="flex items-center gap-3">

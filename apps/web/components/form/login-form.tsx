@@ -85,7 +85,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                       <FormLabel>Password</FormLabel>
                       <Link
                         href="/forgot-password"
-                        className="ml-auto text-xs text-brand-accent underline-offset-4 hover:underline font-medium"
+                        className="ml-auto text-xs text-foreground underline-offset-4 hover:underline font-medium"
                       >
                         Forgot your password?
                       </Link>
@@ -98,11 +98,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 )}
               />
 
-              <Button
-                type="submit"
-                className="w-full h-10 bg-brand text-brand-foreground hover:bg-brand/90 font-semibold"
-                disabled={isPending}
-              >
+              <Button type="submit" className="w-full h-10 font-semibold" disabled={isPending}>
                 {isPending ? 'Signing in...' : 'Sign In'}
               </Button>
 
@@ -110,7 +106,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                 Don&apos;t have an account?{' '}
                 <Link
                   href="/register"
-                  className="font-medium text-brand-accent underline-offset-4 hover:underline"
+                  className="font-medium text-foreground underline-offset-4 hover:underline"
                 >
                   Sign up
                 </Link>
