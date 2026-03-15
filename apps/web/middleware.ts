@@ -64,7 +64,7 @@ export function middleware(request: NextRequest) {
 
   if (sessionCookie?.value) {
     try {
-      session = JSON.parse(sessionCookie.value) as SessionCookie
+      session = JSON.parse(decodeURIComponent(sessionCookie.value)) as SessionCookie
 
       if (session.expiresAt && Date.now() > session.expiresAt) {
         session = null

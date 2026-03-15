@@ -48,6 +48,7 @@ export class AuthController {
 
   private setAuthCookies(res: Response, accessToken: string, refreshToken: string) {
     const isProduction = this.configService.get('NODE_ENV') === 'production'
+    const cookieDomain = this.configService.get<string>('COOKIE_DOMAIN')
 
     const jwtExpiresIn = this.configService.get<string>('JWT_EXPIRES_IN') || '15m'
     const accessTokenMaxAge = this.parseTimeToMs(jwtExpiresIn)
@@ -55,20 +56,22 @@ export class AuthController {
     const refreshExpiresIn = this.configService.get<string>('REFRESH_TOKEN_EXPIRES_IN') || '7d'
     const refreshTokenMaxAge = this.parseTimeToMs(refreshExpiresIn)
 
-    res.cookie('accessToken', accessToken, {
+    const cookieOptions = {
       httpOnly: true,
       secure: isProduction,
-      sameSite: 'lax',
-      maxAge: accessTokenMaxAge,
+      sameSite: 'lax' as const,
       path: '/',
+      ...(cookieDomain && { domain: cookieDomain }),
+    }
+
+    res.cookie('accessToken', accessToken, {
+      ...cookieOptions,
+      maxAge: accessTokenMaxAge,
     })
 
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
+      ...cookieOptions,
       maxAge: refreshTokenMaxAge,
-      path: '/',
     })
   }
 
@@ -89,8 +92,13 @@ export class AuthController {
   }
 
   private clearAuthCookies(res: Response) {
-    res.clearCookie('accessToken', { path: '/' })
-    res.clearCookie('refreshToken', { path: '/' })
+    const cookieDomain = this.configService.get<string>('COOKIE_DOMAIN')
+    const clearOptions = {
+      path: '/',
+      ...(cookieDomain && { domain: cookieDomain }),
+    }
+    res.clearCookie('accessToken', clearOptions)
+    res.clearCookie('refreshToken', clearOptions)
   }
 
   @ApiOperation({

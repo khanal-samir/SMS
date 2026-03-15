@@ -4,6 +4,8 @@ export const COOKIE_NAMES = {
   SESSION: 'user-session',
 } as const
 
+const cookieDomain = process.env.NEXT_PUBLIC_COOKIE_DOMAIN
+
 export interface SessionCookie {
   role: Role
   isAuthenticated: boolean
@@ -20,11 +22,16 @@ export function setSessionCookie(data: Omit<SessionCookie, 'expiresAt'>): void {
     expires: 7,
     sameSite: 'lax',
     path: '/',
+    ...(cookieDomain && { domain: cookieDomain }),
+    secure: !!cookieDomain,
   })
 }
 
 export function removeSessionCookie() {
-  Cookies.remove(COOKIE_NAMES.SESSION, { path: '/' })
+  Cookies.remove(COOKIE_NAMES.SESSION, {
+    path: '/',
+    ...(cookieDomain && { domain: cookieDomain }),
+  })
 }
 
 export function getSessionCookie(): SessionCookie | null {

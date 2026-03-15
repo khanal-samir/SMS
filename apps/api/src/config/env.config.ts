@@ -16,6 +16,7 @@ export const envSchema = z.object({
   SMTP_FROM: z.email(),
   REDIS_URL: z.url(),
   ADMIN_EMAILS: z.string().transform((val) => val.split(',').map((email) => email.trim())),
+  COOKIE_DOMAIN: z.string().optional(),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
   BE_PORT: z.coerce.number().optional().default(8000),
 })
