@@ -4,13 +4,14 @@ import { useRef } from 'react'
 import { LazyMotion, domAnimation, m, useInView } from 'motion/react'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 24, filter: 'blur(4px)' },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
+    filter: 'blur(0px)',
     transition: {
       delay: i * 0.1,
-      duration: 0.6,
+      duration: 0.7,
       ease: [0.22, 1, 0.36, 1] as const,
     },
   }),
@@ -24,7 +25,7 @@ function AnimatedSection({
   className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
+  const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
     <LazyMotion features={domAnimation}>
@@ -34,7 +35,7 @@ function AnimatedSection({
           animate={inView ? 'visible' : 'hidden'}
           variants={{
             hidden: {},
-            visible: { transition: { staggerChildren: 0.08 } },
+            visible: { transition: { staggerChildren: 0.1 } },
           }}
         >
           {children}
