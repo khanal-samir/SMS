@@ -19,6 +19,10 @@ export const envSchema = z.object({
   COOKIE_DOMAIN: z.string().optional(),
   NODE_ENV: z.enum(['development', 'production']).default('development'),
   BE_PORT: z.coerce.number().optional().default(8000),
+  AWS_S3_BUCKET: z.string().min(1),
+  AWS_S3_REGION: z.string().min(1),
+  AWS_ACCESS_KEY_ID: z.string().min(1),
+  AWS_SECRET_ACCESS_KEY: z.string().min(1),
 })
 
 export type Env = z.infer<typeof envSchema>
