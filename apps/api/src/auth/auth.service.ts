@@ -58,8 +58,12 @@ export class AuthService {
     }
 
     this.logger.log(`Registering new student with email: ${createUserDto.email}`)
-    //student auto verify
-    return this.userService.create(createUserDto, true, null)
+    const optCode = this.generateOTP()
+    const [newStudent] = await Promise.all([
+      this.userService.create(createUserDto, false, optCode),
+      this.mailService.sendVerificationEmail(createUserDto.email, createUserDto.name, optCode),
+    ])
+    return newStudent
   }
 
   async login(userId: string) {
@@ -90,8 +94,8 @@ export class AuthService {
         'This account was created using Google Sign-In. Please login with Google.',
       )
     }
-    // Check if teacher has verified email
-    if (user.role === Role.TEACHER && !user.isEmailVerified) {
+    // Check if user has verified email (skip for admins as they are auto-verified)
+    if (user.role !== Role.ADMIN && !user.isEmailVerified) {
       throw new UnauthorizedException(
         'Please verify your email address before logging in. Check your inbox for the OTP code.',
       )
@@ -205,9 +209,6 @@ export class AuthService {
     if (!user) throw new NotFoundException('User not found')
 
     if (user.isEmailVerified) throw new BadRequestException('Email already verified')
-
-    if (user.role !== Role.TEACHER)
-      throw new BadRequestException('Only teachers require email verification')
 
     const otpCode = this.generateOTP()
     return Promise.all([
