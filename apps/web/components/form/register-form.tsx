@@ -20,10 +20,15 @@ import { CreateUserSchema, type CreateUserDto } from '@repo/schemas'
 import { useRegister, useGoogleAuth } from '@/hooks/useAuth'
 import { GoogleAuthButton } from '@/components/auth/google-auth-button'
 import Link from 'next/link'
+import { useState } from 'react'
+import { VerifyEmailDialog } from '@/components/form/verify-email-dialog'
+import { useRouter } from 'next/navigation'
 
 export function RegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
-  const { mutate: register, isPending } = useRegister()
+  const [showVerifyDialog, setShowVerifyDialog] = useState(false)
+  const { mutate: register, isPending } = useRegister(setShowVerifyDialog)
   const { initiateGoogleLogin } = useGoogleAuth()
+  const router = useRouter()
 
   const form = useForm<CreateUserDto>({
     resolver: zodResolver(CreateUserSchema),
@@ -37,6 +42,11 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
 
   const onSubmit = (data: CreateUserDto) => {
     register(data)
+  }
+
+  const handleVerified = () => {
+    setShowVerifyDialog(false)
+    router.push('/login')
   }
 
   return (
@@ -134,6 +144,12 @@ export function RegisterForm({ className, ...props }: React.ComponentProps<'div'
         </Link>
         .
       </p>
+      <VerifyEmailDialog
+        open={showVerifyDialog}
+        onOpenChange={setShowVerifyDialog}
+        email={form.getValues('email') || ''}
+        onVerified={handleVerified}
+      />
     </div>
   )
 }

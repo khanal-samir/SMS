@@ -8,9 +8,10 @@ import { QUERY_KEYS } from '@/lib/query-keys'
 import type { CreateUserDto, LoginDto, ResetPasswordDto } from '@repo/schemas'
 import { toast } from 'sonner'
 
-export const useRegister = () => {
+export const useRegister = (
+  setShowVerifyDialog: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
   const { setLoading } = useAuthStore()
-  const router = useRouter()
 
   return useMutation({
     mutationFn: (userData: CreateUserDto) => authApi.register(userData as CreateUserDto),
@@ -19,7 +20,7 @@ export const useRegister = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message)
-      router.push('/login')
+      setShowVerifyDialog(true)
     },
     onSettled: () => {
       setLoading(false)
