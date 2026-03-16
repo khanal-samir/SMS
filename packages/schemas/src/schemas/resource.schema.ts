@@ -96,3 +96,9 @@ export const ResourceResponseSchema = z.object({
   }),
 })
 export type ResourceResponse = z.infer<typeof ResourceResponseSchema>
+
+export const CreateResourceResponseSchema = z.object({
+  resource: ResourceResponseSchema,
+  uploadUrl: z.string().nullable(),
+})
+export type CreateResourceResponse = z.infer<typeof CreateResourceResponseSchema>

@@ -24,4 +24,8 @@ export const QUERY_KEYS = {
   STUDENT_DASHBOARD: 'student-dashboard',
   TEACHER_DASHBOARD: 'teacher-dashboard',
   ADMIN_DASHBOARD: 'admin-dashboard',
+  RESOURCES: 'resources',
+  RESOURCE: 'resource',
+  RESOURCE_TEACHER_SUBJECTS: 'resource-teacher-subjects',
+  RESOURCE_ALL_SUBJECT_TEACHERS: 'resource-all-subject-teachers',
 } as const

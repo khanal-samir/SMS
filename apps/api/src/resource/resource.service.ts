@@ -228,12 +228,17 @@ export class ResourceService {
     })
   }
 
-  async findAll(user: AuthUser) {
+  async findAll(user: AuthUser, subjectId?: string) {
     this.logger.log(`Finding all resources for user: ${user.id} (role: ${user.role})`)
 
     if (this.isAdmin(user)) {
       return this.prisma.resource.findMany({
-        where: { isUploaded: true },
+        where: {
+          isUploaded: true,
+          ...(subjectId && {
+            subjectTeacher: { subject: { id: subjectId } },
+          }),
+        },
         include: this.RESOURCE_INCLUDE,
         orderBy: { createdAt: 'desc' },
       })
@@ -259,6 +264,7 @@ export class ResourceService {
           subjectTeacher: {
             subject: {
               semesterId: student.batch.currentSemesterId,
+              ...(subjectId && { id: subjectId }),
             },
             isActive: true,
           },
@@ -271,7 +277,10 @@ export class ResourceService {
     // Teacher: see their own resources (including unpublished)
     return this.prisma.resource.findMany({
       where: {
-        subjectTeacher: { teacherId: user.id },
+        subjectTeacher: {
+          teacherId: user.id,
+          ...(subjectId && { subject: { id: subjectId } }),
+        },
         isUploaded: true,
       },
       include: this.RESOURCE_INCLUDE,

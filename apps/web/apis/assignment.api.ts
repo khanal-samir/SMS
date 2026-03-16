@@ -5,29 +5,9 @@ import type {
   CreateAssignmentDto,
   UpdateAssignmentDto,
   UpdateAssignmentStatusDto,
+  TeacherSubjectRecord,
+  AllSubjectTeacherRecord,
 } from '@repo/schemas'
-
-export interface TeacherSubjectRecord {
-  id: string
-  subject: {
-    id: string
-    subjectCode: string
-    subjectName: string
-  }
-}
-
-export interface AllSubjectTeacherRecord {
-  id: string
-  subject: {
-    id: string
-    subjectCode: string
-    subjectName: string
-  }
-  teacher: {
-    id: string
-    name: string
-  }
-}
 
 export const assignmentApi = {
   getAllAssignments: async (): Promise<ApiResponse<AssignmentResponse[]>> => {

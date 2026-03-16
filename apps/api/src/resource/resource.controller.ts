@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
 import { Role } from '@prisma/client'
 import type { AuthUser } from '@repo/schemas'
@@ -45,8 +45,8 @@ export class ResourceController {
   @Get()
   @ApiOperation({ summary: 'Get resources based on user role' })
   @ApiResponse({ status: 200, description: 'List of resources' })
-  async findAll(@CurrentUser() user: AuthUser) {
-    const resources = await this.resourceService.findAll(user)
+  async findAll(@Query('subjectId') subjectId: string | undefined, @CurrentUser() user: AuthUser) {
+    const resources = await this.resourceService.findAll(user, subjectId)
     return {
       message: 'Resources retrieved successfully',
       data: resources,
