@@ -94,8 +94,8 @@ export class AuthService {
         'This account was created using Google Sign-In. Please login with Google.',
       )
     }
-    // Check if user has verified email
-    if (!user.isEmailVerified) {
+    // Check if user has verified email (skip for admins as they are auto-verified)
+    if (user.role !== Role.ADMIN && !user.isEmailVerified) {
       throw new UnauthorizedException(
         'Please verify your email address before logging in. Check your inbox for the OTP code.',
       )
