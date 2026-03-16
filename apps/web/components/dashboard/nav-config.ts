@@ -36,6 +36,7 @@ export const adminNavGroups: NavGroup[] = [
       { title: 'Batches', url: '/admin/batches', icon: GraduationCap },
       { title: 'Semesters', url: '/admin/semesters', icon: BookOpen },
       { title: 'Assignments', url: '/admin/assignments', icon: ClipboardList },
+      { title: 'Resources', url: '/admin/resources', icon: FolderOpen },
       { title: 'Announcements', url: '/admin/announcements', icon: Megaphone },
       { title: 'Chat', url: '/admin/chat', icon: MessageCircle },
     ],
@@ -78,6 +79,7 @@ export const studentNavGroups: NavGroup[] = [
     items: [
       { title: 'Courses', url: '/student/courses', icon: BookOpen },
       { title: 'Assignments', url: '/student/assignments', icon: ClipboardList },
+      { title: 'Resources', url: '/student/resources', icon: FolderOpen },
       { title: 'Announcements', url: '/student/announcements', icon: Megaphone },
       { title: 'Chat', url: '/student/chat', icon: MessageCircle },
     ],

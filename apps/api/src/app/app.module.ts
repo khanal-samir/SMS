@@ -19,6 +19,8 @@ import { AnnouncementModule } from 'src/announcement/announcement.module'
 import { ChatModule } from '@src/chat/chat.module'
 import { QueueModule } from 'src/common/queue/queue.module'
 import { DashboardModule } from 'src/dashboard/dashboard.module'
+import { StorageModule } from 'src/common/storage/storage.module'
+import { ResourceModule } from 'src/resource/resource.module'
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { DashboardModule } from 'src/dashboard/dashboard.module'
     AnnouncementModule,
     ChatModule,
     DashboardModule,
+    StorageModule,
+    ResourceModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (config) => {

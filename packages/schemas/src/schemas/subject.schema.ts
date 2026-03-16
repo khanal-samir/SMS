@@ -31,3 +31,35 @@ export const SubjectTeacherResponseSchema = z.object({
   ),
 })
 export type SubjectTeacherResponse = z.infer<typeof SubjectTeacherResponseSchema>
+
+/**
+ * Lightweight subject-teacher record used in dropdowns (teacher-facing).
+ * Shared across features: assignments, resources, etc.
+ */
+export const TeacherSubjectRecordSchema = z.object({
+  id: z.string(),
+  subject: z.object({
+    id: z.string(),
+    subjectCode: z.string(),
+    subjectName: z.string(),
+  }),
+})
+export type TeacherSubjectRecord = z.infer<typeof TeacherSubjectRecordSchema>
+
+/**
+ * Lightweight subject-teacher record with teacher info (admin-facing).
+ * Shared across features: assignments, resources, etc.
+ */
+export const AllSubjectTeacherRecordSchema = z.object({
+  id: z.string(),
+  subject: z.object({
+    id: z.string(),
+    subjectCode: z.string(),
+    subjectName: z.string(),
+  }),
+  teacher: z.object({
+    id: z.string(),
+    name: z.string(),
+  }),
+})
+export type AllSubjectTeacherRecord = z.infer<typeof AllSubjectTeacherRecordSchema>

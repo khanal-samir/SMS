@@ -8,7 +8,7 @@ import { ResourceListTable } from '@/components/resource/resource-list-table'
 import { CreateResourceSheet } from '@/components/resource/create-resource-sheet'
 import { useResources } from '@/hooks/useResource'
 
-export default function TeacherResourcesPage() {
+export default function AdminResourcesPage() {
   const { data: resources, isLoading } = useResources()
   const [isCreateOpen, setIsCreateOpen] = useState(false)
 
@@ -16,9 +16,9 @@ export default function TeacherResourcesPage() {
     <div className="min-h-screen bg-background p-6">
       <div className="mx-auto max-w-6xl">
         <PageHeader
-          backButton={{ href: '/teacher/dashboard', label: 'Dashboard' }}
-          title="Resources"
-          description="Upload and manage teaching resources for your subjects"
+          backButton={{ href: '/admin/dashboard', label: 'Dashboard' }}
+          title="Resource Management"
+          description="View and manage all resources across subjects and teachers"
           actions={
             <Button onClick={() => setIsCreateOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />
@@ -30,10 +30,11 @@ export default function TeacherResourcesPage() {
         <ResourceListTable
           resources={resources}
           isLoading={isLoading}
-          emptyBackHref="/teacher/dashboard"
+          showTeacher
+          emptyBackHref="/admin/dashboard"
         />
 
-        <CreateResourceSheet open={isCreateOpen} onOpenChange={setIsCreateOpen} variant="teacher" />
+        <CreateResourceSheet open={isCreateOpen} onOpenChange={setIsCreateOpen} variant="admin" />
       </div>
     </div>
   )

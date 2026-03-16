@@ -2,7 +2,11 @@
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CreateAssignmentSchema, type CreateAssignmentDto } from '@repo/schemas'
+import {
+  CreateAssignmentSchema,
+  type CreateAssignmentDto,
+  type TeacherSubjectRecord,
+} from '@repo/schemas'
 import {
   Dialog,
   DialogContent,
@@ -31,7 +35,6 @@ import {
 import { Loader2 } from 'lucide-react'
 import { useCreateAssignment, useTeacherSubjects } from '@/hooks/useAssignment'
 import { useBatches } from '@/hooks/useBatch'
-import type { TeacherSubjectRecord } from '@/apis/assignment.api'
 
 interface CreateAssignmentDialogProps {
   open: boolean
