@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Batches — SMS Teacher',
+  title: 'Batches — PNC Teacher',
   description: 'Browse student batches, view enrolled students, and track batch progress.',
 }
 

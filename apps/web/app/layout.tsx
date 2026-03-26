@@ -11,9 +11,9 @@ const geist = Geist({
 })
 
 export const metadata: Metadata = {
-  title: ' Student Management System',
+  title: 'PNC CSIT Portal',
   description:
-    'A modern platform for managing students, teachers, courses, and academic operations.',
+    'A modern platform for managing students, teachers, courses, and academic operations at Prithvi Narayan Campus.',
 }
 
 export default function RootLayout({

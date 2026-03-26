@@ -17,9 +17,12 @@ import {
   GraduationCap,
   Library,
   Newspaper,
+  LayoutDashboard,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { useAuthStore } from '@/store/auth.store'
+import { RoleEnum } from '@repo/schemas'
 
 const NAV_SECTIONS = [
   {
@@ -70,6 +73,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const { isAuthenticated, user } = useAuthStore()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -207,19 +211,43 @@ export function Navbar() {
 
             <div className="hidden lg:flex items-center gap-3">
               <ThemeToggle />
-              <Button variant="ghost" size="sm" asChild className="text-sm font-medium">
-                <Link href="/login">Student Portal</Link>
-              </Button>
-              <Button
-                size="sm"
-                asChild
-                className="group font-semibold gap-1.5 rounded-lg bg-accent hover:bg-accent/90"
-              >
-                <Link href="/teacher/login">
-                  Faculty Portal
-                  <ArrowUpRight className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </Link>
-              </Button>
+              {isAuthenticated ? (
+                <Button
+                  size="sm"
+                  asChild
+                  className="group font-semibold gap-1.5 rounded-lg bg-accent hover:bg-accent/90"
+                >
+                  <Link
+                    href={
+                      user?.role === RoleEnum.enum.TEACHER
+                        ? '/teacher/dashboard'
+                        : user?.role === RoleEnum.enum.ADMIN
+                          ? '/admin/dashboard'
+                          : '/student/dashboard'
+                    }
+                  >
+                    <LayoutDashboard className="size-4" />
+                    Dashboard
+                    <ArrowUpRight className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="ghost" size="sm" asChild className="text-sm font-medium">
+                    <Link href="/login">Student Portal</Link>
+                  </Button>
+                  <Button
+                    size="sm"
+                    asChild
+                    className="group font-semibold gap-1.5 rounded-lg bg-accent hover:bg-accent/90"
+                  >
+                    <Link href="/teacher/login">
+                      Faculty Portal
+                      <ArrowUpRight className="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </Link>
+                  </Button>
+                </>
+              )}
             </div>
 
             <div className="flex items-center gap-2 lg:hidden">
@@ -300,19 +328,36 @@ export function Navbar() {
                   </div>
                 ))}
                 <div className="flex flex-col gap-2 border-t border-border pt-4 mt-3">
-                  <Button variant="ghost" asChild className="w-full justify-center">
-                    <Link href="/login" onClick={closeMobile}>
-                      Student Portal
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    className="w-full justify-center font-semibold bg-accent hover:bg-accent/90"
-                  >
-                    <Link href="/teacher/login" onClick={closeMobile}>
-                      Faculty Portal
-                    </Link>
-                  </Button>
+                  {isAuthenticated ? (
+                    <Button
+                      asChild
+                      className="w-full justify-center font-semibold gap-2 bg-accent hover:bg-accent/90"
+                    >
+                      <Link
+                        href={user?.role === 'TEACHER' ? '/teacher' : '/dashboard'}
+                        onClick={closeMobile}
+                      >
+                        <LayoutDashboard className="size-4" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                  ) : (
+                    <>
+                      <Button variant="ghost" asChild className="w-full justify-center">
+                        <Link href="/login" onClick={closeMobile}>
+                          Student Portal
+                        </Link>
+                      </Button>
+                      <Button
+                        asChild
+                        className="w-full justify-center font-semibold bg-accent hover:bg-accent/90"
+                      >
+                        <Link href="/teacher/login" onClick={closeMobile}>
+                          Faculty Portal
+                        </Link>
+                      </Button>
+                    </>
+                  )}
                 </div>
               </div>
             </m.div>

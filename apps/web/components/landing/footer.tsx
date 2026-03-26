@@ -168,7 +168,7 @@ export function LandingFooter() {
                 <ExternalLink className="size-3" />
               </a>
               <span>|</span>
-              <span>Student Management System</span>
+              <span>CSIT Portal</span>
             </div>
           </div>
         </div>

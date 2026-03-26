@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'My Details — SMS Student',
+  title: 'My Details — PNC Student',
   description: 'View your student profile, academic progress, and personal information.',
 }
 

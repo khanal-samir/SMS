@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'My Subjects — SMS Teacher',
+  title: 'My Subjects — PNC Teacher',
   description: 'View and manage your assigned subjects and course materials.',
 }
 

@@ -13,7 +13,7 @@ import { LandingFooter } from '@/components/landing/footer'
 export const metadata: Metadata = {
   title: 'PNC CSIT Portal — Prithvi Narayan Campus, B.Sc. CSIT',
   description:
-    'Student Management System for B.Sc. CSIT at Prithvi Narayan Campus, Tribhuvan University. Manage academics, attendance, grades, and resources.',
+    'Student Portal for B.Sc. CSIT at Prithvi Narayan Campus, Tribhuvan University. Manage academics, attendance, grades, and resources.',
   keywords: [
     'PNC',
     'CSIT',
@@ -24,8 +24,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: 'PNC CSIT Portal — Prithvi Narayan Campus',
-    description:
-      'Student Management System for B.Sc. CSIT at Prithvi Narayan Campus, Tribhuvan University.',
+    description: 'Student Portal for B.Sc. CSIT at Prithvi Narayan Campus, Tribhuvan University.',
     type: 'website',
     locale: 'en_NP',
   },

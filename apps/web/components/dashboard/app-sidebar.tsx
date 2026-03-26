@@ -1,8 +1,10 @@
 'use client'
 
+import * as React from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { ChevronsUpDown, LogOut } from 'lucide-react'
+import { ChevronsUpDown, LogOut, Moon, Sun, Monitor } from 'lucide-react'
+import { useTheme } from 'next-themes'
 import { useAuthStore } from '@/store/auth.store'
 import { useLogout } from '@/hooks/useAuth'
 import { UserAvatar } from '@/components/ui/user-avatar'
@@ -40,6 +42,12 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
   const pathname = usePathname()
   const { user } = useAuthStore()
   const { mutate: logout, isPending: isLoggingOut } = useLogout()
+  const { setTheme, theme } = useTheme()
+  const [mounted, setMounted] = React.useState(false)
+
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const roleBadgeLabel =
     user?.role === RoleEnum.enum.ADMIN
@@ -60,8 +68,8 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
                   SM
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">SMS</span>
-                  <span className="text-muted-foreground truncate text-xs">Student Management</span>
+                  <span className="truncate font-semibold">PNC</span>
+                  <span className="text-muted-foreground truncate text-xs">CSIT Portal</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -134,6 +142,22 @@ export function AppSidebar({ navGroups, ...props }: AppSidebarProps) {
                     </Badge>
                   </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setTheme('light')}>
+                  <Sun className="mr-2 size-4" />
+                  Light
+                  {mounted && theme === 'light' && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('dark')}>
+                  <Moon className="mr-2 size-4" />
+                  Dark
+                  {mounted && theme === 'dark' && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme('system')}>
+                  <Monitor className="mr-2 size-4" />
+                  System
+                  {mounted && theme === 'system' && <span className="ml-auto text-xs">✓</span>}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => logout()}
