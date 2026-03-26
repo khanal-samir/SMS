@@ -51,10 +51,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         }
       }
 
-      if (typeof response === 'string') {
-        return { statusCode, message: response }
-      }
-
       if (typeof response === 'object' && response !== null) {
         const message =
           typeof response.message === 'string'

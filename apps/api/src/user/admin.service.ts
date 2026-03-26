@@ -33,7 +33,6 @@ export class AdminService {
         role: true,
       },
     })
-
     await this.mailService.sendTeacherApprovedEmail(teacher.email, teacher.name)
     this.logger.log(`Approval email sent to teacher ${teacher.email}`)
     return teacher
@@ -43,7 +42,7 @@ export class AdminService {
     this.logger.log(`Getting pending teachers`)
     return await this.prisma.user.findMany({
       where: {
-        role: 'TEACHER',
+        role: Role.TEACHER,
         isEmailVerified: true,
         isTeacherApproved: false,
       },
@@ -64,7 +63,7 @@ export class AdminService {
     this.logger.log('Getting approved teachers')
     return await this.prisma.user.findMany({
       where: {
-        role: 'TEACHER',
+        role: Role.TEACHER,
         isEmailVerified: true,
         isTeacherApproved: true,
       },

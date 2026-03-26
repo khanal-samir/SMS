@@ -9,7 +9,12 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    logger:
+      process.env.NODE_ENV === 'development'
+        ? ['log', 'debug', 'verbose', 'warn', 'error']
+        : ['warn', 'error'],
+  })
   const configService = app.get<ConfigService>(ConfigService)
 
   app.use(helmet()) // add security headers to responses
@@ -19,7 +24,6 @@ async function bootstrap() {
     origin: configService.get('PUBLIC_WEB_URL'),
     credentials: true,
   })
-  Logger.log('CORS enabled for', configService.get('PUBLIC_WEB_URL'))
 
   // puts errors inside cause of the exception
   app.useGlobalPipes(new ZodValidationPipe())

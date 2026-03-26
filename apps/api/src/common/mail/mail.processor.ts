@@ -23,7 +23,7 @@ export class EmailProcessor extends WorkerHost {
     private mailConfiguration: ConfigType<typeof mailConfig>,
     private readonly configService: ConfigService,
   ) {
-    super()
+    super() // calling workerhost constructor
     this.transporter = nodemailer.createTransport({
       host: this.mailConfiguration.host,
       secure: false,

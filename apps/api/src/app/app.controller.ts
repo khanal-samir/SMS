@@ -8,7 +8,7 @@ export class AppController {
   getHello(): Promise<schemas.ApiResponse<null>> {
     return Promise.resolve({
       statusCode: 200,
-      message: 'Hello World',
+      message: 'OK',
       data: null,
     })
   }

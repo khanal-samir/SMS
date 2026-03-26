@@ -161,7 +161,7 @@ export class AuthService {
   async validateGoogleUser(googleUser: CreateUserDto) {
     const user = await this.userService.findByEmail(googleUser.email)
     if (user) {
-      if (user.role !== 'STUDENT') {
+      if (user.role !== Role.STUDENT) {
         throw new UnauthorizedException('Only students can login with Google')
       }
       this.logger.log(`Existing user found for Google login: ${user.email}`)
