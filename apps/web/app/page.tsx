@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Navbar } from '@/components/navbar'
 import { LandingHero } from '@/components/landing/hero'
-import { LandingFeatures } from '@/components/landing/features'
 import { LandingTechStack } from '@/components/landing/tech-stack'
 import { LandingNews } from '@/components/landing/news-announcements'
 import { LandingEvents } from '@/components/landing/events'
