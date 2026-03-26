@@ -1,151 +1,176 @@
 import Link from 'next/link'
-import { GraduationCap, ArrowUpRight } from 'lucide-react'
+import Image from 'next/image'
+import { MapPin, Phone, Mail, Facebook, ExternalLink } from 'lucide-react'
 
 const footerLinks = {
   portals: [
-    { label: 'Student Login', href: '/login' },
-    { label: 'Teacher Login', href: '/teacher/login' },
+    { label: 'Student Portal', href: '/login' },
+    { label: 'Faculty Portal', href: '/teacher/login' },
     { label: 'Admin Access', href: '/admin/access' },
   ],
-  campus: [
-    { label: 'About PNC', href: '/' },
-    { label: 'Contact us', href: '/' },
-    { label: 'Faculty', href: '/' },
-    { label: 'Campus life', href: '/' },
+  academics: [
+    { label: 'CSIT Syllabus', href: '#' },
+    { label: 'Past Papers', href: '#' },
+    { label: 'Results', href: '#' },
+    { label: 'Academic Calendar', href: '#' },
   ],
-  legal: [
-    { label: 'Privacy policy', href: '/' },
-    { label: 'Terms of service', href: '/' },
-    { label: 'Accessibility', href: '/' },
+  resources: [
+    { label: 'Downloads', href: '#' },
+    { label: 'Library', href: '#' },
+    { label: 'E-Journals', href: '#' },
+    { label: 'Research', href: '#' },
+  ],
+  campus: [
+    { label: 'About PNC', href: '#' },
+    { label: 'Faculty & Staff', href: '#' },
+    { label: 'Campus Life', href: '#' },
+    { label: 'Contact Us', href: '#contact' },
   ],
 }
 
+const socialLinks = [
+  { label: 'Facebook', href: 'https://www.facebook.com/pncampus.edu.np', icon: Facebook },
+]
+
 export function LandingFooter() {
   return (
-    <footer className="relative border-t border-border/40 bg-background">
-      {/* Subtle top gradient */}
-      <div className="absolute top-0 left-0 right-0 h-px editorial-rule" />
+    <footer className="relative bg-primary text-primary-foreground">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-foreground/20 to-transparent" />
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        {/* CTA band */}
-        <div className="py-16 sm:py-20 border-b border-border/30">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
-            <div className="max-w-lg">
-              <h3 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-                Ready to get started?
-              </h3>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                Log in to access your dashboard, grades, schedules, and everything else you need at
-                PNC.
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="py-16 sm:py-20">
+          <div className="grid gap-12 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <Link href="/" className="flex items-center gap-3 group cursor-pointer mb-6">
+                <div className="relative">
+                  <Image
+                    src="/images/prnc-logo.png"
+                    alt="PRNC Logo"
+                    width={56}
+                    height={56}
+                    className="transition-transform duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg font-display font-bold leading-tight">
+                    Prithvi Narayan Campus
+                  </span>
+                  <span className="text-xs text-primary-foreground/70 tracking-wider uppercase">
+                    B.Sc. CSIT Department
+                  </span>
+                </div>
+              </Link>
+              <p className="text-sm text-primary-foreground/80 leading-relaxed max-w-md mb-6">
+                A unified platform for students and faculty of B.Sc. CSIT at Prithvi Narayan Campus
+                — Tribhuvan University. Manage academics, attendance, grades, and resources in one
+                place.
               </p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 text-sm text-primary-foreground/80">
+                  <MapPin className="size-4 shrink-0" />
+                  <span>Bhimkali Patan, Bagar Pokhara, Nepal</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-primary-foreground/80">
+                  <Phone className="size-4 shrink-0" />
+                  <span>061-576837</span>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-primary-foreground/80">
+                  <Mail className="size-4 shrink-0" />
+                  <span>info@prnc.tu.edu.np</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 mt-6">
+                {socialLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="size-10 rounded-lg bg-primary-foreground/10 flex items-center justify-center hover:bg-primary-foreground/20 transition-colors"
+                    aria-label={link.label}
+                  >
+                    <link.icon className="size-5" />
+                  </a>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/login"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-              >
-                Student Login
-                <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </Link>
-              <span className="text-border">|</span>
-              <Link
-                href="/teacher/login"
-                className="group inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
-              >
-                Teacher Login
-                <ArrowUpRight className="size-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </Link>
+
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/50 mb-4">
+                Portals
+              </h4>
+              <ul className="space-y-3">
+                {footerLinks.portals.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/50 mb-4">
+                Academics
+              </h4>
+              <ul className="space-y-3">
+                {footerLinks.academics.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/50 mb-4">
+                Campus
+              </h4>
+              <ul className="space-y-3">
+                {footerLinks.campus.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
 
-        {/* Links grid */}
-        <div className="py-12 grid gap-10 md:grid-cols-5">
-          {/* Brand column */}
-          <div className="md:col-span-2">
-            <Link href="/" className="flex items-center gap-3.5 cursor-pointer group">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-all duration-300 group-hover:scale-105 group-hover:shadow-lg group-hover:shadow-primary/20">
-                <GraduationCap className="size-5" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-base font-semibold leading-none tracking-tight text-foreground">
-                  SMS
-                </span>
-                <span className="mt-0.5 text-[9px] font-medium uppercase tracking-[0.25em] text-muted-foreground">
-                  College
-                </span>
-              </div>
-            </Link>
-            <p className="mt-5 text-sm leading-relaxed text-muted-foreground max-w-xs">
-              The student management system for Prithvi Narayan Campus — managing academics,
-              attendance, and campus operations.
-            </p>
+        <div className="border-t border-primary-foreground/10 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-xs text-primary-foreground/60">
+              <span>&copy; {new Date().getFullYear()} Prithvi Narayan Campus.</span>
+              <span>All rights reserved.</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-primary-foreground/60">
+              <a
+                href="https://tu.edu.np"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 hover:text-primary-foreground transition-colors"
+              >
+                Tribhuvan University
+                <ExternalLink className="size-3" />
+              </a>
+              <span>|</span>
+              <span>Student Management System</span>
+            </div>
           </div>
-
-          {/* Portal links */}
-          <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-5">
-              Portals
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.portals.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="cursor-pointer text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Campus links */}
-          <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-5">
-              Campus
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.campus.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="cursor-pointer text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal links */}
-          <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground mb-5">
-              Legal
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="cursor-pointer text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Copyright */}
-        <div className="border-t border-border/30 py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} Prithvi Narayan Campus. All rights reserved.
-          </p>
-          <p className="text-xs text-muted-foreground/60">Student Management System</p>
         </div>
       </div>
     </footer>
