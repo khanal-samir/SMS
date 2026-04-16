@@ -1,135 +1,220 @@
-# Turborepo starter
+# SMS
 
-This Turborepo starter is maintained by the Turborepo core team.
+SMS is a school management system for Prithvi Narayan Campus, B.Sc. CSIT. The repository is a Turborepo with a NestJS API, a Next.js web app, and shared schema/config packages.
 
-## Using this example
+## Overview
 
-Run the following command:
+- `apps/api`: NestJS backend with Prisma, PostgreSQL, Redis-backed jobs, Swagger docs, JWT auth, Google OAuth, SMTP email, AWS S3 storage, and Socket.IO chat.
+- `apps/web`: Next.js 15 frontend with role-based routing for admin, teacher, and student workflows.
+- `packages/schemas`: shared Zod schemas, enums, and API response types.
+- `packages/eslint-config`: shared lint rules.
+- `packages/typescript-config`: shared TypeScript base configs.
 
-```sh
-npx create-turbo@latest
+## Core Features
+
+- Role-based authentication for `ADMIN`, `TEACHER`, and `STUDENT` users.
+- Public landing page plus separate login, register, forgot-password, and reset-password flows.
+- Admin dashboards for users, semesters, batches, subjects, assignments, announcements, resources, and chat.
+- Teacher dashboards for schedules, batches, subjects, assignments, resources, announcements, and chat.
+- Student dashboards for courses, assignments, resources, announcements, and chat.
+- Course and batch management with semester enrollment, resource publishing, and assignment tracking.
+- Backend support for notifications, email delivery, background jobs, and file uploads.
+
+## Tech Stack
+
+- Monorepo orchestration: Turborepo, pnpm, TypeScript
+- Frontend: Next.js 15, React 19, Tailwind CSS 4, TanStack Query, Zustand, Socket.IO client, Radix UI, Motion
+- Backend: NestJS 11, Prisma, PostgreSQL, Redis, BullMQ, Swagger, Passport, JWT, Zod
+- Integrations: Google OAuth, Nodemailer, AWS S3
+
+## Repository Layout
+
+```text
+apps/
+	api/   NestJS backend
+	web/   Next.js frontend
+packages/
+	eslint-config/      shared linting presets
+	schemas/            shared schemas and API types
+	typescript-config/   shared tsconfig presets
 ```
 
-## What's inside?
+## Prerequisites
 
-This Turborepo includes the following packages/apps:
+- Node.js 18 or newer
+- pnpm 9
+- PostgreSQL
+- Redis
+- An SMTP provider
+- Google OAuth credentials
+- An AWS S3 bucket and credentials
 
-### Apps and Packages
+## Installation
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+pnpm install
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## Environment Variables
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+Create an environment file for the API at `apps/api/.env` and one for the web app at `apps/web/.env.local`.
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
+### API environment
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
+```bash
+DATABASE_URL=
+JWT_SECRET=
+JWT_EXPIRES_IN=
+REFRESH_TOKEN_SECRET=
+REFRESH_TOKEN_EXPIRES_IN=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=
+PUBLIC_WEB_URL=
+SMTP_HOST=
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_FROM=
+REDIS_URL=
+ADMIN_EMAILS=
+COOKIE_DOMAIN=
+NODE_ENV=development
+BE_PORT=8000
+AWS_S3_BUCKET=
+AWS_S3_REGION=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
 ```
 
-### Remote Caching
+### Web environment
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+NEXT_PUBLIC_API_URL=
+NEXT_PUBLIC_COOKIE_DOMAIN=
+ADMIN_SECRET_KEY=
+NODE_ENV=development
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## Running Locally
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Start everything from the monorepo root:
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+pnpm dev
 ```
 
-## Useful Links
+Common task filters:
 
-Learn more about the power of Turborepo:
+```bash
+pnpm --filter api dev
+pnpm --filter web dev
+pnpm --filter api build
+pnpm --filter web build
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+If you need the API container stack, use the scripts in `apps/api`:
+
+```bash
+pnpm --filter api compose:up
+pnpm --filter api compose:logs
+pnpm --filter api compose:down
+```
+
+## Database Tasks
+
+The API package owns Prisma tasks:
+
+```bash
+pnpm --filter api db:generate
+pnpm --filter api db:migrate
+pnpm --filter api db:deploy
+pnpm --filter api db:reset
+pnpm --filter api db:studio
+```
+
+## Scripts
+
+At the repo root:
+
+```bash
+pnpm build
+pnpm dev
+pnpm lint
+pnpm check-types
+pnpm format
+```
+
+In `apps/api`:
+
+```bash
+pnpm build
+pnpm dev
+pnpm start
+pnpm test
+pnpm test:e2e
+pnpm db:migrate
+pnpm db:studio
+```
+
+In `apps/web`:
+
+```bash
+pnpm build
+pnpm dev
+pnpm start
+pnpm lint
+pnpm check-types
+```
+
+## Backend Notes
+
+- Global route prefix: `v1`
+- Swagger UI: `/docs`
+- Health check: `/v1/health`
+- Global validation uses Zod.
+- Global auth and roles guards protect the API by default.
+- Main backend modules cover auth, users, semesters, subjects, batches, assignments, announcements, chat, dashboard, resources, storage, mail, queue processing, seeding, and Prisma access.
+
+## Frontend Notes
+
+- Public landing page: `/`
+- Auth routes: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/auth/google/callback`
+- Student routes: `/student/*`
+- Teacher routes: `/teacher/*`
+- Admin routes: `/admin/*`
+- Route protection is handled in `apps/web/middleware.ts` using the session cookie and backend auth cookies.
+
+## Data Model
+
+The Prisma schema centers on these entities:
+
+- `User`
+- `Batch`
+- `Semester`
+- `StudentSemester`
+- `Subject`
+- `SubjectTeacher`
+- `Resource`
+- `Assignment`
+- `Announcement`
+- `AnnouncementRead`
+- `ChatGroup`
+- `ChatMessage`
+
+## Useful Commands
+
+```bash
+pnpm --filter api test
+pnpm --filter api test:cov
+pnpm --filter api lint
+pnpm --filter web lint
+pnpm --filter api check-types
+pnpm --filter web check-types
+```
+
+## Notes
+
+- The web app expects `NEXT_PUBLIC_API_URL` to point at the API origin.
+- The API must know the frontend origin through `PUBLIC_WEB_URL` for CORS and websocket access.
+- `ADMIN_EMAILS` is parsed as a comma-separated list.
+

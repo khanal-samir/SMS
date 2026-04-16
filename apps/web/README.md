@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# Web
 
-## Getting Started
+This package contains the Next.js frontend for the SMS monorepo.
 
-First, run the development server:
+## What It Does
+
+- Renders the public landing page and all authenticated role-based routes.
+- Uses cookie-based session state plus backend auth cookies to keep users in the correct role area.
+- Includes admin, teacher, and student dashboards for announcements, assignments, resources, chat, semesters, batches, subjects, and course pages.
+- Uses the API at the URL defined by `NEXT_PUBLIC_API_URL`.
+
+## Routes
+
+- Public: `/`
+- Auth: `/login`, `/register`, `/forgot-password`, `/reset-password`, `/auth/google/callback`
+- Student: `/student/*`
+- Teacher: `/teacher/*`
+- Admin: `/admin/*`
+
+## Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
+pnpm build
+pnpm start
+pnpm lint
+pnpm check-types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The frontend uses the variables documented in the root README, especially `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_COOKIE_DOMAIN`, and `ADMIN_SECRET_KEY`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+## Local Development
 
-## Learn More
+```bash
+pnpm install
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open the app on port 3000 when the dev server is running. For the full project overview and backend setup, see the root [README.md](../../README.md).
