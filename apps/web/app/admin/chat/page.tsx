@@ -4,13 +4,12 @@ import { Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { ChatPanel } from '@/components/chat/chat-panel'
 import { ChatGroupList } from '@/components/chat/chat-group-list'
-import { useChatGroups, useChatSocket } from '@/hooks/useChat'
+import { useChatGroups } from '@/hooks/useChat'
 import { useChatStore } from '@/store/chat.store'
 
 export default function AdminChatPage() {
   const { groups, isLoading } = useChatGroups()
   const { activeGroupId, setActiveGroupId } = useChatStore()
-  useChatSocket()
 
   const activeGroup = groups?.find((g) => g.id === activeGroupId)
 

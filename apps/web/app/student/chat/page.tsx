@@ -4,13 +4,12 @@ import { useEffect } from 'react'
 import { Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { ChatPanel } from '@/components/chat/chat-panel'
-import { useChatGroups, useChatSocket } from '@/hooks/useChat'
+import { useChatGroups } from '@/hooks/useChat'
 import { useChatStore } from '@/store/chat.store'
 
 export default function StudentChatPage() {
   const { groups, isLoading } = useChatGroups()
   const { activeGroupId, setActiveGroupId } = useChatStore()
-  useChatSocket()
 
   // Auto-select the student's single batch group
   useEffect(() => {

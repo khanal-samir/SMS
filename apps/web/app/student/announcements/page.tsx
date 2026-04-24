@@ -1,23 +1,12 @@
-'use client'
-
-import { PageHeader } from '@/components/ui/page-header'
-import { useAnnouncements } from '@/hooks/useAnnouncement'
-import { StudentAnnouncementList } from '@/components/announcement/student-announcement-list'
+import { AnnouncementsPage } from '@/components/announcement/announcements-page'
 
 export default function StudentAnnouncementsPage() {
-  const { data: announcements, isLoading } = useAnnouncements()
-
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="mx-auto max-w-6xl">
-        <PageHeader
-          backButton={{ href: '/student/dashboard', label: 'Dashboard' }}
-          title="Announcements"
-          description="Stay up to date with the latest announcements"
-        />
-
-        <StudentAnnouncementList announcements={announcements} isLoading={isLoading} />
-      </div>
-    </div>
+    <AnnouncementsPage
+      variant="student"
+      backHref="/student/dashboard"
+      title="Announcements"
+      description="Stay up to date with the latest announcements"
+    />
   )
 }
