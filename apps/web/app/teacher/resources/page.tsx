@@ -1,40 +1,12 @@
-'use client'
-
-import { useState } from 'react'
-import { Plus } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { PageHeader } from '@/components/ui/page-header'
-import { ResourceListTable } from '@/components/resource/resource-list-table'
-import { CreateResourceSheet } from '@/components/resource/create-resource-sheet'
-import { useResources } from '@/hooks/useResource'
+import { ResourcesPage } from '@/components/resource/resources-page'
 
 export default function TeacherResourcesPage() {
-  const { data: resources, isLoading } = useResources()
-  const [isCreateOpen, setIsCreateOpen] = useState(false)
-
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="mx-auto max-w-6xl">
-        <PageHeader
-          backButton={{ href: '/teacher/dashboard', label: 'Dashboard' }}
-          title="Resources"
-          description="Upload and manage teaching resources for your subjects"
-          actions={
-            <Button onClick={() => setIsCreateOpen(true)}>
-              <Plus className="mr-2 h-4 w-4" />
-              Upload Resource
-            </Button>
-          }
-        />
-
-        <ResourceListTable
-          resources={resources}
-          isLoading={isLoading}
-          emptyBackHref="/teacher/dashboard"
-        />
-
-        <CreateResourceSheet open={isCreateOpen} onOpenChange={setIsCreateOpen} variant="teacher" />
-      </div>
-    </div>
+    <ResourcesPage
+      variant="teacher"
+      backHref="/teacher/dashboard"
+      title="Resources"
+      description="Upload and manage teaching resources for your subjects"
+    />
   )
 }

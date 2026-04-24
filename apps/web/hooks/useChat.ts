@@ -65,7 +65,7 @@ export const useChatMessages = (groupId: string) => {
 // Socket hook — manages connection lifecycle and real-time messages
 // -------------------------------------------------------------------------
 
-export const useChatSocket = () => {
+export const useChatSocketLifecycle = () => {
   const { setConnected, addMessage } = useChatStore()
   const queryClient = useQueryClient()
   const connectedRef = useRef(false)
@@ -108,6 +108,11 @@ export const useChatSocket = () => {
       socket.off('newMessage', onNewMessage)
     }
   }, [setConnected, addMessage, queryClient])
+
+}
+
+export const useChatSocket = () => {
+  const { setConnected } = useChatStore()
 
   const sendMessage = useCallback((chatGroupId: string, content: string) => {
     const socket = getChatSocket()

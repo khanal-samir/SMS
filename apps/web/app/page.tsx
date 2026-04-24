@@ -1,13 +1,34 @@
 import type { Metadata } from 'next'
+import dynamic from 'next/dynamic'
 import { Navbar } from '@/components/navbar'
 import { LandingHero } from '@/components/landing/hero'
-import { LandingTechStack } from '@/components/landing/tech-stack'
-import { LandingNews } from '@/components/landing/news-announcements'
-import { LandingEvents } from '@/components/landing/events'
-import { LandingCareers } from '@/components/landing/careers'
-import { LandingAlumni } from '@/components/landing/alumni'
-import { LandingTestimonials } from '@/components/landing/testimonials'
 import { LandingFooter } from '@/components/landing/footer'
+
+const LandingTechStack = dynamic(
+  () => import('@/components/landing/tech-stack').then((module) => module.LandingTechStack),
+)
+
+const LandingNews = dynamic(
+  () =>
+    import('@/components/landing/news-announcements').then((module) => module.LandingNews),
+)
+
+const LandingEvents = dynamic(
+  () => import('@/components/landing/events').then((module) => module.LandingEvents),
+)
+
+const LandingCareers = dynamic(
+  () => import('@/components/landing/careers').then((module) => module.LandingCareers),
+)
+
+const LandingAlumni = dynamic(
+  () => import('@/components/landing/alumni').then((module) => module.LandingAlumni),
+)
+
+const LandingTestimonials = dynamic(
+  () =>
+    import('@/components/landing/testimonials').then((module) => module.LandingTestimonials),
+)
 
 export const metadata: Metadata = {
   title: 'PNC CSIT Portal — Prithvi Narayan Campus, B.Sc. CSIT',

@@ -1,6 +1,6 @@
 'use client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import dynamic from 'next/dynamic'
 import { ThemeProvider } from 'next-themes'
 import { useState } from 'react'
 import { Toaster } from '@/components/ui/sonner'
@@ -9,6 +9,11 @@ import { useErrorStore } from '@/store/error.store'
 import type { AxiosError } from 'axios'
 import type { ApiResponse } from '@repo/schemas'
 import { AuthInitializer } from '@/components/auth-initializer'
+
+const ReactQueryDevtools = dynamic(
+  () => import('@tanstack/react-query-devtools').then((module) => module.ReactQueryDevtools),
+  { ssr: false },
+)
 
 function ErrorProvider({ children }: { children: React.ReactNode }) {
   useError()
@@ -49,7 +54,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <AuthInitializer />
           {children}
           <Toaster position="top-right" richColors closeButton />
-          <ReactQueryDevtools initialIsOpen={false} />
+          {process.env.NODE_ENV === 'development' ? <ReactQueryDevtools initialIsOpen={false} /> : null}
         </ErrorProvider>
       </QueryClientProvider>
     </ThemeProvider>

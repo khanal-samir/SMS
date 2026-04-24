@@ -1,13 +1,19 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { AppSidebar } from '@/components/dashboard/app-sidebar'
 import {
   adminNavGroups,
   studentNavGroups,
   teacherNavGroups,
 } from '@/components/dashboard/nav-config'
+import { ChatSocketProvider } from '@/components/chat/chat-socket-provider'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { ChatWidget } from '@/components/chat/chat-widget'
+
+const ChatWidget = dynamic(
+  () => import('@/components/chat/chat-widget').then((module) => module.ChatWidget),
+  { ssr: false },
+)
 
 const NAV_GROUPS = {
   admin: adminNavGroups,
@@ -29,7 +35,8 @@ export function DashboardLayout({ role, children }: DashboardLayoutProps) {
     <SidebarProvider>
       <AppSidebar navGroups={NAV_GROUPS[role]} />
       <SidebarInset>{children}</SidebarInset>
-      {showChat && <ChatWidget multiGroup={role === 'admin'} />}
+      {showChat ? <ChatSocketProvider /> : null}
+      {showChat ? <ChatWidget multiGroup={role === 'admin'} /> : null}
     </SidebarProvider>
   )
 }

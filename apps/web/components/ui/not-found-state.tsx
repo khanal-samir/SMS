@@ -1,6 +1,4 @@
-'use client'
-
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { FileX, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -18,8 +16,6 @@ export function NotFoundState({
   message = 'The requested resource could not be found.',
   backButton,
 }: NotFoundStateProps) {
-  const router = useRouter()
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-6">
       <div className="flex flex-col items-center gap-4 text-center">
@@ -31,13 +27,11 @@ export function NotFoundState({
           <p className="mt-1 text-sm text-muted-foreground">{message}</p>
         </div>
         {backButton && (
-          <Button
-            variant="outline"
-            onClick={() => router.push(backButton.href)}
-            className="mt-2 gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {backButton.label}
+          <Button variant="outline" className="mt-2 gap-2" asChild>
+            <Link href={backButton.href}>
+              <ArrowLeft className="h-4 w-4" />
+              {backButton.label}
+            </Link>
           </Button>
         )}
       </div>

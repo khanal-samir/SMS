@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { MessageCircle, X } from 'lucide-react'
-import { useChatGroups, useChatSocket } from '@/hooks/useChat'
+import { useChatGroups } from '@/hooks/useChat'
 import { useChatStore } from '@/store/chat.store'
 import { ChatPanel } from './chat-panel'
 import { ChatGroupList } from './chat-group-list'
@@ -15,7 +15,6 @@ interface ChatWidgetProps {
 export function ChatWidget({ multiGroup = false }: ChatWidgetProps) {
   const { isWidgetOpen, toggleWidget, activeGroupId, setActiveGroupId } = useChatStore()
   const { groups, isLoading } = useChatGroups()
-  useChatSocket()
 
   // Auto-select first group for single-group mode (student)
   useEffect(() => {
