@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation'
 import { Users } from 'lucide-react'
 import { useBatch } from '@/hooks/useBatch'
 import { BatchInfoCards } from '@/components/batch/batch-info-cards'
-import { SectionHeader } from '@/components/ui/section-header'
+import { ContentSection } from '@/components/dashboard/content-section'
 import { BatchStudentsTable } from '@/components/batch/batch-students-table'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
@@ -31,7 +31,7 @@ export default function TeacherBatchDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/teacher/batches', label: 'All Batches' }}
@@ -41,18 +41,18 @@ export default function TeacherBatchDetailPage() {
 
         <BatchInfoCards batch={batch} />
 
-        <section className="mt-8">
-          <SectionHeader
-            icon={Users}
-            title="Enrolled students"
-            description="Students currently enrolled in this batch"
-          />
+        <ContentSection
+          icon={Users}
+          title="Enrolled students"
+          description="Students currently enrolled in this batch"
+          className="mt-10"
+        >
           <BatchStudentsTable
             students={batch.users}
             isLoading={false}
             studentLinkBasePath={`/teacher/batches/${batchId}/students`}
           />
-        </section>
+        </ContentSection>
       </div>
     </div>
   )

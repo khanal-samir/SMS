@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react'
 import { useParams } from 'next/navigation'
+import { Code, Users } from 'lucide-react'
 import {
   useSubject,
   useSubjectTeachers,
@@ -12,7 +13,7 @@ import { useApprovedTeachers } from '@/hooks/useTeacherApproval'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import { StatCards } from '@/components/ui/stat-cards'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
 import { FeatureCards } from '@/components/ui/feature-cards'
 import { AssignedTeachersCard } from '@/components/subject/assigned-teachers-card'
 import { AssignTeacherCard } from '@/components/subject/assign-teacher-card'
@@ -64,7 +65,7 @@ export default function AdminSubjectDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: `/admin/semesters/${semesterId}`, label: 'Semester Subjects' }}
@@ -72,11 +73,22 @@ export default function AdminSubjectDetailPage() {
           description={subject.subjectCode}
         />
 
-        <StatCards
-          variant="strip"
+        <StatsStrip
           stats={[
-            { label: 'Subject Code', value: subject.subjectCode },
-            { label: 'Assigned Teachers', value: subjectTeachers?.length ?? 0 },
+            {
+              label: 'Subject Code',
+              value: subject.subjectCode,
+              icon: Code,
+              iconColor: 'text-primary',
+              iconBg: 'bg-primary/10',
+            },
+            {
+              label: 'Assigned Teachers',
+              value: subjectTeachers?.length ?? 0,
+              icon: Users,
+              iconColor: 'text-success-foreground',
+              iconBg: 'bg-success/15',
+            },
           ]}
         />
 
@@ -96,7 +108,7 @@ export default function AdminSubjectDetailPage() {
           />
         </div>
 
-        <div className="mt-8">
+        <div className="mt-10">
           <FeatureCards
             assignmentsHref={`/admin/semesters/${semesterId}/subjects/${subject.id}/assignments`}
             resourcesHref={`/admin/semesters/${semesterId}/subjects/${subject.id}/resources`}

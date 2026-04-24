@@ -6,9 +6,9 @@ import { useSubject, useSubjectTeachers } from '@/hooks/useSubject'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import { StatCards } from '@/components/ui/stat-cards'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
 import { FeatureCards } from '@/components/ui/feature-cards'
-import { SectionHeader } from '@/components/ui/section-header'
+import { ContentSection } from '@/components/dashboard/content-section'
 import {
   Table,
   TableBody,
@@ -40,7 +40,7 @@ export default function TeacherSubjectDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/teacher/subjects', label: 'All Subjects' }}
@@ -48,40 +48,51 @@ export default function TeacherSubjectDetailPage() {
           description={subject.subjectCode}
         />
 
-        <StatCards
-          variant="strip"
+        <StatsStrip
           stats={[
-            { label: 'Subject Code', value: subject.subjectCode, icon: Code },
-            { label: 'Co-Teachers', value: teachers?.length ?? 0, icon: Users },
+            {
+              label: 'Subject Code',
+              value: subject.subjectCode,
+              icon: Code,
+              iconColor: 'text-primary',
+              iconBg: 'bg-primary/10',
+            },
+            {
+              label: 'Co-Teachers',
+              value: teachers?.length ?? 0,
+              icon: Users,
+              iconColor: 'text-info',
+              iconBg: 'bg-info/10',
+            },
           ]}
         />
 
-        <section className="mt-8">
-          <SectionHeader
-            icon={Users}
-            title="Assigned teachers"
-            description="Other teachers working on this subject."
-          />
+        <ContentSection
+          icon={Users}
+          title="Assigned teachers"
+          description="Other teachers working on this subject."
+          className="mt-10"
+        >
           {isLoadingTeachers ? (
-            <div className="flex items-center justify-center py-6">
+            <div className="flex items-center justify-center py-10">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
             </div>
           ) : teachers && teachers.length > 0 ? (
-            <div className="overflow-hidden rounded-lg border">
-              <Table>
+            <div className="card-elevated overflow-hidden">
+              <Table className="table-clean">
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="px-6">Teacher</TableHead>
-                    <TableHead className="px-6">Email</TableHead>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Teacher</TableHead>
+                    <TableHead>Email</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {teachers.map((assignment) => (
                     <TableRow key={assignment.id}>
-                      <TableCell className="px-6 font-medium text-foreground">
+                      <TableCell className="font-medium text-foreground">
                         {assignment.teacher.name}
                       </TableCell>
-                      <TableCell className="px-6 text-sm text-muted-foreground">
+                      <TableCell className="text-muted-foreground">
                         {assignment.teacher.email}
                       </TableCell>
                     </TableRow>
@@ -90,13 +101,13 @@ export default function TeacherSubjectDetailPage() {
               </Table>
             </div>
           ) : (
-            <div className="rounded-lg border py-6 text-center">
+            <div className="card-elevated py-10 text-center">
               <p className="text-sm text-muted-foreground">No teachers assigned.</p>
             </div>
           )}
-        </section>
+        </ContentSection>
 
-        <div className="mt-8">
+        <div className="mt-10">
           <FeatureCards assignmentsHref="/teacher/assignments" resourcesHref="/teacher/resources" />
         </div>
       </div>

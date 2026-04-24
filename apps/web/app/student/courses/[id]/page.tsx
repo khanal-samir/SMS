@@ -6,7 +6,7 @@ import { useSubject } from '@/hooks/useSubject'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import { StatCards } from '@/components/ui/stat-cards'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
 import {
   Table,
   TableBody,
@@ -53,7 +53,7 @@ export default function StudentCourseDetailPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/student/courses', label: 'Courses' }}
@@ -61,41 +61,50 @@ export default function StudentCourseDetailPage() {
           description={subject.subjectCode}
         />
 
-        <StatCards
-          variant="strip"
+        <StatsStrip
           stats={[
-            { label: 'Subject Code', value: subject.subjectCode, icon: Code },
-            { label: 'Status', value: 'Active', icon: Activity },
+            {
+              label: 'Subject Code',
+              value: subject.subjectCode,
+              icon: Code,
+              iconColor: 'text-primary',
+              iconBg: 'bg-primary/10',
+            },
+            {
+              label: 'Status',
+              value: 'Active',
+              icon: Activity,
+              iconColor: 'text-success-foreground',
+              iconBg: 'bg-success/15',
+            },
           ]}
         />
 
-        <div className="overflow-hidden rounded-lg border">
-          <Table>
+        <div className="card-elevated overflow-hidden">
+          <Table className="table-clean">
             <TableHeader>
-              <TableRow>
-                <TableHead className="px-4">Section</TableHead>
-                <TableHead className="px-4">Description</TableHead>
-                <TableHead className="px-4 text-right">Action</TableHead>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Section</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {navItems.map((item) => (
                 <TableRow
                   key={item.label}
-                  className="cursor-pointer transition-colors hover:bg-muted/50"
+                  className="cursor-pointer"
                   onClick={() => router.push(item.href)}
                 >
-                  <TableCell className="px-4 font-semibold text-foreground">
+                  <TableCell className="font-semibold text-foreground">
                     <div className="flex items-center gap-2">
                       <item.icon className="size-4 text-muted-foreground" />
                       {item.label}
                     </div>
                   </TableCell>
-                  <TableCell className="px-4 text-muted-foreground">
-                    {item.description}
-                  </TableCell>
-                  <TableCell className="px-4 text-right">
-                    <ArrowRight className="inline size-4 text-muted-foreground transition-colors group-hover:text-foreground" />
+                  <TableCell className="text-muted-foreground">{item.description}</TableCell>
+                  <TableCell className="text-right">
+                    <ArrowRight className="inline size-4 text-muted-foreground" />
                   </TableCell>
                 </TableRow>
               ))}

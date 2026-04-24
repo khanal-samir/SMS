@@ -43,7 +43,7 @@ function BatchListTable({
 
   if (!batches || batches.length === 0) {
     return (
-      <div className="rounded-lg border bg-card py-16 text-center shadow-sm">
+      <div className="card-elevated py-16 text-center">
         <p className="text-muted-foreground">{emptyMessage}</p>
         {emptySubMessage && <p className="mt-1 text-sm text-muted-foreground">{emptySubMessage}</p>}
       </div>
@@ -51,10 +51,10 @@ function BatchListTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-      <Table>
+    <div className="card-elevated overflow-hidden">
+      <Table className="table-clean">
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-transparent">
             <TableHead>Batch Year</TableHead>
             <TableHead>Start Date</TableHead>
             <TableHead>End Date</TableHead>
@@ -71,15 +71,15 @@ function BatchListTable({
               onClick={() => router.push(`${basePath}/${batch.id}`)}
             >
               <TableCell>
-                <span className="text-sm font-semibold text-foreground">{batch.batchYear}</span>
+                <span className="font-semibold text-foreground">{batch.batchYear}</span>
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">
+              <TableCell className="text-muted-foreground">
                 {formatShortDate(batch.startDate)}
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">
+              <TableCell className="text-muted-foreground">
                 {batch.endDate ? formatShortDate(batch.endDate) : '-'}
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">{batch.totalStudents}</TableCell>
+              <TableCell className="text-muted-foreground">{batch.totalStudents}</TableCell>
               <TableCell>
                 <span
                   className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold ${

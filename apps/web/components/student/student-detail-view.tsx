@@ -2,8 +2,8 @@
 
 import { GraduationCap, Calendar, CheckCircle2, Activity } from 'lucide-react'
 import { UserAvatar } from '@/components/ui/user-avatar'
-import { StatCards } from '@/components/ui/stat-cards'
-import { SectionHeader } from '@/components/ui/section-header'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
+import { ContentSection } from '@/components/dashboard/content-section'
 import {
   Table,
   TableBody,
@@ -95,13 +95,14 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
       </div>
 
       {/* Stat strip */}
-      <StatCards
-        variant="strip"
+      <StatsStrip
         stats={[
           {
             label: 'Batch',
             value: student.batch ? student.batch.batchYear : 'N/A',
             icon: GraduationCap,
+            iconColor: 'text-primary',
+            iconBg: 'bg-primary/10',
           },
           {
             label: 'Current semester',
@@ -109,55 +110,61 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
               ? formatSemesterNumber(student.batch.currentSemester.semesterNumber)
               : 'N/A',
             icon: Calendar,
+            iconColor: 'text-info',
+            iconBg: 'bg-info/10',
           },
           {
             label: 'Completed',
             value: completedCount,
             icon: CheckCircle2,
+            iconColor: 'text-success-foreground',
+            iconBg: 'bg-success/15',
           },
           {
             label: 'In progress',
             value: activeCount,
             icon: Activity,
+            iconColor: 'text-warning-foreground',
+            iconBg: 'bg-warning/15',
           },
         ]}
       />
 
       {/* Semester progress table */}
-      <section>
-        <SectionHeader
-          icon={GraduationCap}
-          title="Semester progress"
-          description={
-            student.semesters.length > 0
-              ? `${completedCount} completed, ${activeCount} in progress${failedCount > 0 ? `, ${failedCount} failed` : ''}`
-              : 'No semester records found'
-          }
-        />
+      <ContentSection
+        icon={GraduationCap}
+        title="Semester progress"
+        description={
+          student.semesters.length > 0
+            ? `${completedCount} completed, ${activeCount} in progress${failedCount > 0 ? `, ${failedCount} failed` : ''}`
+            : 'No semester records found'
+        }
+        className="mt-10"
+      >
         {student.semesters.length === 0 ? (
-          <div className="rounded-lg border py-8 text-center text-muted-foreground">
-            <p>This student has no semester records yet.</p>
+          <div className="card-elevated py-10 text-center">
+            <p className="text-muted-foreground">This student has no semester records yet.</p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-lg border">
-            <Table>
+          <div className="card-elevated overflow-hidden">
+            <Table className="table-clean">
               <TableHeader>
-                <TableRow>
-                  <TableHead className="px-4">Semester</TableHead>
-                  <TableHead className="px-4">Enrolled date</TableHead>
-                  <TableHead className="px-4">Status</TableHead>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Semester</TableHead>
+                  <TableHead>Enrolled date</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {student.semesters.map((semester) => (
                   <TableRow key={semester.id}>
-                    <TableCell className="px-4 font-medium text-foreground">
+                    <TableCell className="font-medium text-foreground">
                       {formatSemesterNumber(semester.semesterNumber)} Semester
                     </TableCell>
-                    <TableCell className="px-4 text-sm text-muted-foreground tabular-nums">
+                    <TableCell className="text-muted-foreground tabular-nums">
                       {formatShortDate(semester.enrolledAt)}
                     </TableCell>
-                    <TableCell className="px-4">
+                    <TableCell>
                       <StatusBadge status={semester.status} />
                     </TableCell>
                   </TableRow>
@@ -166,7 +173,7 @@ function StudentDetailView({ student }: StudentDetailViewProps) {
             </Table>
           </div>
         )}
-      </section>
+      </ContentSection>
     </div>
   )
 }

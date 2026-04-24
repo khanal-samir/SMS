@@ -21,7 +21,7 @@ export default function AdminBatchesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/admin/dashboard', label: 'Dashboard' }}

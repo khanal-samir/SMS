@@ -35,10 +35,10 @@ function BatchStudentsTable({ students, isLoading, studentLinkBasePath }: BatchS
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border">
-      <Table>
+    <div className="card-elevated overflow-hidden">
+      <Table className="table-clean">
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-transparent">
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
           </TableRow>
@@ -52,16 +52,16 @@ function BatchStudentsTable({ students, isLoading, studentLinkBasePath }: BatchS
                   {studentLinkBasePath ? (
                     <Link
                       href={`${studentLinkBasePath}/${student.id}`}
-                      className="text-sm font-medium text-foreground hover:underline"
+                      className="font-medium text-foreground hover:underline"
                     >
                       {student.name}
                     </Link>
                   ) : (
-                    <span className="text-sm font-medium text-foreground">{student.name}</span>
+                    <span className="font-medium text-foreground">{student.name}</span>
                   )}
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">{student.email}</TableCell>
+              <TableCell className="text-muted-foreground">{student.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>

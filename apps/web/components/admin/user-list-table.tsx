@@ -107,10 +107,10 @@ function StudentTable({
   const batchGroups = groupStudentsByBatch(students)
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-      <Table>
+    <div className="card-elevated overflow-hidden">
+      <Table className="table-clean">
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-transparent">
             <TableHead className="w-[300px]">Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead className="w-[80px]">Actions</TableHead>
@@ -141,19 +141,19 @@ function StudentTable({
                 </TableCell>
               </TableRow>
               {group.students.map((student) => (
-                <TableRow key={student.id} className="hover:bg-muted/50">
+                <TableRow key={student.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <UserAvatar name={student.name} image={student.image} size="sm" />
                       <Link
                         href={`/admin/users/students/${student.id}`}
-                        className="text-sm font-semibold text-foreground hover:underline"
+                        className="font-semibold text-foreground hover:underline"
                       >
                         {student.name ?? '-'}
                       </Link>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{student.email}</TableCell>
+                  <TableCell className="text-muted-foreground">{student.email}</TableCell>
 
                   <TableCell>
                     <DeleteButton userId={student.id} onDelete={onDelete} />
@@ -176,10 +176,10 @@ function TeacherTable({
   onDelete: (id: string) => void
 }) {
   return (
-    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-      <Table>
+    <div className="card-elevated overflow-hidden">
+      <Table className="table-clean">
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-transparent">
             <TableHead className="w-[300px]">Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead className="w-[180px]">Approval Status</TableHead>
@@ -188,16 +188,14 @@ function TeacherTable({
         </TableHeader>
         <TableBody>
           {teachers.map((teacher) => (
-            <TableRow key={teacher.id} className="hover:bg-muted/50">
+            <TableRow key={teacher.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <UserAvatar name={teacher.name} image={teacher.image} size="sm" />
-                  <span className="text-sm font-semibold text-foreground">
-                    {teacher.name ?? '-'}
-                  </span>
+                  <span className="font-semibold text-foreground">{teacher.name ?? '-'}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">{teacher.email}</TableCell>
+              <TableCell className="text-muted-foreground">{teacher.email}</TableCell>
               <TableCell>
                 <span
                   className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
@@ -222,24 +220,24 @@ function TeacherTable({
 
 function AdminTable({ admins }: { admins: AllUsersResponse[] }) {
   return (
-    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-      <Table>
+    <div className="card-elevated overflow-hidden">
+      <Table className="table-clean">
         <TableHeader>
-          <TableRow>
+          <TableRow className="hover:bg-transparent">
             <TableHead className="w-[300px]">Name</TableHead>
             <TableHead>Email</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {admins.map((admin) => (
-            <TableRow key={admin.id} className="hover:bg-muted/50">
+            <TableRow key={admin.id}>
               <TableCell>
                 <div className="flex items-center gap-3">
                   <UserAvatar name={admin.name} image={admin.image} size="sm" />
-                  <span className="text-sm font-semibold text-foreground">{admin.name ?? '-'}</span>
+                  <span className="font-semibold text-foreground">{admin.name ?? '-'}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-sm text-muted-foreground">{admin.email}</TableCell>
+              <TableCell className="text-muted-foreground">{admin.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>

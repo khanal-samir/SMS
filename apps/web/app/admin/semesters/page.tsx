@@ -20,7 +20,7 @@ export default function AdminSemestersPage() {
   const { data: semesters, isLoading } = useSemesters()
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/admin/dashboard', label: 'Dashboard' }}
@@ -33,13 +33,13 @@ export default function AdminSemestersPage() {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : semesters && semesters.length > 0 ? (
-          <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
-            <Table>
+          <div className="card-elevated overflow-hidden">
+            <Table className="table-clean">
               <TableHeader>
-                <TableRow>
-                  <TableHead className="px-6">Semester</TableHead>
-                  <TableHead className="px-6">Created</TableHead>
-                  <TableHead className="px-6 text-right">Actions</TableHead>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Semester</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -49,13 +49,13 @@ export default function AdminSemestersPage() {
                     className="cursor-pointer"
                     onClick={() => router.push(`/admin/semesters/${semester.id}`)}
                   >
-                    <TableCell className="px-6 font-semibold text-foreground">
+                    <TableCell className="font-semibold text-foreground">
                       {formatSemesterNumber(semester.semesterNumber)} Semester
                     </TableCell>
-                    <TableCell className="px-6 text-sm tabular-nums text-muted-foreground">
+                    <TableCell className="tabular-nums text-muted-foreground">
                       {formatShortDate(semester.createdAt)}
                     </TableCell>
-                    <TableCell className="px-6 text-right">
+                    <TableCell className="text-right">
                       <Button
                         variant="outline"
                         size="sm"
@@ -73,7 +73,7 @@ export default function AdminSemestersPage() {
             </Table>
           </div>
         ) : (
-          <div className="rounded-lg border bg-card py-16 text-center shadow-sm">
+          <div className="card-elevated py-16 text-center">
             <p className="text-muted-foreground">No semesters available.</p>
           </div>
         )}

@@ -14,9 +14,9 @@ import {
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { DashboardPageHeader } from '@/components/dashboard/dashboard-page-header'
-import { StatCards } from '@/components/ui/stat-cards'
-import { SectionHeader } from '@/components/ui/section-header'
+import { DashboardHeader } from '@/components/dashboard/dashboard-header'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
+import { ContentSection } from '@/components/dashboard/content-section'
 import { LoadingState } from '@/components/ui/loading-state'
 import { UserAvatar } from '@/components/ui/user-avatar'
 import {
@@ -53,82 +53,88 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
-        <DashboardPageHeader
+        <DashboardHeader
           title="Admin Dashboard"
           roleBadge={{ text: 'Admin', variant: 'destructive' }}
         />
 
-        {/* Stat cards row */}
-        <StatCards
-          columns={5}
+        <StatsStrip
           stats={[
             {
               label: 'Students',
               value: data?.stats.totalStudents ?? 0,
               icon: Users,
+              iconColor: 'text-info',
+              iconBg: 'bg-info/10',
             },
             {
               label: 'Teachers',
               value: data?.stats.totalTeachers ?? 0,
               icon: GraduationCap,
+              iconColor: 'text-primary',
+              iconBg: 'bg-primary/10',
             },
             {
               label: 'Batches',
               value: data?.stats.totalBatches ?? 0,
               icon: BarChart3,
+              iconColor: 'text-success-foreground',
+              iconBg: 'bg-success/15',
             },
             {
               label: 'Subjects',
               value: data?.stats.totalSubjects ?? 0,
               icon: BookOpen,
+              iconColor: 'text-warning-foreground',
+              iconBg: 'bg-warning/15',
             },
             {
               label: 'Pending approvals',
               value: data?.stats.pendingApprovals ?? 0,
               icon: ShieldAlert,
+              iconColor: 'text-destructive',
+              iconBg: 'bg-destructive/10',
             },
           ]}
         />
 
-        {/* Pending teacher approvals — full-width table */}
-        <section>
-          <SectionHeader
-            icon={UserPlus}
-            title="Pending approvals"
-            description="Teachers awaiting approval"
-            badge={
-              data?.pendingTeachers && data.pendingTeachers.length > 0
-                ? { value: data.pendingTeachers.length, variant: 'destructive' }
-                : undefined
-            }
-          />
+        <ContentSection
+          icon={UserPlus}
+          title="Pending approvals"
+          description="Teachers awaiting approval"
+          badge={
+            data?.pendingTeachers && data.pendingTeachers.length > 0
+              ? { value: data.pendingTeachers.length, variant: 'destructive' }
+              : undefined
+          }
+        >
           {data?.pendingTeachers && data.pendingTeachers.length > 0 ? (
-            <div className="overflow-hidden rounded-lg border">
-              <Table>
+            <div className="card-elevated overflow-hidden">
+              <Table className="table-clean">
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="px-4">Teacher</TableHead>
-                    <TableHead className="px-4">Email</TableHead>
-                    <TableHead className="px-4">Registered</TableHead>
-                    <TableHead className="px-4 text-right">Action</TableHead>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Teacher</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Registered</TableHead>
+                    <TableHead className="text-right">Action</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {data.pendingTeachers.map((teacher) => (
                     <TableRow key={teacher.id}>
-                      <TableCell className="px-4">
+                      <TableCell>
                         <div className="flex items-center gap-3">
                           <UserAvatar name={teacher.name} />
                           <span className="font-medium text-foreground">{teacher.name}</span>
                         </div>
                       </TableCell>
-                      <TableCell className="px-4 text-muted-foreground">{teacher.email}</TableCell>
-                      <TableCell className="px-4 text-muted-foreground tabular-nums">
+                      <TableCell className="text-muted-foreground">{teacher.email}</TableCell>
+                      <TableCell className="text-muted-foreground tabular-nums">
                         {formatShortDate(teacher.createdAt)}
                       </TableCell>
-                      <TableCell className="px-4 text-right">
+                      <TableCell className="text-right">
                         <Button
                           size="sm"
                           onClick={() => {
@@ -152,31 +158,30 @@ export default function AdminDashboard() {
               </Table>
             </div>
           ) : (
-            <div className="rounded-lg border py-8 text-center">
+            <div className="card-elevated py-10 text-center">
               <p className="text-sm text-muted-foreground">No pending approvals</p>
             </div>
           )}
-        </section>
+        </ContentSection>
 
-        {/* Recent assignments — full-width table */}
-        <section className="mt-8">
-          <SectionHeader
-            icon={ClipboardList}
-            title="Recent assignments"
-            description="Across all batches"
-            href="/admin/assignments"
-          />
+        <ContentSection
+          icon={ClipboardList}
+          title="Recent assignments"
+          description="Across all batches"
+          href="/admin/assignments"
+          className="mt-10"
+        >
           {data?.recentAssignments && data.recentAssignments.length > 0 ? (
-            <div className="overflow-hidden rounded-lg border">
-              <Table>
+            <div className="card-elevated overflow-hidden">
+              <Table className="table-clean">
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="px-4">Title</TableHead>
-                    <TableHead className="px-4">Subject</TableHead>
-                    <TableHead className="px-4">Teacher</TableHead>
-                    <TableHead className="px-4">Batch</TableHead>
-                    <TableHead className="px-4">Status</TableHead>
-                    <TableHead className="px-4 text-right">Due</TableHead>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Title</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Teacher</TableHead>
+                    <TableHead>Batch</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Due</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -188,25 +193,27 @@ export default function AdminDashboard() {
                     }
                     return (
                       <TableRow key={assignment.id}>
-                        <TableCell className="px-4 font-medium text-foreground">
+                        <TableCell className="font-medium text-foreground">
                           {assignment.title}
                         </TableCell>
-                        <TableCell className="px-4 text-muted-foreground">
+                        <TableCell className="text-muted-foreground">
                           {assignment.subjectTeacher.subject.subjectName}
                         </TableCell>
-                        <TableCell className="px-4 text-muted-foreground">
+                        <TableCell className="text-muted-foreground">
                           {assignment.subjectTeacher.teacher.name}
                         </TableCell>
-                        <TableCell className="px-4 text-muted-foreground tabular-nums">
+                        <TableCell className="text-muted-foreground tabular-nums">
                           {assignment.batch.batchYear}
                         </TableCell>
-                        <TableCell className="px-4">
-                          <Badge variant={status.variant} className="text-xs">
+                        <TableCell>
+                          <Badge variant={status.variant} className="text-xs font-medium">
                             {status.label}
                           </Badge>
                         </TableCell>
-                        <TableCell className="px-4 text-right">
-                          <span className={`text-xs font-medium tabular-nums ${dueDateInfo.color}`}>
+                        <TableCell className="text-right">
+                          <span
+                            className={`text-xs font-semibold tabular-nums ${dueDateInfo.color}`}
+                          >
                             {dueDateInfo.label}
                           </span>
                         </TableCell>
@@ -217,41 +224,47 @@ export default function AdminDashboard() {
               </Table>
             </div>
           ) : (
-            <div className="rounded-lg border py-8 text-center">
+            <div className="card-elevated py-10 text-center">
               <p className="text-sm text-muted-foreground">No assignments yet</p>
             </div>
           )}
-        </section>
+        </ContentSection>
 
-        {/* Recent announcements — full width grid */}
-        <section className="mt-8">
-          <SectionHeader
-            icon={Megaphone}
-            title="Recent announcements"
-            description="System-wide announcements"
-            href="/admin/announcements"
-          />
+        <ContentSection
+          icon={Megaphone}
+          title="Recent announcements"
+          description="System-wide announcements"
+          href="/admin/announcements"
+          className="mt-10"
+        >
           {data?.recentAnnouncements && data.recentAnnouncements.length > 0 ? (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {data.recentAnnouncements.map((announcement) => (
-                <div key={announcement.id} className="rounded-lg border p-3">
-                  <p className="truncate font-medium text-foreground">{announcement.title}</p>
-                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                    {announcement.message}
-                  </p>
-                  <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{announcement.createdBy.name}</span>
-                    <span className="tabular-nums">{formatShortDate(announcement.createdAt)}</span>
+                <div key={announcement.id} className="card-elevated p-5">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 h-2 w-2 shrink-0 rounded-full bg-accent" />
+                    <div className="min-w-0">
+                      <p className="font-medium text-foreground">{announcement.title}</p>
+                      <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                        {announcement.message}
+                      </p>
+                      <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                        <span>{announcement.createdBy.name}</span>
+                        <span className="tabular-nums">
+                          {formatShortDate(announcement.createdAt)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="rounded-lg border py-8 text-center">
+            <div className="card-elevated py-10 text-center">
               <p className="text-sm text-muted-foreground">No announcements yet</p>
             </div>
           )}
-        </section>
+        </ContentSection>
       </div>
     </div>
   )

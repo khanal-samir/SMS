@@ -46,19 +46,17 @@ function StudentDetailPageContent({
   }
 
   if (!student) {
-    return (
-      <NotFoundState
-        title={notFoundTitle}
-        message={notFoundMessage}
-        backButton={backButton}
-      />
-    )
+    return <NotFoundState title={notFoundTitle} message={notFoundMessage} backButton={backButton} />
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
-        <PageHeader title={title ?? student.name} description={description} backButton={backButton} />
+        <PageHeader
+          title={title ?? student.name}
+          description={description}
+          backButton={backButton}
+        />
         <StudentDetailView student={student} />
       </div>
     </div>

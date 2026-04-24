@@ -220,6 +220,37 @@
   background: linear-gradient(to right, transparent, #e5e7eb 20%, #e5e7eb 80%, transparent);
 }
 
+.card-elevated {
+  background: var(--card);
+  box-shadow:
+    0 1px 2px rgba(26, 54, 93, 0.06),
+    0 4px 8px rgba(26, 54, 93, 0.04);
+  border-radius: calc(var(--radius) + 2px);
+}
+
+.table-clean th {
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-clean td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.table-clean tr:last-child td {
+  border-bottom: none;
+}
+
+.table-clean tbody tr:hover {
+  background-color: var(--muted);
+}
+
 .noise-overlay {
   position: relative;
 }

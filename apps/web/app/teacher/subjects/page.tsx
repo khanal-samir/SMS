@@ -6,7 +6,7 @@ import { BookOpen, Loader2 } from 'lucide-react'
 import { useSemesters } from '@/hooks/useSemester'
 import { useSubjects } from '@/hooks/useSubject'
 import { PageHeader } from '@/components/ui/page-header'
-import { SectionHeader } from '@/components/ui/section-header'
+import { ContentSection } from '@/components/dashboard/content-section'
 import {
   Table,
   TableBody,
@@ -36,7 +36,7 @@ export default function TeacherSubjectsPage() {
   const isLoading = isLoadingSemesters || isLoadingSubjects
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/teacher/dashboard', label: 'Dashboard' }}
@@ -49,33 +49,34 @@ export default function TeacherSubjectsPage() {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : groupedSubjects.length > 0 ? (
-          <div className="space-y-8">
-            {groupedSubjects.map(({ semester, subjects: semesterSubjects }) => (
-              <section key={semester.id}>
-                <SectionHeader
-                  icon={BookOpen}
-                  title={`${formatSemesterNumber(semester.semesterNumber)} Semester`}
-                  description={`${semesterSubjects.length} subject${semesterSubjects.length === 1 ? '' : 's'}`}
-                />
-                <div className="overflow-hidden rounded-lg border">
-                  <Table>
+          <div className="space-y-10">
+            {groupedSubjects.map(({ semester, subjects: semesterSubjects }, index) => (
+              <ContentSection
+                key={semester.id}
+                icon={BookOpen}
+                title={`${formatSemesterNumber(semester.semesterNumber)} Semester`}
+                description={`${semesterSubjects.length} subject${semesterSubjects.length === 1 ? '' : 's'}`}
+                className={index > 0 ? 'mt-10' : undefined}
+              >
+                <div className="card-elevated overflow-hidden">
+                  <Table className="table-clean">
                     <TableHeader>
-                      <TableRow>
-                        <TableHead className="px-4">Code</TableHead>
-                        <TableHead className="px-4">Subject name</TableHead>
+                      <TableRow className="hover:bg-transparent">
+                        <TableHead>Code</TableHead>
+                        <TableHead>Subject name</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {semesterSubjects.map((subject) => (
                         <TableRow
                           key={subject.id}
-                          className="cursor-pointer transition-colors hover:bg-muted/50"
+                          className="cursor-pointer"
                           onClick={() => router.push(`/teacher/subjects/${subject.id}`)}
                         >
-                          <TableCell className="px-4 font-semibold text-foreground">
+                          <TableCell className="font-semibold text-foreground">
                             {subject.subjectCode}
                           </TableCell>
-                          <TableCell className="px-4 text-muted-foreground">
+                          <TableCell className="text-muted-foreground">
                             {subject.subjectName}
                           </TableCell>
                         </TableRow>
@@ -83,11 +84,11 @@ export default function TeacherSubjectsPage() {
                     </TableBody>
                   </Table>
                 </div>
-              </section>
+              </ContentSection>
             ))}
           </div>
         ) : (
-          <div className="rounded-lg border py-16 text-center">
+          <div className="card-elevated py-16 text-center">
             <p className="text-muted-foreground">No subject assignments yet.</p>
           </div>
         )}

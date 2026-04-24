@@ -1,5 +1,5 @@
 import { Calendar, GraduationCap, Users, Activity } from 'lucide-react'
-import { StatCards } from '@/components/ui/stat-cards'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
 import { formatSemesterNumber } from '@/lib/formatters'
 import type { BatchDetailResponse } from '@repo/schemas'
 
@@ -9,19 +9,31 @@ interface BatchInfoCardsProps {
 
 function BatchInfoCards({ batch }: BatchInfoCardsProps) {
   return (
-    <StatCards
-      variant="strip"
-      columns={4}
+    <StatsStrip
       stats={[
-        { label: 'Batch Year', value: batch.batchYear, icon: Calendar },
+        {
+          label: 'Batch Year',
+          value: batch.batchYear,
+          icon: Calendar,
+          iconColor: 'text-primary',
+          iconBg: 'bg-primary/10',
+        },
         {
           label: 'Current Semester',
           value: batch.currentSemester
             ? `${formatSemesterNumber(batch.currentSemester.semesterNumber)} Semester`
             : 'No semester',
           icon: GraduationCap,
+          iconColor: 'text-info',
+          iconBg: 'bg-info/10',
         },
-        { label: 'Total Students', value: batch.totalStudents, icon: Users },
+        {
+          label: 'Total Students',
+          value: batch.totalStudents,
+          icon: Users,
+          iconColor: 'text-success-foreground',
+          iconBg: 'bg-success/15',
+        },
         {
           label: 'Status',
           value: (
@@ -36,6 +48,8 @@ function BatchInfoCards({ batch }: BatchInfoCardsProps) {
             </span>
           ),
           icon: Activity,
+          iconColor: batch.isActive ? 'text-success-foreground' : 'text-muted-foreground',
+          iconBg: batch.isActive ? 'bg-success/15' : 'bg-muted',
         },
       ]}
     />

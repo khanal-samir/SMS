@@ -7,7 +7,7 @@ import { useSemesters } from '@/hooks/useSemester'
 import { useSubjects } from '@/hooks/useSubject'
 
 import { PageHeader } from '@/components/ui/page-header'
-import { SectionHeader } from '@/components/ui/section-header'
+import { ContentSection } from '@/components/dashboard/content-section'
 import {
   Table,
   TableBody,
@@ -32,7 +32,7 @@ export default function StudentCoursesPage() {
   const isLoading = isLoadingSemesters || isLoadingSubjects
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/student/dashboard', label: 'Dashboard' }}
@@ -45,32 +45,31 @@ export default function StudentCoursesPage() {
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
           </div>
         ) : currentSemester ? (
-          <section>
-            <SectionHeader
-              icon={BookOpen}
-              title={`${formatSemesterNumber(currentSemester.semesterNumber)} Semester`}
-              description={`${semesterSubjects.length} subject${semesterSubjects.length === 1 ? '' : 's'} enrolled`}
-            />
+          <ContentSection
+            icon={BookOpen}
+            title={`${formatSemesterNumber(currentSemester.semesterNumber)} Semester`}
+            description={`${semesterSubjects.length} subject${semesterSubjects.length === 1 ? '' : 's'} enrolled`}
+          >
             {semesterSubjects.length > 0 ? (
-              <div className="overflow-hidden rounded-lg border">
-                <Table>
+              <div className="card-elevated overflow-hidden">
+                <Table className="table-clean">
                   <TableHeader>
-                    <TableRow>
-                      <TableHead className="px-4">Code</TableHead>
-                      <TableHead className="px-4">Subject name</TableHead>
+                    <TableRow className="hover:bg-transparent">
+                      <TableHead>Code</TableHead>
+                      <TableHead>Subject name</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {semesterSubjects.map((subject) => (
                       <TableRow
                         key={subject.id}
-                        className="cursor-pointer transition-colors hover:bg-muted/50"
+                        className="cursor-pointer"
                         onClick={() => router.push(`/student/courses/${subject.id}`)}
                       >
-                        <TableCell className="px-4 font-semibold text-foreground">
+                        <TableCell className="font-semibold text-foreground">
                           {subject.subjectCode}
                         </TableCell>
-                        <TableCell className="px-4 text-muted-foreground">
+                        <TableCell className="text-muted-foreground">
                           {subject.subjectName}
                         </TableCell>
                       </TableRow>
@@ -79,15 +78,15 @@ export default function StudentCoursesPage() {
                 </Table>
               </div>
             ) : (
-              <div className="rounded-lg border py-8 text-center">
+              <div className="card-elevated py-10 text-center">
                 <p className="text-sm text-muted-foreground">
                   No subjects found for this semester.
                 </p>
               </div>
             )}
-          </section>
+          </ContentSection>
         ) : (
-          <div className="rounded-lg border py-16 text-center">
+          <div className="card-elevated py-16 text-center">
             <p className="text-muted-foreground">No current semester assigned yet.</p>
           </div>
         )}

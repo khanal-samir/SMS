@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/ui/page-header'
 import { LoadingState } from '@/components/ui/loading-state'
 import { NotFoundState } from '@/components/ui/not-found-state'
-import { StatCards } from '@/components/ui/stat-cards'
-import { SectionHeader } from '@/components/ui/section-header'
+import { StatsStrip } from '@/components/dashboard/stats-strip'
+import { ContentSection } from '@/components/dashboard/content-section'
 import {
   Table,
   TableBody,
@@ -49,7 +49,7 @@ export default function AdminSemesterDetailPage() {
   )
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen bg-background p-6 lg:p-10">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           backButton={{ href: '/admin/semesters', label: 'All Semesters' }}
@@ -57,31 +57,47 @@ export default function AdminSemesterDetailPage() {
           description="Manage subjects and assignments for this semester"
         />
 
-        <StatCards
-          variant="strip"
+        <StatsStrip
           stats={[
-            { label: 'Semester', value: semesterLabel, icon: GraduationCap },
-            { label: 'Subjects', value: semester.subjects.length, icon: BookOpen },
-            { label: 'Assigned Teachers', value: assignedTeachersCount, icon: Users },
+            {
+              label: 'Semester',
+              value: semesterLabel,
+              icon: GraduationCap,
+              iconColor: 'text-primary',
+              iconBg: 'bg-primary/10',
+            },
+            {
+              label: 'Subjects',
+              value: semester.subjects.length,
+              icon: BookOpen,
+              iconColor: 'text-info',
+              iconBg: 'bg-info/10',
+            },
+            {
+              label: 'Assigned Teachers',
+              value: assignedTeachersCount,
+              icon: Users,
+              iconColor: 'text-success-foreground',
+              iconBg: 'bg-success/15',
+            },
           ]}
-          columns={3}
         />
 
-        <section className="mt-8">
-          <SectionHeader
-            icon={BookOpen}
-            title="Subjects"
-            description="Click a subject to manage teachers and details."
-          />
+        <ContentSection
+          icon={BookOpen}
+          title="Subjects"
+          description="Click a subject to manage teachers and details."
+          className="mt-10"
+        >
           {semester.subjects.length > 0 ? (
-            <div className="overflow-hidden rounded-lg border">
-              <Table>
+            <div className="card-elevated overflow-hidden">
+              <Table className="table-clean">
                 <TableHeader>
-                  <TableRow>
-                    <TableHead className="px-6">Code</TableHead>
-                    <TableHead className="px-6">Subject</TableHead>
-                    <TableHead className="px-6">Teachers</TableHead>
-                    <TableHead className="px-6 text-right">Actions</TableHead>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Code</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Teachers</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -93,20 +109,18 @@ export default function AdminSemesterDetailPage() {
                         router.push(`/admin/semesters/${semester.id}/subjects/${subject.id}`)
                       }
                     >
-                      <TableCell className="px-6 font-semibold text-foreground">
+                      <TableCell className="font-semibold text-foreground">
                         {subject.subjectCode}
                       </TableCell>
-                      <TableCell className="px-6 text-sm text-muted-foreground">
-                        {subject.subjectName}
-                      </TableCell>
-                      <TableCell className="px-6 text-sm text-muted-foreground">
+                      <TableCell className="text-muted-foreground">{subject.subjectName}</TableCell>
+                      <TableCell className="text-muted-foreground">
                         {subject.subjectTeachers.length > 0
                           ? subject.subjectTeachers
                               .map((assignment) => assignment.teacher.name)
                               .join(', ')
                           : 'No teachers assigned'}
                       </TableCell>
-                      <TableCell className="px-6 text-right">
+                      <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Button
                             variant="secondary"
@@ -126,11 +140,11 @@ export default function AdminSemesterDetailPage() {
               </Table>
             </div>
           ) : (
-            <div className="rounded-lg border py-8 text-center text-muted-foreground">
-              <p>No subjects available for this semester.</p>
+            <div className="card-elevated py-10 text-center">
+              <p className="text-muted-foreground">No subjects available for this semester.</p>
             </div>
           )}
-        </section>
+        </ContentSection>
       </div>
     </div>
   )
