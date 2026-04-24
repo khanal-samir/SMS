@@ -4,6 +4,83 @@ import { Prisma, Role, SemesterNumber } from '@prisma/client'
 import { hash } from 'argon2'
 import { ConfigService } from '@nestjs/config'
 
+type SeedStudent = {
+  name: string
+  email: string
+}
+
+type SeedTeacher = {
+  name: string
+  email: string
+  isEmailVerified: boolean
+  isTeacherApproved: boolean
+}
+
+const DEFAULT_PASSWORD = '12345678'
+
+function createStudents(startRoll: number, count: number): SeedStudent[] {
+  return Array.from({ length: count }, (_, index) => {
+    const rollNumber = startRoll + index
+    const name = `student${rollNumber}`
+
+    return {
+      name,
+      email: `${name}@pnc.com`,
+    }
+  })
+}
+
+const TEACHER_CONFIG: SeedTeacher[] = [
+  {
+    name: 'Ramesh Adhikari',
+    email: 'ramesh.adhikari@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: true,
+  },
+  {
+    name: 'Sushmita Karki',
+    email: 'sushmita.karki@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: true,
+  },
+  {
+    name: 'Bikash Shrestha',
+    email: 'bikash.shrestha@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: true,
+  },
+  {
+    name: 'Anjana Poudel',
+    email: 'anjana.poudel@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: true,
+  },
+  {
+    name: 'Dipendra Gautam',
+    email: 'dipendra.gautam@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: true,
+  },
+  {
+    name: 'Pratima Regmi',
+    email: 'pratima.regmi@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: true,
+  },
+  {
+    name: 'Niraj Bhandari',
+    email: 'niraj.bhandari@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: false,
+  },
+  {
+    name: 'Kabita Gurung',
+    email: 'kabita.gurung@pnc.com',
+    isEmailVerified: true,
+    isTeacherApproved: false,
+  },
+]
+
 // Canonical semester progression (index 0 = Semester I)
 const SEMESTER_ORDER: SemesterNumber[] = [
   SemesterNumber.FIRST,
@@ -20,18 +97,12 @@ const SEMESTER_ORDER: SemesterNumber[] = [
 
 const BATCH_CONFIG = [
   {
-    batchYear: 2026,
+    batchYear: 2082,
     startDate: new Date('2026-01-15T00:00:00.000Z'),
     endDate: new Date('2029-12-31T00:00:00.000Z'),
     isActive: true,
     currentSemesterNumber: SemesterNumber.FIRST,
-    students: [
-      { name: 'Aarav Sharma', email: 'aarav.sharma_2026@sms.com' },
-      { name: 'Priya Thapa', email: 'priya.thapa_2026@sms.com' },
-      { name: 'Rajan Karki', email: 'rajan.karki_2026@sms.com' },
-      { name: 'Sita Poudel', email: 'sita.poudel_2026@sms.com' },
-      { name: 'Bikram Rai', email: 'bikram.rai_2026@sms.com' },
-    ],
+    students: createStudents(20820, 10),
     assignments: [
       {
         subjectCode: 'CSC109',
@@ -60,35 +131,29 @@ const BATCH_CONFIG = [
     ],
     announcements: [
       {
-        title: 'Orientation Day Schedule – Batch 2026',
+        title: 'Semester I Orientation Schedule - 2082/10/05 BS',
         message:
-          'The orientation programme for Batch 2026 is scheduled for 20 January 2026 in the main auditorium at 10:00 AM. Attendance is mandatory for all newly admitted students.',
+          'Batch 2082 students of Semester I should report to the main auditorium on 2082/10/05 BS at 10:00 AM for orientation, ID verification, and class briefing.',
       },
       {
-        title: 'First Internal Examination: 15 April 2026',
+        title: 'Semester I Internal Exam Begins - 2083/01/12 BS',
         message:
-          'The first internal examination for Semester I will be held from 15 April 2026. The detailed timetable will be shared by the examination cell one week prior.',
+          'The first internal examination for Semester I starts from 2083/01/12 BS. Students should check the department notice board for the detailed routine.',
       },
       {
-        title: 'Library Membership Registration Now Open',
+        title: 'Library Registration Window - Until 2082/11/15 BS',
         message:
-          'Library membership registration is now open for Batch 2026 students. Bring your college ID to the library counter before 28 February 2026 to complete registration.',
+          'Semester I students must complete library registration by 2082/11/15 BS using their college ID card and admission slip.',
       },
     ],
   },
   {
-    batchYear: 2025,
+    batchYear: 2081,
     startDate: new Date('2025-01-15T00:00:00.000Z'),
     endDate: new Date('2028-12-31T00:00:00.000Z'),
     isActive: true,
     currentSemesterNumber: SemesterNumber.THIRD,
-    students: [
-      { name: 'Aditya Bhandari', email: 'aditya.bhandari_2025@sms.com' },
-      { name: 'Nisha Shrestha', email: 'nisha.shrestha_2025@sms.com' },
-      { name: 'Rohan Maharjan', email: 'rohan.maharjan_2025@sms.com' },
-      { name: 'Manisha Gurung', email: 'manisha.gurung_2025@sms.com' },
-      { name: 'Sanjay Tamang', email: 'sanjay.tamang_2025@sms.com' },
-    ],
+    students: createStudents(20810, 10),
     assignments: [
       {
         subjectCode: 'CSC206',
@@ -117,35 +182,29 @@ const BATCH_CONFIG = [
     ],
     announcements: [
       {
-        title: 'Mid-Term Exam Schedule – Semester III',
+        title: 'Semester III Mid-Term Routine - 2082/12/18 BS',
         message:
-          'Mid-term examinations for Semester III will be conducted from 22 March 2026. Students are advised to thoroughly review their syllabi and consult teachers for any clarifications.',
+          'Mid-term examinations for Semester III begin on 2082/12/18 BS. Students should complete all lab submissions before the exam week starts.',
       },
       {
-        title: 'Guest Lecture: Machine Learning in Industry – 20 March 2026',
+        title: 'Guest Lecture on ML Practice - 2082/12/10 BS',
         message:
-          'A guest lecture on practical applications of machine learning will be delivered by a senior engineer from CloudTech Solutions on 20 March 2026 at 11:00 AM in Seminar Hall B. All Batch 2025 students are encouraged to attend.',
+          'Semester III students are invited to a machine learning guest lecture on 2082/12/10 BS at 11:00 AM in Seminar Hall B. Attendance will count toward internal participation.',
       },
       {
-        title: 'Project Group Formation Deadline: 25 March 2026',
+        title: 'Project Group Registration Deadline - 2082/12/22 BS',
         message:
-          'All Semester III students must form project groups of 4–5 members and register the group details via the student portal no later than 25 March 2026.',
+          'Semester III students must register their project groups through the portal by 2082/12/22 BS. Each group should have 4 to 5 members.',
       },
     ],
   },
   {
-    batchYear: 2024,
+    batchYear: 2080,
     startDate: new Date('2024-01-15T00:00:00.000Z'),
     endDate: new Date('2027-12-31T00:00:00.000Z'),
     isActive: true,
     currentSemesterNumber: SemesterNumber.FIFTH,
-    students: [
-      { name: 'Arjun Basnet', email: 'arjun.basnet_2024@sms.com' },
-      { name: 'Kavya Joshi', email: 'kavya.joshi_2024@sms.com' },
-      { name: 'Dipesh Magar', email: 'dipesh.magar_2024@sms.com' },
-      { name: 'Sunita Limbu', email: 'sunita.limbu_2024@sms.com' },
-      { name: 'Prakash Subedi', email: 'prakash.subedi_2024@sms.com' },
-    ],
+    students: createStudents(2080, 10),
     assignments: [
       {
         subjectCode: 'CSC314',
@@ -174,35 +233,29 @@ const BATCH_CONFIG = [
     ],
     announcements: [
       {
-        title: 'Semester IV Results Published on Portal',
+        title: 'Semester IV Results Published - 2082/11/28 BS',
         message:
-          'Semester IV examination results are now available on the student portal. Students must report any grade discrepancy to the examination office within 7 working days of publication.',
+          'Semester IV examination results are available in the portal from 2082/11/28 BS. Re-totaling requests must be submitted within 7 working days.',
       },
       {
-        title: 'Industrial Visit to InfoTech Park – 5 April 2026',
+        title: 'Industrial Visit Registration - 2082/12/25 BS',
         message:
-          'An industrial visit to InfoTech Park, Lalitpur has been arranged for 5 April 2026. Seats are limited — interested students should register through the student portal by 25 March 2026.',
+          'Semester V students can register for the industrial visit through the portal until 2082/12/25 BS. Seats will be confirmed on a first-come basis.',
       },
       {
-        title: 'Semester V Elective Subject Selection Now Open',
+        title: 'Semester V Elective Selection Open - 2082/12/14 BS',
         message:
-          'Students in Semester V may now select their elective subjects through the student portal. The selection window will remain open until 20 March 2026.',
+          'Elective subject selection for Semester V is open from 2082/12/14 BS. Students must finalize their choices before the closing notice from the department.',
       },
     ],
   },
   {
-    batchYear: 2023,
+    batchYear: 2079,
     startDate: new Date('2023-01-15T00:00:00.000Z'),
     endDate: new Date('2026-12-31T00:00:00.000Z'),
     isActive: true,
     currentSemesterNumber: SemesterNumber.SEVENTH,
-    students: [
-      { name: 'Anish Bhattarai', email: 'anish.bhattarai_2023@sms.com' },
-      { name: 'Pooja Adhikari', email: 'pooja.adhikari_2023@sms.com' },
-      { name: 'Suresh Khadka', email: 'suresh.khadka_2023@sms.com' },
-      { name: 'Anita Hamal', email: 'anita.hamal_2023@sms.com' },
-      { name: 'Nirmal Dhakal', email: 'nirmal.dhakal_2023@sms.com' },
-    ],
+    students: createStudents(20790, 10),
     assignments: [
       {
         subjectCode: 'CSC409',
@@ -231,19 +284,19 @@ const BATCH_CONFIG = [
     ],
     announcements: [
       {
-        title: 'Final Year Project Presentations – April 2026',
+        title: 'Final Year Project Defense Window - 2083/01/20 BS',
         message:
-          'Final year project presentations for Batch 2023 are scheduled throughout April 2026. Complete project reports must be submitted to the department office by 31 March 2026.',
+          'Semester VII project defense preparation starts from 2083/01/20 BS. Groups must submit their final draft report to the department before the defense slot is assigned.',
       },
       {
-        title: 'Campus Placement Drive: TechCorp & Infosys – 10 April 2026',
+        title: 'Campus Placement Drive Notice - 2083/01/08 BS',
         message:
-          'TechCorp Nepal and Infosys will conduct campus placement drives on 10 April 2026. Eligible final-year students must register with the placement cell and submit their updated CVs by 28 March 2026.',
+          'Eligible Semester VII students should submit updated CVs to the placement cell by 2083/01/08 BS for the upcoming campus recruitment drive.',
       },
       {
-        title: 'Semester VII Internal Evaluation Guidelines Released',
+        title: 'Semester VII Internal Evaluation Guideline - 2082/12/30 BS',
         message:
-          'The academic committee has released internal evaluation guidelines for Semester VII. A minimum of 80% attendance is mandatory to be eligible for the final examinations.',
+          'The internal evaluation guideline for Semester VII has been published on 2082/12/30 BS. Students need minimum 80% attendance to remain exam eligible.',
       },
     ],
   },
@@ -251,14 +304,14 @@ const BATCH_CONFIG = [
 
 const GLOBAL_ANNOUNCEMENTS = [
   {
-    title: 'Welcome to the New Academic Session 2025–26',
+    title: 'Welcome to the New Academic Session 2082/83 BS',
     message:
-      'The college administration warmly welcomes all students and faculty to the new academic session. Regular attendance from the very first day is mandatory for all enrolled students.',
+      'The college administration welcomes all students and faculty to the academic session 2082/83 BS. Regular attendance from the first teaching day is mandatory.',
   },
   {
-    title: 'Important: Tuition Fee Payment Deadline – 31 March 2026',
+    title: 'Important: Fee Payment Deadline - 2082/12/29 BS',
     message:
-      'All students are reminded that the tuition and examination fee payment deadline is 31 March 2026. Payments received after this date will incur a late fine as per college policy.',
+      'All students are reminded that tuition and examination fees must be cleared by 2082/12/29 BS. Late payments will be charged according to campus rules.',
   },
 ]
 
@@ -516,7 +569,7 @@ export class SeedService implements OnModuleInit {
     })
     const semesterMap = new Map(allSemesters.map((s) => [s.semesterNumber, s.id]))
 
-    const defaultPassword = await hash('12345678')
+    const defaultPassword = await hash(DEFAULT_PASSWORD)
 
     // ── Batches ──────────────────────────────────────────────────────────────
 
@@ -554,9 +607,9 @@ export class SeedService implements OnModuleInit {
     // ── Admin ────────────────────────────────────────────────────────────────
 
     await prisma.user.upsert({
-      where: { email: 'admin@sms.com' },
+      where: { email: 'admin@pnc.com' },
       update: {
-        name: 'Admin',
+        name: 'PNC Admin',
         role: Role.ADMIN,
         isEmailVerified: true,
         isTeacherApproved: true,
@@ -565,7 +618,7 @@ export class SeedService implements OnModuleInit {
       },
       create: {
         name: 'Admin',
-        email: 'admin@sms.com',
+        email: 'admin@pnc.com',
         role: Role.ADMIN,
         isEmailVerified: true,
         isTeacherApproved: true,
@@ -577,82 +630,7 @@ export class SeedService implements OnModuleInit {
 
     // ── Teachers ─────────────────────────────────────────────────────────────
 
-    const teachers = [
-      {
-        name: 'Teacher One',
-        email: 'teacher1@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: true,
-      },
-      {
-        name: 'Teacher Two',
-        email: 'teacher2@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: true,
-      },
-      {
-        name: 'Teacher Three',
-        email: 'teacher3@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: true,
-      },
-      {
-        name: 'Teacher Four',
-        email: 'teacher4@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: true,
-      },
-      {
-        name: 'Teacher Five',
-        email: 'teacher5@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: true,
-      },
-      {
-        name: 'Teacher Six',
-        email: 'teacher6@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: true,
-      },
-      {
-        name: 'Teacher Seven',
-        email: 'teacher7@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: false,
-      },
-      {
-        name: 'Teacher Eight',
-        email: 'teacher8@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: false,
-      },
-      {
-        name: 'Teacher Nine',
-        email: 'teacher9@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: false,
-      },
-      {
-        name: 'Teacher Ten',
-        email: 'teacher10@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: false,
-      },
-      {
-        name: 'Teacher Eleven',
-        email: 'teacher11@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: false,
-      },
-      {
-        name: 'Teacher Twelve',
-        email: 'teacher12@sms.com',
-        isEmailVerified: true,
-        isTeacherApproved: false,
-      },
-    ]
-
-    for (const teacher of teachers) {
+    for (const teacher of TEACHER_CONFIG) {
       await prisma.user.upsert({
         where: { email: teacher.email },
         update: {
@@ -772,12 +750,9 @@ export class SeedService implements OnModuleInit {
   private async seedSubjectTeachers(prisma: Prisma.TransactionClient) {
     this.logger.log('Seeding subject teachers...')
 
-    const approvedTeacherEmails = [
-      'teacher1@sms.com',
-      'teacher2@sms.com',
-      'teacher3@sms.com',
-      'teacher4@sms.com',
-    ]
+    const approvedTeacherEmails = TEACHER_CONFIG.filter((teacher) => teacher.isTeacherApproved).map(
+      (teacher) => teacher.email,
+    )
 
     const teachers = await prisma.user.findMany({
       where: { email: { in: approvedTeacherEmails } },
@@ -817,7 +792,7 @@ export class SeedService implements OnModuleInit {
     this.logger.log('Seeding assignments and announcements...')
 
     const admin = await prisma.user.findUnique({
-      where: { email: 'admin@sms.com' },
+      where: { email: 'admin@pnc.com' },
       select: { id: true },
     })
 

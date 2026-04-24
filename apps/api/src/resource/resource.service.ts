@@ -173,9 +173,9 @@ export class ResourceService {
     let uploadUrl: string | null = null
     if (isFileResource && createResourceDto.fileName && createResourceDto.mimeType) {
       const objectKey = this.storage.getObjectKey(
-        createResourceDto.subjectTeacherId as string,
-        resource.id as string,
-        createResourceDto.fileName as string,
+        createResourceDto.subjectTeacherId,
+        resource.id,
+        createResourceDto.fileName,
       )
 
       // Store the S3 object key on the resource
@@ -188,7 +188,7 @@ export class ResourceService {
 
       uploadUrl = await this.storage.generatePresignedUploadUrl(
         objectKey,
-        createResourceDto.mimeType as string,
+        createResourceDto.mimeType,
       )
     }
 
@@ -310,7 +310,7 @@ export class ResourceService {
       throw new BadRequestException('Resource file has not been uploaded yet')
     }
 
-    const downloadUrl = await this.storage.generatePresignedDownloadUrl(resource.fileUrl as string)
+    const downloadUrl = await this.storage.generatePresignedDownloadUrl(resource.fileUrl)
     return { downloadUrl }
   }
 
@@ -348,7 +348,7 @@ export class ResourceService {
 
       // Delete from S3 if there's a file
       if (resource.fileUrl && resource.isUploaded) {
-        await this.storage.deleteObject(resource.fileUrl as string)
+        await this.storage.deleteObject(resource.fileUrl)
       }
 
       await tx.resource.delete({ where: { id } })

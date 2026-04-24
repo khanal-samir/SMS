@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { CreateAssignmentDto, UpdateAssignmentDto, UpdateAssignmentStatusDto } from './dto'

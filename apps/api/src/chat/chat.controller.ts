@@ -50,7 +50,6 @@ export class ChatController {
     @Query() query: GetChatMessagesQueryDto,
     @CurrentUser() user: AuthUser,
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const page = await this.chatService.getMessages(chatGroupId, user, query.cursor, query.limit)
     return {
       message: 'Chat messages retrieved successfully',
